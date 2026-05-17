@@ -1,0 +1,129 @@
+services:
+    laravel.test:
+        image: 'sail-8.4/app'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-8081}:80'
+            - '${VITE_PORT:-5174}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+        volumes:
+            - '.:/var/www/html'
+            - 'hanab-tmpfiles:/tmp'
+        networks:
+            sail:
+                ipv4_address: 172.23.0.10
+        container_name: 'hanab-laravel'
+        depends_on:
+            - mysql
+            - redis
+            - meilisearch
+            - mailpit
+            - selenium
+            - chromium
+
+    mysql:
+        image: 'mysql/mysql-server:8.0'
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_EXTRA_OPTIONS: '${MYSQL_EXTRA_OPTIONS}'
+        volumes:
+            - 'hanab-mysql:/var/lib/mysql'
+            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        networks:
+            - sail
+        container_name: 'hanab-mysql'
+
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6380}:6379'
+        volumes:
+            - 'hanab-redis:/data'
+        networks:
+            - sail
+        container_name: 'hanab-redis'
+
+    meilisearch:
+        image: 'getmeili/meilisearch:latest'
+        ports:
+            - '${FORWARD_MEILISEARCH_PORT:-7701}:7700'
+        environment:
+            MEILI_NO_ANALYTICS: '${MEILISEARCH_NO_ANALYTICS:-false}'
+        volumes:
+            - 'hanab-meilisearch:/meili_data'
+        networks:
+            - sail
+        container_name: 'hanab-meilisearch'
+
+    mailpit:
+        image: 'axllent/mailpit:latest'
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1026}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8026}:8025'
+        networks:
+            - sail
+        container_name: 'hanab-mailpit'
+
+    selenium:
+        image: selenium/standalone-chromium
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
+        container_name: 'hanab-selenium'
+
+    chromium:
+        image: zenika/alpine-chrome
+        command:
+          [
+              chromium-browser,
+              "--headless",
+              "--disable-gpu",
+              "--remote-debugging-address=0.0.0.0",
+              "--remote-debugging-port=9222",
+              "--no-sandbox",
+              "--disable-dev-shm-usage"
+          ]
+        cap_add:
+            - SYS_ADMIN
+        volumes:
+            - hanab-tmpfiles:/tmp
+        ports:
+            - '${FORWARD_CHROMIUM_PORT:-9223}:9222'
+        networks:
+            sail:
+                ipv4_address: 172.23.0.100
+        container_name: 'hanab-chromium'
+
+networks:
+    sail:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.23.0.0/24"
+
+volumes:
+    hanab-mysql:
+        driver: local
+    hanab-redis:
+        driver: local
+    hanab-meilisearch:
+        driver: local
+    hanab-tmpfiles:
+        driver: local

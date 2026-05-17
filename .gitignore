@@ -1,0 +1,54 @@
+# OS files
+.DS_Store
+
+# Environment
+.env
+.env.backup
+.env.production
+.env.testing
+
+# Dependency managers
+/node_modules
+npm-debug.log
+yarn-error.log
+/vendor
+
+# IDEA
+/.idea
+/.fleet
+/.vscode
+
+# Testing
+/.phpunit.cache
+.phpunit.result.cache
+
+# Vagrant
+/.vagrant
+VagrantFile
+
+# Public files
+/public/build
+/public/hot
+/public/storage
+/public/media
+
+# Storage
+/storage/*.key
+/storage/app/forms/signatures
+
+# Auth
+auth.json
+
+# Docker
+docker-compose.override.yml
+
+# Homestead
+Homestead.json
+Homestead.yaml
+
+#test data
+/storage/test
+
+/app/src/certs
+
+/dist

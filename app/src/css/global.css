@@ -1,0 +1,248 @@
+@import url('./animations.css');
+@import url('./transitions.css');
+@import url('./smooth-expand.css');
+@import 'tailwindcss';
+@import 'tailwindcss/utilities';
+
+@theme {
+    --color-primary: #006a7c;
+    --color-primary-light: rgba(148, 72, 24, 0.2);
+    --color-secondary: #ffed4a;
+    --color-ternary: green;
+    --color-ternary-highlight-dark: #015b01;
+    --color-accent: #e3342f;
+    --color-background: #006a7c;
+    --color-text: #2d3748;
+
+    --color-text-blocked: #888888;
+    --color-bg-blocked: #ececec;
+
+    --color-placeholder: #7d7d7d;
+    --color-error: #c90400;
+    --color-warning: #da8f00;
+    --color-success: #0b7500;
+
+    --color-warning-light: rgba(218, 143, 0, 0.2);
+    --color-success-light: rgba(11, 117, 0, 0.15);
+
+    --color-highlight-dark: #004651;
+    --color-highlight-light: #ffeee3;
+
+    --font-family: 'Titillium Web', sans-serif;
+    --line-height: 1.5;
+    --font-weight: 400;
+}
+
+@layer components {
+    .button {
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .button-primary {
+        @apply bg-[var(--color-primary)] text-white hover:bg-[var(--color-highlight-dark)];
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .button-primary-outline {
+        @apply border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-light)];
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .button-dismiss {
+        @apply bg-gray-300 text-gray-700 hover:bg-gray-400;
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .button-default {
+        @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-100;
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .button-success {
+        @apply bg-green-600 text-white hover:bg-green-700;
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .button-danger {
+        @apply bg-red-600 text-white hover:bg-red-700;
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
+    }
+
+    .input-base {
+        @apply border border-gray-200 w-full rounded px-2 py-1 shadow
+    transition-all duration-200 ease-in-out
+    hover:ring-2 hover:ring-[var(--color-primary)] hover:ring-offset-0
+    focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-0;
+    }
+
+    .base-hover {
+        @apply hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in;
+    }
+
+    .badge-primary {
+        @apply text-xs font-semibold border border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-primary-light)] px-2 py-1;
+    }
+
+    .badge-secondary {
+        @apply text-xs font-semibold border border-gray-300 text-black bg-gray-200 px-2 py-1;
+    }
+
+    .slide-fade-enter-active {
+        @apply transition-transform ease-in-out duration-300;
+    }
+
+    .slide-fade-enter-from {
+        @apply -translate-x-full;
+    }
+
+    .slide-fade-enter-to {
+        @apply translate-x-0;
+    }
+}
+
+@layer utilities {
+    .text-outline {
+        -webkit-text-stroke: 1px var(--color-gray-200);
+    }
+}
+
+:root {
+    font-family: 'Titillium Web', sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+    height: 100dvh;
+    width: 100vw;
+}
+
+.Vue-Toastification__container.top-right {
+    top: 0 !important;
+    right: 0 !important;
+}
+
+.Vue-Toastification__toast--default {
+    background-color: transparent !important;
+    color: inherit !important;
+    border-radius: inherit !important;
+}
+
+.Vue-Toastification__toast {
+    padding: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Mobile toast container placement */
+@media (max-width: 768px) {
+    .Vue-Toastification__container {
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    .Vue-Toastification__container--top-center {
+        top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+    }
+
+    .Vue-Toastification__toast {
+        pointer-events: auto;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+    }
+}
+
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+    color: var(--color-placeholder);
+}
+
+input[type='text']::placeholder,
+input[type='email']::placeholder,
+input[type='password']::placeholder,
+textarea::placeholder {
+    color: var(--color-placeholder);
+}
+
+/* Popular Ribbon */
+.ribbon {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    position: absolute;
+    z-index: 20;
+}
+
+.ribbon::before,
+.ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: block;
+    border: 3px solid #5e0a0e;
+}
+
+.ribbon span {
+    position: absolute;
+    display: block;
+    width: 160px;
+    padding: 8px 0;
+    /* deep red -> lighter red -> deep red */
+    background: linear-gradient(135deg, #7a0f14 0%, #c11b1f 50%, #7a0f14 100%);
+    color: #fff;
+    font:
+        700 12px/1 'Lato',
+        sans-serif;
+    letter-spacing: 0.08em;
+    text-align: center;
+
+    /* subtle depth/edge definition */
+    box-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.14); /* thin highlight border */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+}
+
+.ribbon-top-left {
+    top: -6px;
+    left: -6px;
+}
+
+.ribbon-top-left::before,
+.ribbon-top-left::after {
+    border-top-color: transparent;
+    border-left-color: transparent;
+}
+
+.ribbon-top-left::before {
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.ribbon-top-left::after {
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.ribbon-top-left span {
+    right: -24px;
+    top: 22px;
+    transform: rotate(-45deg);
+}
