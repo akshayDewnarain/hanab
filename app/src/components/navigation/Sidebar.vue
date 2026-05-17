@@ -206,7 +206,7 @@
 
 <script lang="ts" setup>
     import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-    import { SidebarItemInterface } from '@/modules/types/SidebarTypes';
+    import type { SidebarItemInterface } from '@/modules/types/support/navigation/SidebarItemInterface';
     import SidebarItem from '@/components/navigation/SidebarItem.vue';
     import { Icon } from '@iconify/vue';
     import http from '@/utils/http';
@@ -326,7 +326,7 @@
                 label: 'SIDEBAR_ITEM_DEVELOPMENT',
                 to: '/admin/development',
                 icon: 'material-symbols:code-rounded',
-            } as SidebarItemInterface);
+            });
         }
 
         return [...items, ...bottomSidebarItems];

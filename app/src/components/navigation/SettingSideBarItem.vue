@@ -15,16 +15,13 @@
     import { useRoute, useRouter } from 'vue-router';
     import { useI18n } from 'vue-i18n';
     import { computed } from 'vue';
+    import type { SettingsSidebarItemProps } from '@/modules/types/support/navigation/SettingsSidebarItemProps';
 
     const currentRoute = useRoute();
     const router = useRouter();
     const { t } = useI18n();
 
-    const props = defineProps<{
-        label: string;
-        to: string;
-        icon: string;
-    }>();
+    const props = defineProps<SettingsSidebarItemProps>();
 
     function topSegment(path: string, base = '/admin'): string {
         const [pathname] = path.split(/[?#]/);

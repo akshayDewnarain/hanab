@@ -38,15 +38,14 @@
     import { computed } from 'vue';
     import { useRoute } from 'vue-router';
     import { Icon } from '@iconify/vue';
+    import type { BreadcrumbCrumb } from '@/modules/types/support/navigation/BreadcrumbCrumb';
 
     const route = useRoute();
 
-    type Crumb = { name: string; path: string };
-
-    const breadcrumbs = computed<Crumb[]>(() => {
+    const breadcrumbs = computed<BreadcrumbCrumb[]>(() => {
         const segments = route.path.split('/').filter(Boolean); // keep 'admin' here
         let currentPath = '';
-        const result: Crumb[] = [];
+        const result: BreadcrumbCrumb[] = [];
 
         for (const seg of segments) {
             currentPath += `/${seg}`;

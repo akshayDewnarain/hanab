@@ -1,9 +1,9 @@
 <template>
     <Transition mode="out-in" name="detail-fade">
         <div v-if="isLoading" key="loading" class="w-full h-full px-4 my-2 overflow-y-auto">
-            <div class="flex h-full min-h-[260px] items-center justify-center">
+            <div class="flex h-full min-h-65 items-center justify-center">
                 <div
-                    class="h-10 w-10 rounded-full border-2 border-gray-300 border-t-[var(--color-primary)] animate-spin"
+                    class="h-10 w-10 rounded-full border-2 border-gray-300 border-t-(--color-primary) animate-spin"
                 ></div>
             </div>
         </div>
@@ -28,14 +28,14 @@
                             >
                                 <div
                                     v-if="isDirty"
-                                    class="fixed inset-x-0 bottom-0 z-[100] flex justify-center px-4 pb-4 pointer-events-none"
+                                    class="fixed inset-x-0 bottom-0 z-100 flex justify-center px-4 pb-4 pointer-events-none"
                                 >
                                     <div
-                                        class="pointer-events-auto flex h-[60px] w-full max-w-[900px] items-center justify-between rounded-lg border border-gray-200 bg-white px-4 shadow-lg"
+                                        class="pointer-events-auto flex h-15 w-full max-w-225 items-center justify-between rounded-lg border border-gray-200 bg-white px-4 shadow-lg"
                                     >
                                         <div class="flex items-center gap-2">
                                             <Icon
-                                                class="h-5 w-5 text-[var(--color-warning)]"
+                                                class="h-5 w-5 text-warning"
                                                 icon="material-symbols:warning-outline-rounded"
                                             />
                                             <span class="font-semibold"> {{ t('GENERAL_UNSAVED_CHANGES') }} </span>
@@ -77,7 +77,7 @@
     import { useComponentState } from '@/composables/components/useComponentState';
     import { useRoute } from 'vue-router';
     import FormBuilder from '@/components/forms/FormBuilder.vue';
-    import { ModelConstructor } from '@/modules/types/ModelTypes';
+    import type { ModelConstructor } from '@/modules/types/support/models/ModelConstructor.ts';
     import { useI18n } from 'vue-i18n';
     import { Icon } from '@iconify/vue';
 
