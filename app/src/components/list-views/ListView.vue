@@ -273,8 +273,6 @@
                                         :custom-classes="column.component.customClasses"
                                         :options="column.component.options"
                                         :item="
-                                            column.component.type ===
-                                                TableColumnComponentEnum.COMPONENT_PREVIEW ||
                                             column.component.type === TableColumnComponentEnum.SKILL_LABEL
                                                 ? item
                                                 : undefined
@@ -301,7 +299,6 @@
             </div>
         </div>
         <ListViewPagination
-            v-if="props.alwaysShowPagination || items.length > 0"
             :current="meta.current_page"
             :per-page="meta.per_page"
             :total="meta.total"
@@ -347,7 +344,6 @@
         selectable: true,
         disableRowNavigation: false,
         useURLQueries: true,
-        alwaysShowPagination: false,
     });
 
     // Use the composable

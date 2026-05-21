@@ -7,10 +7,10 @@
  * @property label - i18n key for the item label.
  * @property icon - Iconify icon id for the item.
  * @property to - Vue Router location string for the link target.
- * @property permissionEntity - Entity key for `canViewEntity` checks (e.g. DRINK, RESERVATION). Omitted items stay visible by default.
+ * @property permissionEntity - Entity key for `canViewEntity` checks (e.g. EMPLOYEE, SKILL). Omitted items stay visible by default.
  * @property visible - Optional direct visibility toggle after permission resolution.
  * @property activeExact - When true, active only when the current path exactly matches resolved `to` (normalized trailing slashes).
- * @property inactiveWhenPathStartsWith - When set, never active if the current path starts with this prefix (e.g. exclude calendar from Reservations highlight).
+ * @property inactiveWhenPathStartsWith - When set, never active if the current path starts with this prefix.
  */
 export interface SidebarItemInterface {
     label: string;

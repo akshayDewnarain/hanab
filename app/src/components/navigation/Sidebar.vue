@@ -14,7 +14,7 @@
         >
             <div class="bg-[var(--color-background)] relative flex h-full flex-1 flex-col justify-between">
                 <div class="flex flex-col items-center my-2">
-                    <div class="w-full my-1 items-center relative group" @click="clearLocationScope()">
+                    <div class="w-full my-1 items-center relative group" @click="goToEmployees()">
                         <div
                             class="flex items-center mx-2 gap-1 text-white rounded-md hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in relative cursor-pointer"
                         >
@@ -314,8 +314,8 @@
         localStorage.setItem('isSidebarOpen', JSON.stringify(sidebarCollapsed.value));
     }
 
-    function clearLocationScope(): void {
-        router.push('/admin/locations');
+    function goToEmployees(): void {
+        router.push('/admin/employees');
     }
 
     function getBottomSidebarItems(): SidebarItemInterface[] {

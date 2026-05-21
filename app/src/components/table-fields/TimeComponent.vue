@@ -51,7 +51,7 @@
 
             if (typeof props.value === 'string' && /^\d{1,2}:\d{2}(:\d{2})?$/.test(props.value)) {
                 const today = new Date();
-                const [hours, minutes, seconds = '00'] = props.value.split(':');
+                const [hours = '0', minutes = '0', seconds = '00'] = props.value.split(':');
                 date = new Date(
                     today.getFullYear(),
                     today.getMonth(),

@@ -135,9 +135,9 @@
 <script lang="ts" setup>
     import { defineComponent, provide } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import type Model from '@/modules/models/Model';
-    import type BaseInputField from '@/modules/models/forms/BaseInputField';
-    import type { FormBuilderPanel, FormBuilderRow, FormBuilderTab } from '@/modules/types/FormBuilderTypes';
+    import type Model from '@/modules/models/support/Model';
+    import type BaseInputField from '@/modules/models/support/inputs/BaseInputField';
+    import type { FormBuilderPanel, FormBuilderRow, FormBuilderTab } from '@/modules/types/support/form-builder/FormBuilder';
     import { useFormData } from '@/composables/forms/useFormData';
     import {
         formBuilderGetFieldErrorKey,

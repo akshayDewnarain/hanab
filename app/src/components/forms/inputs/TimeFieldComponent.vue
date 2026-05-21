@@ -203,7 +203,9 @@
         return String(n).padStart(2, '0');
     }
     function displayLabel(value: string): string {
-        const [hh, mm] = value.split(':').map(Number);
+        const [hhRaw, mmRaw] = value.split(':').map(Number);
+        const hh = hhRaw ?? 0;
+        const mm = mmRaw ?? 0;
         if (!IS_24H.value) {
             const ampm = hh >= 12 ? 'PM' : 'AM';
             const h12 = hh % 12 === 0 ? 12 : hh % 12;

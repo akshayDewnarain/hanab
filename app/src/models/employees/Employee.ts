@@ -356,6 +356,24 @@ export default class Employee extends Model<EmployeeRecord> {
 
     override inputFields(): BaseInputField[] {
         return [
+            new UploadImageField({
+                name: 'image',
+                label: 'GENERAL_IMAGE',
+                maxFiles: 1,
+                multiple: false,
+                accept: 'image/*',
+                media: this.image ?? null,
+                callback: async () => {
+                    if (!this.id) {
+                        return false;
+                    }
+
+                    await this.removeImage(this.id);
+                    this.image = undefined;
+
+                    return true;
+                },
+            }),
             new InputField({
                 name: 'employee_number',
                 label: 'EMPLOYEE_NUMBER',
@@ -447,7 +465,7 @@ export default class Employee extends Model<EmployeeRecord> {
                     params: { per_page: 100 },
                     immediate: true,
                     translate: false,
-                    filter: (row) => (row as EmployeeLocationRecord).is_active !== false,
+                    filter: (row) => (row as EmployeeLocationRecord).is_active,
                 },
             }),
 
@@ -482,25 +500,6 @@ export default class Employee extends Model<EmployeeRecord> {
                 defaultValue: true,
                 width: FieldWidth.HALF,
                 validators: { required: true },
-            }),
-
-            new UploadImageField({
-                name: 'image',
-                label: 'GENERAL_IMAGE',
-                maxFiles: 1,
-                multiple: false,
-                accept: 'image/*',
-                media: this.image ?? null,
-                callback: async () => {
-                    if (!this.id) {
-                        return false;
-                    }
-
-                    await this.removeImage(this.id);
-                    this.image = undefined;
-
-                    return true;
-                },
             }),
 
             new CustomField({

@@ -35,7 +35,6 @@ import EntityModal from '@/components/modals/content-modals/EntityModal.vue';
 import ConfirmationModal from '@/components/modals/content-modals/ConfirmationModal.vue';
 import TimeComponent from '@/components/table-fields/TimeComponent.vue';
 import WeekdayComponent from '@/components/table-fields/WeekdayComponent.vue';
-import ComponentPreview from '@/components/table-fields/ComponentPreview.vue';
 import SkillLabelCellComponent from '@/components/table-fields/SkillLabelCellComponent.vue';
 import type TableColumn from '@/modules/models/support/list-views/TableColumn.ts';
 import type { TableColumnInterface } from '@/modules/types/support/list-views/TableColumnInterface.ts';
@@ -96,7 +95,10 @@ export function useListViewHelper(props: UseListViewHelperProps) {
         transition: `height ${anySelected.value ? 300 : 200}ms ${anySelected.value ? 'ease-out' : 'ease-in'}`,
     }));
 
-    const handleInputChange = useDebounce(() => fetchData(), 500);
+    const handleInputChange = useDebounce(() => {
+        meta.value.current_page = 1;
+        fetchData();
+    }, 500);
 
     function updateBarHeight() {
         barHeight.value = barInnerRef.value ? barInnerRef.value.offsetHeight : 0;
@@ -194,8 +196,6 @@ export function useListViewHelper(props: UseListViewHelperProps) {
                 return TimeComponent;
             case TableColumnComponentEnum.WEEKDAY:
                 return WeekdayComponent;
-            case TableColumnComponentEnum.COMPONENT_PREVIEW:
-                return ComponentPreview;
             case TableColumnComponentEnum.SKILL_LABEL:
                 return SkillLabelCellComponent;
             default:
@@ -246,6 +246,7 @@ export function useListViewHelper(props: UseListViewHelperProps) {
     }
 
     function applyFilters(appliedFilters: Record<string, unknown>): void {
+        meta.value.current_page = 1;
         setLoading(true);
 
         columns.value = modelInstance.columns();

@@ -87,7 +87,7 @@
         }
 
         for (const key of Object.keys(map)) {
-            map[key].sort((a, b) => String(a.name ?? '').localeCompare(String(b.name ?? '')));
+            map[key]?.sort((a, b) => String(a.name ?? '').localeCompare(String(b.name ?? '')));
         }
 
         return map;

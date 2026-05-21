@@ -133,12 +133,13 @@
             animation: 210,
             handle: '.drag-handle',
             draggable: '[role="listitem"]',
-            onEnd(evt) {
+            onEnd(evt: Sortable.SortableEvent) {
                 const oldIndex = evt.oldIndex;
                 const newIndex = evt.newIndex;
                 if (oldIndex == null || newIndex == null || oldIndex === newIndex) return;
                 const next = [...columns.value];
-                const [moved] = next.splice(oldIndex, 1);
+                const moved = next.splice(oldIndex, 1)[0];
+                if (moved === undefined) return;
                 next.splice(newIndex, 0, moved);
                 columns.value = next;
                 nextTick(() => initSortable());

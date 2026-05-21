@@ -1,4 +1,4 @@
-import type TableColumn from '@/modules/models/support/list-views/TableColumn';
+import type { TableColumnInterface } from '@/modules/types/support/list-views/TableColumnInterface';
 
 /** Old filter keys from localStorage / URLs → current API scope keys. */
 const LEGACY_FILTER_KEY_ALIASES: Record<string, string> = {
@@ -31,13 +31,13 @@ function migrateLegacyFilterKeys(filters: Record<string, unknown>): void {
 }
 
 /** API / query-builder filter key for a column (column.filterKey → relation.filterKey → name). */
-export function getColumnFilterKey(column: TableColumn): string {
+export function getColumnFilterKey(column: TableColumnInterface): string {
     return column.filterKey ?? column.relation?.filterKey ?? column.name;
 }
 
 /** Read a saved filter value, including legacy keys stored under `column.name`. */
 export function resolveSavedFilterValue(
-    column: TableColumn,
+    column: TableColumnInterface,
     saved: Record<string, unknown>,
 ): unknown {
     const filterKey = getColumnFilterKey(column);
@@ -64,7 +64,7 @@ export function resolveSavedFilterValue(
 /** Rename legacy filter keys (column.name) to the API filter key (e.g. skills → skill_ids). */
 export function normalizeFiltersForColumns(
     filters: Record<string, unknown>,
-    columns: TableColumn[],
+    columns: TableColumnInterface[],
 ): Record<string, unknown> {
     const normalized = { ...filters };
 

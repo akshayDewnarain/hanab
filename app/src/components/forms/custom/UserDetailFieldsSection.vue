@@ -66,7 +66,7 @@
     import { computed, defineComponent, inject } from 'vue';
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
-    import type BaseInputField from '@/modules/models/forms/BaseInputField';
+    import type BaseInputField from '@/modules/models/support/inputs/BaseInputField';
     import type { BaseInputFieldOptions } from '@/modules/types/support/inputs/BaseInputFieldOptions.ts';
     import {
         formBuilderGetFieldErrorKey,

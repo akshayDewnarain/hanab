@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, withDefaults } from 'vue';
+    import { computed, defineComponent } from 'vue';
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
     import { useDropdown } from '@/composables/fields/useDropdown';

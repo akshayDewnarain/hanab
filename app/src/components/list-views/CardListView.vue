@@ -69,7 +69,7 @@
             </div>
 
             <!-- Filter column (inside list view) -->
-            <div class="flex w-72 shrink-0 flex-col gap-3 bg-slate-50/90 p-3 lg:w-80">
+            <div class="flex h-full min-h-0 w-72 shrink-0 flex-col gap-3 bg-slate-50/90 p-3 lg:w-80">
                 <!-- Actions card -->
                 <section class="w-full shrink-0 space-y-3 rounded border border-gray-200 bg-white p-3 shadow-md">
                     <button
@@ -167,10 +167,9 @@
                     </div>
                 </section>
 
-                <!-- Pagination card -->
+                <!-- Pagination card (pinned to bottom of sidebar) -->
                 <section
-                    v-if="props.alwaysShowPagination || items.length > 0"
-                    class="w-full shrink-0 overflow-hidden rounded border border-gray-200 bg-white shadow-md"
+                    class="mt-auto w-full shrink-0 overflow-hidden rounded border border-gray-200 bg-white shadow-md"
                 >
                     <ListViewPagination
                         compact
@@ -221,7 +220,6 @@
             selectable: false,
             disableRowNavigation: false,
             useURLQueries: true,
-            alwaysShowPagination: false,
         },
     );
 

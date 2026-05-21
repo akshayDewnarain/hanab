@@ -105,8 +105,6 @@
                                     v-if="column.component"
                                     :badges="column.component.badges"
                                     :item="
-                                        column.component?.type ===
-                                            TableColumnComponentEnum.COMPONENT_PREVIEW ||
                                         column.component?.type === TableColumnComponentEnum.SKILL_LABEL
                                             ? item
                                             : undefined
@@ -150,7 +148,6 @@
     import WeekdayComponent from '@/components/table-fields/WeekdayComponent.vue';
     import type { TableColumnInterface } from '@/modules/types/support/list-views/TableColumnInterface.ts';
     import TimeComponent from '@/components/table-fields/TimeComponent.vue';
-    import ComponentPreview from '@/components/table-fields/ComponentPreview.vue';
     import SkillLabelCellComponent from '@/components/table-fields/SkillLabelCellComponent.vue';
 
     const { t } = useI18n();
@@ -266,8 +263,6 @@
                 return TimeComponent;
             case TableColumnComponentEnum.WEEKDAY:
                 return WeekdayComponent;
-            case TableColumnComponentEnum.COMPONENT_PREVIEW:
-                return ComponentPreview;
             case TableColumnComponentEnum.SKILL_LABEL:
                 return SkillLabelCellComponent;
             default:

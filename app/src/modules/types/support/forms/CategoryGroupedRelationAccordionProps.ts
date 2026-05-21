@@ -1,6 +1,6 @@
-import type Model from '@/modules/models/support/Model.ts';
 import type TableColumn from '@/modules/models/support/list-views/TableColumn.ts';
 import type { CategoryGroupedRelationCategory } from '@/modules/types/support/forms/CategoryGroupedRelationCategory.ts';
+import type { CategoryGroupedRelationRow } from '@/modules/types/support/forms/CategoryGroupedRelationRow.ts';
 import type { ModelConstructor } from '@/modules/types/support/models/ModelConstructor.ts';
 
 /**
@@ -20,7 +20,7 @@ import type { ModelConstructor } from '@/modules/types/support/models/ModelConst
  */
 export interface CategoryGroupedRelationAccordionProps {
     category: CategoryGroupedRelationCategory;
-    items: Model<unknown>[];
+    items: CategoryGroupedRelationRow[];
     attachedIds: number[];
     listColumns: TableColumn[];
     entity: string;

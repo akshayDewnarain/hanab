@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { onMounted, ref, useId, withDefaults } from 'vue';
+    import { onMounted, ref, useId } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { convertToString } from '@/composables/useGlobalHelpers';
     import type TableColumn from '@/modules/models/support/list-views/TableColumn.ts';

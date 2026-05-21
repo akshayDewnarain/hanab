@@ -1,3 +1,4 @@
+import type { Component } from 'vue';
 import type BaseInputField from '@/modules/models/support/inputs/BaseInputField.ts';
 
 /**
@@ -13,6 +14,30 @@ export type FormBuilderFieldsRow = {
     col?: number;
 };
 
+export type FormBuilderTextRow = {
+    type: 'text';
+    text: string;
+    col?: number;
+};
+
+export type FormBuilderIconRow = {
+    type: 'icon';
+    icon: Component;
+    text: string;
+    col?: number;
+};
+
+export type FormBuilderCustomRow = {
+    type: 'custom';
+    col?: number;
+};
+
+export type FormBuilderRow =
+    | FormBuilderFieldsRow
+    | FormBuilderTextRow
+    | FormBuilderIconRow
+    | FormBuilderCustomRow;
+
 /**
  * Tab section inside a panel.
  *
@@ -21,7 +46,7 @@ export type FormBuilderFieldsRow = {
  */
 export type FormBuilderTab = {
     label: string;
-    rows: FormBuilderFieldsRow[];
+    rows: FormBuilderRow[];
 };
 
 /**

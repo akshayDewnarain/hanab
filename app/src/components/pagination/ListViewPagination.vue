@@ -1,6 +1,6 @@
 <template>
     <div
-        v-if="pages && compact"
+        v-if="compact"
         class="space-y-2 px-4 py-3"
     >
         <div class="flex items-center gap-2">
@@ -53,7 +53,7 @@
     </div>
 
     <div
-        v-else-if="pages"
+        v-else
         class="flex items-center justify-between border-t border-gray-100 bg-gray-100 px-4 py-3 sm:px-6"
     >
         <div class="flex flex-1 justify-between sm:hidden">
@@ -78,10 +78,10 @@
             <div>
                 <p class="text-sm">
                     {{ t('PAGINATION_SHOWING') }}
-                    <span class="font-bold">{{ current * perPage - perPage + 1 }}</span>
+                    <span class="font-bold">{{ rangeStart }}</span>
 
                     {{ t('PAGINATION_TO') }}
-                    <span class="font-bold">{{ current * perPage < total ? current * perPage : total }}</span>
+                    <span class="font-bold">{{ rangeEnd }}</span>
 
                     {{ t('PAGINATION_OF') }}
                     <span class="font-bold">{{ total }}</span>
@@ -229,11 +229,16 @@
         (e: 'update:perPage', value: number): void;
     }>();
 
-    const pages = computed(() => Math.ceil(props.total / props.perPage));
-    const rangeStart = computed(() => props.current * props.perPage - props.perPage + 1);
-    const rangeEnd = computed(() =>
-        props.current * props.perPage < props.total ? props.current * props.perPage : props.total,
-    );
+    /** At least 1 so the control stays visible when total is 0 (empty filter results). */
+    const pages = computed(() => Math.max(1, Math.ceil(props.total / props.perPage) || 0));
+    const rangeStart = computed(() => {
+        if (props.total <= 0) return 0;
+        return props.current * props.perPage - props.perPage + 1;
+    });
+    const rangeEnd = computed(() => {
+        if (props.total <= 0) return 0;
+        return props.current * props.perPage < props.total ? props.current * props.perPage : props.total;
+    });
     const pageNumbers = computed(() => {
         const numbers = [];
         for (let i = 1; i <= pages.value; i++) {

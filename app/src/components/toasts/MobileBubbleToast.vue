@@ -78,7 +78,7 @@
             warning: 'material-symbols:exclamation-rounded',
             error: 'material-symbols:exclamation-rounded',
         };
-        return variants[props.variant] || variants.info;
+        return variants[props.variant] ?? 'material-symbols:info-i-rounded';
     });
 
     const title = computed(() => {

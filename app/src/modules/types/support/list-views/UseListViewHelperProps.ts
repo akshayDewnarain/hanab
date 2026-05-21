@@ -15,7 +15,6 @@ import type { ListViewActionType } from '@/modules/types/support/list-views/List
  * @property selectable - When true, rows can be selected for bulk operations.
  * @property disableRowNavigation - When true, clicking a row does not navigate to detail.
  * @property useURLQueries - When true, sync pagination/search/filters with the route query string.
- * @property alwaysShowPagination - When true, show pagination even when the list is empty.
  * @property staticFilters - Non-editable filters always merged into API requests (e.g. parent id for embedded lists).
  * @property customActions - Extra header buttons (route, modal, or callback); see {@link import('@/modules/types/support/list-views/ListViewActionType.ts').ListViewActionType ListViewActionType}.
  */
@@ -31,7 +30,6 @@ export interface UseListViewHelperProps {
     selectable?: boolean;
     disableRowNavigation?: boolean;
     useURLQueries?: boolean;
-    alwaysShowPagination?: boolean;
     staticFilters?: Record<string, unknown>;
     customActions?: ListViewActionType[];
 }

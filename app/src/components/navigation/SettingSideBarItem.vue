@@ -24,7 +24,7 @@
     const props = defineProps<SettingsSidebarItemProps>();
 
     function topSegment(path: string, base = '/admin'): string {
-        const [pathname] = path.split(/[?#]/);
+        const pathname = path.split(/[?#]/)[0] ?? '';
         const clean = pathname.replace(/\/+$/, '');
         const parts = clean.split('/').filter(Boolean);
         const baseParts = base.replace(/\/+$/, '').split('/').filter(Boolean);

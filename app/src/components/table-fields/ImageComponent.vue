@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
     import { computed, defineComponent } from 'vue';
-    import MediaURL from '@/models/general/MediaURL';
+    import type MediaURL from '@/modules/types/support/media/MediaURL.ts';
     import { Icon } from '@iconify/vue';
 
     defineComponent({

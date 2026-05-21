@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { defineComponent, defineProps, onMounted, reactive, ref } from 'vue';
+    import { defineComponent, onMounted, reactive, ref } from 'vue';
     import type { EntityModalProps } from '@/modules/types/support/modals/EntityModalProps.ts';
     import type Model from '@/modules/models/support/Model.ts';
     import type { ModelConstructor } from '@/modules/types/support/models/ModelConstructor.ts';

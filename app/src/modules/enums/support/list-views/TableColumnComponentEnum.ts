@@ -7,7 +7,6 @@ export enum TableColumnComponentEnum {
     ENUM = 'enum',
     IMAGE = 'image',
     WEEKDAY = 'weekday',
-    COMPONENT_PREVIEW = 'component-preview',
     SKILL_LABEL = 'skill-label',
     MULTI_SELECT = 'multi-select',
     CUSTOM = 'custom',

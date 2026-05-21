@@ -152,7 +152,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { onMounted, reactive, watch, withDefaults } from 'vue';
+    import { onMounted, reactive, watch } from 'vue';
     import TableColumn from '@/modules/models/support/list-views/TableColumn.ts';
     import FilterDropdown from '@/components/filters/list-views/FilterDropdown.vue';
     import { useI18n } from 'vue-i18n';

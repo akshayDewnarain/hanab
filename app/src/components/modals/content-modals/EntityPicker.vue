@@ -60,16 +60,17 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, defineProps, onMounted, ref, watch, withDefaults } from 'vue';
+    import { computed, defineComponent, onMounted, ref, watch } from 'vue';
     import type { EntityPickerProps } from '@/modules/types/support/modals/EntityPickerProps.ts';
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
     import { useDebounce } from '@/composables/useDebounce';
     import { useComponentState } from '@/composables/components/useComponentState';
     import SimpleListView from '@/components/list-views/SimpleListView.vue';
-    import TableColumn from '@/modules/models/TableColumn';
+    import type { TableColumnInterface } from '@/modules/types/support/list-views/TableColumnInterface.ts';
     import ListViewPagination from '@/components/pagination/ListViewPagination.vue';
-    import type { Meta, QueryParameters } from '@/modules/types/ResponseTypes';
+    import type { Meta } from '@/modules/types/support/responses/Meta.ts';
+    import type { QueryParameters } from '@/modules/types/support/responses/QueryParameters.ts';
 
     defineComponent({
         name: 'EntityPicker',
@@ -103,8 +104,8 @@
     const items = ref<unknown[]>([]);
     const searchQuery = ref('');
     const instance = new props.value.model();
-    const columns = ref<TableColumn[]>(instance.columns());
-    const localSelected = ref<number[]>([...props.value.ids]);
+    const columns = ref<TableColumnInterface[]>(instance.columns());
+    const localSelected = ref<number[]>([...(props.value.ids ?? [])]);
 
     /** Snapshot rows for selected ids so getData works across paginated pages. */
     const selectedEntityCache = ref<Record<number, unknown>>({});
@@ -231,10 +232,11 @@
     watch(
         () => props.value.ids,
         (ids) => {
-            localSelected.value = [...ids];
+            const nextIds = ids ?? [];
+            localSelected.value = [...nextIds];
             const cache = { ...selectedEntityCache.value };
             for (const id of Object.keys(cache).map(Number)) {
-                if (!ids.includes(id)) {
+                if (!nextIds.includes(id)) {
                     delete cache[id];
                 }
             }

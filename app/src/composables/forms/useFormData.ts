@@ -1,9 +1,9 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { FieldWidth } from '@/modules/enums/support/inputs/FieldWidth.ts';
 import { useFormValidator } from '@/composables/forms/useFormValidator';
-import type BaseInputField from '@/modules/models/forms/BaseInputField';
-import type { FormBuilder as FormDef, FormBuilderPanel } from '@/modules/types/FormBuilderTypes';
-import type Model from '@/modules/models/Model';
+import type BaseInputField from '@/modules/models/support/inputs/BaseInputField';
+import type { FormBuilder as FormDef, FormBuilderPanel } from '@/modules/types/support/form-builder/FormBuilder';
+import type Model from '@/modules/models/support/Model';
 import { useToastService } from '@/composables/useToastService';
 
 export function useFormData(
@@ -82,10 +82,11 @@ export function useFormData(
         const parts = path.split('.');
         let o = obj as Record<string, unknown>;
         for (let i = 0; i < parts.length - 1; i++) {
-            o[parts[i]] ??= {};
-            o = o[parts[i]] as Record<string, unknown>;
+            const key = parts[i]!;
+            o[key] ??= {};
+            o = o[key] as Record<string, unknown>;
         }
-        o[parts[parts.length - 1]] = value;
+        o[parts[parts.length - 1]!] = value;
     }
 
     /** Hydrate formData from instance input fields */

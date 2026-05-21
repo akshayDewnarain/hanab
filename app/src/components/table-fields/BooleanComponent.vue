@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { defineComponent, defineProps } from 'vue';
+    import { defineComponent } from 'vue';
     import { Icon } from '@iconify/vue';
 
     defineComponent({
