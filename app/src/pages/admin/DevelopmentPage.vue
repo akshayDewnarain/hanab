@@ -1,6 +1,8 @@
 <template>
     <div class="w-full h-full px-4 my-2 overflow-y-auto">
         <div class="grid grid-cols-12 gap-4 w-full items-start auto-rows-auto px-2">
+            <ThemeBuilder />
+
             <div class="col-span-12 w-full flex gap-4">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer" @click="downloadInvoice()">
                     <span>Download invoice</span>
@@ -75,6 +77,7 @@
     import { AxiosError } from 'axios';
     import { useToastService } from '@/composables/useToastService';
     import User from '@/models/auth/User.ts';
+    import ThemeBuilder from '@/components/development/ThemeBuilder.vue';
 
     defineComponent({
         name: 'DevelopmentPage',

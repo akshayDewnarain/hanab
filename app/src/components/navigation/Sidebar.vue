@@ -10,20 +10,32 @@
         <aside
             ref="asideRef"
             :class="sidebarCollapsed ? 'w-44' : 'w-14'"
-            class="relative bg-[var(--color-background)] small-scrollbar isolate z-10 flex h-full flex-shrink-0 flex-col gap-2 transition-all duration-200 ease-in-out"
+            class="relative bg-(--color-sidebar-background) small-scrollbar isolate z-10 flex h-full shrink-0 flex-col gap-2 transition-all duration-200 ease-in-out"
         >
-            <div class="bg-[var(--color-background)] relative flex h-full flex-1 flex-col justify-between">
+            <div class="relative flex h-full flex-1 flex-col justify-between bg-(--color-sidebar-background)">
                 <div class="flex flex-col items-center my-2">
                     <div class="w-full my-1 items-center relative group" @click="goToEmployees()">
                         <div
-                            class="flex items-center mx-2 gap-1 text-white rounded-md hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in relative cursor-pointer"
+                            class="relative mx-2 flex cursor-pointer items-center justify-center gap-1 rounded-md text-(--color-sidebar-item-text) transition-colors duration-200 ease-in hover:bg-(--color-sidebar-item-highlight-dark)"
                         >
-                            <img alt="Logo" class="w-10 h-10 p-0.5 bg-gray-50 rounded-sm border shadow-sm" src="/cesta-ca-logo.png" />
-                            <transition mode="out-in" name="fade">
-                                <span v-if="sidebarCollapsed" class="block truncate text-white font-bold">{{
-                                    'cest-ca'
-                                }}</span>
-                            </transition>
+                            <div
+                                :class="
+                                    sidebarCollapsed
+                                        ? 'w-full px-1.5 py-1'
+                                        : 'size-11 p-0.5'
+                                "
+                                class="flex items-center justify-center rounded-sm border border-slate-200/80 bg-white shadow-sm"
+                            >
+                                <img
+                                    alt="Hanab"
+                                    :class="
+                                        sidebarCollapsed
+                                            ? 'h-9 w-auto max-w-full object-contain'
+                                            : 'h-10 w-10 object-contain'
+                                    "
+                                    :src="sidebarCollapsed ? '/hanab-logo-long.png' : '/hanab-logo.png'"
+                                />
+                            </div>
                         </div>
                         <div
                             v-if="!sidebarCollapsed"
@@ -59,17 +71,17 @@
                     <div class="w-full my-1 items-center relative group">
                         <div
                             v-if="isInSettingsSection"
-                            class="absolute left-0 top-0 bottom-0 w-1 bg-white rounded"
+                            class="absolute top-0 bottom-0 left-0 w-1 rounded bg-(--color-sidebar-icon)"
                         ></div>
                         <div
                             :class="[
-                                'flex items-center mx-2 gap-1 text-white rounded-md hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in relative cursor-pointer',
-                                isInSettingsSection ? 'bg-[var(--color-highlight-dark)]' : '',
+                                'flex items-center mx-2 gap-1 text-(--color-sidebar-item-text) rounded-md hover:bg-(--color-sidebar-item-highlight-dark) transition-colors duration-200 ease-in relative cursor-pointer',
+                                isInSettingsSection ? 'bg-highlight-dark' : '',
                             ]"
                             @click="toggleSettings"
                         >
                             <div class="flex items-center p-2 rounded-md">
-                                <Icon class="w-6 h-6" icon="material-symbols:settings-rounded" />
+                                <Icon class="h-6 w-6 text-(--color-sidebar-icon)" icon="material-symbols:settings-rounded" />
                             </div>
                             <transition mode="out-in" name="fade">
                                 <span v-if="sidebarCollapsed" class="font-bold text-base">{{
@@ -89,11 +101,11 @@
                     </div>
                     <div class="w-full my-1 items-center relative group">
                         <div
-                            class="flex items-center mx-2 gap-1 text-white rounded-md hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in relative cursor-pointer"
+                            class="flex items-center mx-2 gap-1 text-(--color-sidebar-item-text) rounded-md hover:bg-(--color-sidebar-item-highlight-dark) transition-colors duration-200 ease-in relative cursor-pointer"
                             @click="logout()"
                         >
                             <div class="flex items-center p-2 rounded-md">
-                                <Icon class="w-6 h-6" icon="material-symbols:logout-rounded" />
+                                <Icon class="h-6 w-6 text-(--color-sidebar-icon)" icon="material-symbols:logout-rounded" />
                             </div>
                             <transition mode="out-in" name="fade">
                                 <span v-if="sidebarCollapsed" class="font-bold text-base">{{
@@ -112,12 +124,12 @@
                         </div>
                     </div>
                     <div class="w-full">
-                        <div class="min-h-px bg-white mx-1"></div>
+                        <div class="mx-1 min-h-px bg-[var(--color-sidebar-icon)]/25"></div>
                     </div>
                     <div class="w-full my-1 items-center relative">
                         <div class="w-full my-1 items-center relative" @click="toggleSideBar">
                             <div
-                                class="flex items-center mx-2 gap-1 text-white rounded-md hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in cursor-pointer"
+                                class="flex items-center mx-2 gap-1 text-[var(--color-sidebar-item-text)] rounded-md hover:bg-[var(--color-sidebar-item-highlight-dark)] transition-colors duration-200 ease-in cursor-pointer"
                             >
                                 <div
                                     :class="{
@@ -127,7 +139,7 @@
                                     class="flex items-center p-2 rounded-md transition-transform duration-200 ease-in-out"
                                 >
                                     <Icon
-                                        class="text-white w-6 h-6"
+                                        class="h-6 w-6 text-[var(--color-sidebar-icon)]"
                                         icon="material-symbols:keyboard-double-arrow-right-rounded"
                                     />
                                 </div>
@@ -174,16 +186,16 @@
                     class="fixed top-0 h-screen bg-white shadow-2xl pointer-events-auto overflow-y-auto small-scrollbar"
                 >
                     <div
-                        class="flex items-center bg-[var(--color-background)] justify-between px-4 py-3 border-b border-gray-200"
+                        class="flex items-center justify-between border-b border-gray-200 bg-[var(--color-sidebar-background)] px-4 py-3"
                     >
-                        <h3 class="text-base font-semibold text-white">{{ t('SETTINGS') }}</h3>
+                        <h3 class="text-base font-semibold text-[var(--color-sidebar-item-text)]">{{ t('SETTINGS') }}</h3>
                         <button
                             aria-label="Close"
-                            class="p-2 rounded hover:bg-[var(--color-highlight-dark)]"
+                            class="rounded p-2 hover:bg-[var(--color-sidebar-item-highlight-dark)]"
                             type="button"
                             @click="toggleSettings"
                         >
-                            <Icon class="w-5 h-5 text-white" icon="material-symbols:close-rounded" />
+                            <Icon class="h-5 w-5 text-[var(--color-sidebar-icon)]" icon="material-symbols:close-rounded" />
                         </button>
                     </div>
 

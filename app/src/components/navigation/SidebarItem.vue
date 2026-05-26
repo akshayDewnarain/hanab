@@ -1,17 +1,23 @@
 <template>
     <router-link :to="to" class="w-full my-1 items-center relative group">
-        <div v-if="isActive" class="absolute left-0 top-0 bottom-0 w-1 bg-white rounded"></div>
+        <div
+            v-if="isActive"
+            class="absolute top-0 bottom-0 left-0 w-1 rounded bg-[var(--color-sidebar-icon)]"
+        ></div>
 
         <div
-            :class="{ 'bg-[var(--color-highlight-dark)]': isActive && collapsed }"
-            class="flex items-center mx-2 gap-1 text-white rounded-md hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in relative"
+            :class="{ 'bg-[var(--color-sidebar-item-highlight-dark)]': isActive && collapsed }"
+            class="relative mx-2 flex items-center gap-1 rounded-md text-[var(--color-sidebar-item-text)] transition-colors duration-200 ease-in hover:bg-[var(--color-sidebar-item-highlight-dark)]"
         >
-            <div :class="{ 'bg-[var(--color-highlight-dark)]': isActive }" class="flex items-center p-2 rounded-md">
-                <Icon :icon="icon" class="w-6 h-6" />
+            <div
+                :class="{ 'bg-[var(--color-sidebar-item-highlight-dark)]': isActive }"
+                class="flex items-center rounded-md p-2"
+            >
+                <Icon :icon="icon" class="h-6 w-6 text-[var(--color-sidebar-icon)]" />
             </div>
 
             <transition mode="out-in" name="fade">
-                <span v-if="collapsed" class="font-bold text-base whitespace-nowrap">{{ t(label) }}</span>
+                <span v-if="collapsed" class="text-base font-bold whitespace-nowrap">{{ t(label) }}</span>
             </transition>
         </div>
 

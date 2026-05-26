@@ -1,3 +1,4 @@
+import '@/modules/types/support/navigation/RouteMeta.ts';
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.ts';
 
@@ -32,13 +33,13 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../layouts/AdminLayout.vue'),
         meta: {
             requiresAuth: true,
-            title: 'Admin',
+            titleKey: 'PAGE_TITLE_ADMIN',
         },
         children: [
             {
                 path: '',
                 name: 'admin-home',
-                meta: { requiresAuth: true, requiresScope: false, title: 'Admin' },
+                meta: { requiresAuth: true, requiresScope: false, titleKey: 'PAGE_TITLE_ADMIN' },
                 redirect: { name: 'admin-employees-overview' },
             },
             {
@@ -47,7 +48,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('../pages/admin/DevelopmentPage.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'Development',
+                    titleKey: 'PAGE_TITLE_DEVELOPMENT',
                 },
             },
             {
@@ -56,7 +57,7 @@ const routes: RouteRecordRaw[] = [
                 redirect: { name: 'admin-employees-overview' },
                 meta: {
                     requiresAuth: true,
-                    title: 'Dashboard',
+                    titleKey: 'PAGE_TITLE_DASHBOARD',
                 },
             },
             {
@@ -65,7 +66,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/EmployeeListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employees',
+                    titleKey: 'PAGE_TITLE_EMPLOYEES',
                 },
             },
             {
@@ -74,7 +75,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/EmployeeDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE',
                 },
             },
             {
@@ -83,7 +84,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/EmployeeRoleListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee roles',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_ROLES',
                 },
             },
             {
@@ -92,7 +93,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/EmployeeRoleDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee role',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_ROLE',
                 },
             },
             {
@@ -101,7 +102,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/EmployeeLocationListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee locations',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_LOCATIONS',
                 },
             },
             {
@@ -110,7 +111,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/EmployeeLocationDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee location',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_LOCATION',
                 },
             },
             {
@@ -119,7 +120,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/SkillListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'skills',
+                    titleKey: 'PAGE_TITLE_SKILLS',
                 },
             },
             {
@@ -128,7 +129,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/SkillDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'skill',
+                    titleKey: 'PAGE_TITLE_SKILL',
                 },
             },
             {
@@ -137,7 +138,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/CertificateListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'certificates',
+                    titleKey: 'PAGE_TITLE_CERTIFICATES',
                 },
             },
             {
@@ -146,7 +147,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/CertificateDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'certificate',
+                    titleKey: 'PAGE_TITLE_CERTIFICATE',
                 },
             },
             {
@@ -155,7 +156,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/EmployeeSkillListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee skills',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_SKILLS',
                 },
             },
             {
@@ -164,7 +165,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/EmployeeSkillDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee skill',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_SKILL',
                 },
             },
             {
@@ -173,7 +174,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/list-views/EmployeeCertificateListView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee certificates',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_CERTIFICATES',
                 },
             },
             {
@@ -182,14 +183,14 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/pages/admin/detail-views/EmployeeCertificateDetailView.vue'),
                 meta: {
                     requiresAuth: true,
-                    title: 'employee certificate',
+                    titleKey: 'PAGE_TITLE_EMPLOYEE_CERTIFICATE',
                 },
             },
             {
                 path: ':pathMatch(.*)*',
                 name: 'admin-fallback',
                 redirect: { name: 'admin-employees-overview' },
-                meta: { requiresAuth: true, title: 'Admin' },
+                meta: { requiresAuth: true, titleKey: 'PAGE_TITLE_ADMIN' },
             },
         ],
     },

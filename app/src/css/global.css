@@ -5,14 +5,14 @@
 @import 'tailwindcss/utilities';
 
 @theme {
-    --color-primary: #006a7c;
-    --color-primary-light: rgba(148, 72, 24, 0.2);
-    --color-secondary: #ffed4a;
+    --color-primary: #00416e;
+    --color-primary-light: rgba(0, 65, 110, 0.12);
+    --color-secondary: #e63223;
     --color-ternary: green;
     --color-ternary-highlight-dark: #015b01;
-    --color-accent: #e3342f;
-    --color-background: #006a7c;
-    --color-text: #2d3748;
+    --color-accent: #e63223;
+    --color-background: #00416e;
+    --color-text: #1f2937;
 
     --color-text-blocked: #888888;
     --color-bg-blocked: #ececec;
@@ -25,8 +25,13 @@
     --color-warning-light: rgba(218, 143, 0, 0.2);
     --color-success-light: rgba(11, 117, 0, 0.15);
 
-    --color-highlight-dark: #004651;
-    --color-highlight-light: #ffeee3;
+    --color-highlight-dark: #002d4d;
+    --color-highlight-light: #eaf3f8;
+
+    --color-sidebar-background: #b8241b;
+    --color-sidebar-icon: #ffffff;
+    --color-sidebar-item-text: #ffffff;
+    --color-sidebar-item-highlight-dark: #62120e;
 
     --font-family: 'Titillium Web', sans-serif;
     --line-height: 1.5;

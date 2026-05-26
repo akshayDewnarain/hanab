@@ -3,7 +3,7 @@
         <div class="flex items-center bg-gray-100 pr-2 rounded border border-gray-200 shadow">
             <div class="flex items-center">
                 <router-link
-                    class="bg-[var(--color-background)] px-2 py-1 rounded hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
+                    class="bg-[var(--color-primary)] px-2 py-1 rounded hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
                     to="/admin/dashboard"
                 >
                     <Icon class="w-6 h-6 text-white" icon="material-symbols:home-rounded" />

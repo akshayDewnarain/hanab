@@ -4,7 +4,7 @@
             <div class="flex px-4">
                 <div
                     v-if="displayHeader"
-                    class="bg-[var(--color-background)] rounded border border-gray-200 shadow px-2 py-1"
+                    class="bg-(--color-primary) rounded border border-gray-200 shadow px-2 py-1"
                 >
                     <span class="text-xl font-bold text-white">
                         {{
@@ -20,7 +20,7 @@
                     <div
                         v-for="(customAction, index) in props.customActions || []"
                         :key="index"
-                        class="flex items-center justify-center bg-[var(--color-background)] border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
+                        class="flex items-center justify-center bg-(--color-primary)border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
                         @click="handleCustomAction(customAction)"
                     >
                         <Icon :icon="customAction.icon" class="text-white w-4 h-4" />
@@ -28,7 +28,7 @@
                     </div>
                     <div
                         v-if="enableDefaultActions"
-                        class="flex items-center justify-center bg-[var(--color-background)] border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
+                        class="flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
                         @click="openModal"
                     >
                         <Icon class="text-white w-4 h-4" icon="material-symbols:add-2-rounded" />
@@ -52,7 +52,7 @@
             <div class="flex items-center">
                 <div class="flex p-2 gap-4">
                     <div
-                        class="flex items-center justify-center bg-[var(--color-background)] border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-sm"
+                        class="flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-sm"
                     >
                         <Icon class="text-white w-4 h-4" icon="material-symbols:refresh-rounded" />
                         <span class="text-sm text-white mx-2">{{ t('TABLE_REFRESH') }}</span>
@@ -60,7 +60,7 @@
 
                     <div
                         v-if="displayTableConfiguration"
-                        class="flex items-center justify-center bg-[var(--color-background)] border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-sm"
+                        class="flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-sm"
                         @click="openTableConfiguration()"
                     >
                         <Icon class="text-white w-4 h-4" icon="material-symbols:tools-wrench-outline-rounded" />
@@ -76,7 +76,7 @@
                         @input="handleInputChange"
                     />
                     <div
-                        class="absolute right-0 h-full flex items-center justify-center bg-[var(--color-background)] border border-gray-200 rounded-r px-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
+                        class="absolute right-0 h-full flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded-r px-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
                     >
                         <Icon class="text-white w-4 h-4" icon="material-symbols:search" />
                     </div>

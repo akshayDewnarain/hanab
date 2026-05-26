@@ -8,6 +8,7 @@ import ModalServicePlugin from '@/plugins/ModalServicePlugin.ts';
 import i18n from '@/i18n';
 import Toast, { type PluginOptions } from 'vue-toastification';
 import ToastServicePlugin from '@/plugins/ToastServicePlugin.ts';
+import { useThemeStore } from '@/stores/theme';
 import 'vue-toastification/dist/index.css';
 
 
@@ -27,7 +28,10 @@ const options: PluginOptions = {
     },
 };
 
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
+useThemeStore(pinia).bootFromStorage();
+
 app.use(router);
 app.use(i18n);
 
