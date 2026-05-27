@@ -122,9 +122,19 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
 #app {
     height: 100dvh;
-    width: 100vw;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .Vue-Toastification__container.top-right {

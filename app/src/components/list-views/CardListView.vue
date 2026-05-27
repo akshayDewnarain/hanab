@@ -1,16 +1,26 @@
 <template>
-    <div class="flex h-full w-full flex-col p-4">
+    <div
+        class="flex w-full flex-col p-0 sm:h-full sm:p-4"
+        :class="props.isMobileLayout ? 'h-full min-h-0' : 'h-full'"
+    >
         <!-- Single list-view surface: cards + integrated filter column -->
-        <div class="flex min-h-0 flex-1 overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-sm">
+        <div
+            class="flex min-h-0 flex-1 overflow-hidden"
+            :class="
+                props.isMobileLayout
+                    ? ''
+                    : 'sm:rounded-xl sm:border sm:border-slate-200/90 sm:bg-white sm:shadow-sm'
+            "
+        >
             <!-- Cards -->
             <div class="flex min-w-0 flex-1 flex-col">
                 <div class="relative min-h-0 flex-1 overflow-hidden">
-                    <div class="h-full overflow-auto bg-slate-50/80">
+                    <div class="h-full overflow-auto bg-transparent sm:bg-slate-50/80">
                         <Transition mode="out-in" name="card-fade">
                             <div
                                 v-if="isLoading"
                                 key="loading"
-                                class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                                class="grid grid-cols-1 gap-3 p-2 sm:grid-cols-2 sm:gap-5 sm:p-5 lg:grid-cols-3 xl:grid-cols-4"
                             >
                                 <div
                                     v-for="index in 8"
@@ -30,7 +40,7 @@
                             <div
                                 v-else-if="items.length"
                                 key="content"
-                                class="grid grid-cols-1 gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                                class="grid grid-cols-1 gap-3 p-2 sm:grid-cols-2 sm:gap-5 sm:p-5 lg:grid-cols-3 xl:grid-cols-4"
                             >
                                 <CardListItem
                                     v-for="item in items"
@@ -65,11 +75,10 @@
                         </Transition>
                     </div>
                 </div>
-
             </div>
 
             <!-- Filter column (inside list view) -->
-            <div class="flex h-full min-h-0 w-72 shrink-0 flex-col gap-3 bg-slate-50/90 p-3 lg:w-80">
+            <div class="hidden h-full min-h-0 w-72 shrink-0 flex-col gap-3 bg-slate-50/90 p-3 lg:flex lg:w-80">
                 <!-- Actions card -->
                 <section class="w-full shrink-0 space-y-3 rounded border border-gray-200 bg-white p-3 shadow-md">
                     <button
@@ -122,7 +131,9 @@
                     class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded border border-gray-200 bg-white shadow-md"
                 >
                     <div class="shrink-0 space-y-3 border-b border-slate-100 px-4 pb-4 pt-4">
-                        <label class="sr-only" for="card-list-sidebar-search">{{ t('GENERAL_SEARCH_PLACEHOLDER') }}</label>
+                        <label class="sr-only" for="card-list-sidebar-search">{{
+                            t('GENERAL_SEARCH_PLACEHOLDER')
+                        }}</label>
                         <div class="relative">
                             <input
                                 id="card-list-sidebar-search"
@@ -182,6 +193,81 @@
                 </section>
             </div>
         </div>
+        <MobileFiltersOverlay
+            :open="props.mobileFiltersOpen"
+            @close="emit('update:mobileFiltersOpen', false)"
+        >
+            <template #title>{{ t('FILTER_QUICK_FILTERS') }}</template>
+
+            <div class="space-y-4 p-4">
+                <section class="space-y-3 rounded border border-slate-200 bg-white p-3 shadow-sm">
+                    <label class="sr-only" for="mobile-card-list-filter-search">{{ t('GENERAL_SEARCH_PLACEHOLDER') }}</label>
+                    <div class="relative">
+                        <input
+                            id="mobile-card-list-filter-search"
+                            v-model="searchQuery"
+                            :placeholder="t('GENERAL_SEARCH_PLACEHOLDER')"
+                            class="input-base w-full rounded-lg border-slate-200 bg-white px-3 py-2.5 pr-10 text-sm shadow-sm"
+                            type="text"
+                            @input="handleInputChange"
+                        />
+                        <Icon
+                            class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                            icon="material-symbols:search-rounded"
+                        />
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="text-sm font-medium tabular-nums text-slate-600">
+                            {{ t('CARD_LIST_RESULTS_COUNT', { count: meta.total }) }}
+                        </p>
+                        <button
+                            v-if="filterCount > 0"
+                            type="button"
+                            class="inline-flex shrink-0 cursor-pointer items-center gap-1 text-xs font-semibold text-[var(--color-primary)] hover:underline"
+                            @click="resetFilters"
+                        >
+                            <Icon class="size-3.5" icon="material-symbols:filter-alt-off-outline-rounded" />
+                            {{ t('FILTER_RESET') }}
+                        </button>
+                    </div>
+                </section>
+
+                <section class="min-h-[30vh] rounded border border-slate-200 bg-white p-3 shadow-sm">
+                    <QuickFilters
+                        :key="quickFilterKey"
+                        layout="sidebar"
+                        :entity="props.entity"
+                        :filters="filters"
+                        :model="props.model"
+                        @update:filters="applyFilters"
+                        @update:mounted="onQuickFiltersMounted"
+                    />
+                </section>
+            </div>
+
+            <template #footer>
+                <div class="space-y-3">
+                    <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
+                        <ListViewPagination
+                            compact
+                            :current="meta.current_page"
+                            :per-page="meta.per_page"
+                            :total="meta.total"
+                            @update:currentPage="handlePageChange"
+                            @update:perPage="handlePerPageChange"
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        class="w-full rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white"
+                        @click="emit('update:mobileFiltersOpen', false)"
+                    >
+                        {{ t('GENERAL_DONE') }}
+                    </button>
+                </div>
+            </template>
+        </MobileFiltersOverlay>
     </div>
 </template>
 
@@ -201,6 +287,7 @@
     import ListViewPagination from '@/components/pagination/ListViewPagination.vue';
     import QuickFilters from '@/components/filters/list-views/QuickFilters.vue';
     import Skeleton from '@/components/skeleton/Skeleton.vue';
+import MobileFiltersOverlay from '@/components/mobile/MobileFiltersOverlay.vue';
 
     defineOptions({
         name: 'CardListView',
@@ -210,6 +297,8 @@
         defineProps<
             UseListViewHelperProps & {
                 cardConfig: CardListConfig;
+                isMobileLayout?: boolean;
+                mobileFiltersOpen?: boolean;
             }
         >(),
         {
@@ -220,8 +309,14 @@
             selectable: false,
             disableRowNavigation: false,
             useURLQueries: true,
+            isMobileLayout: false,
+            mobileFiltersOpen: false,
         },
     );
+
+    const emit = defineEmits<{
+        (e: 'update:mobileFiltersOpen', value: boolean): void;
+    }>();
 
     const { t } = useI18n();
     const router = useRouter();

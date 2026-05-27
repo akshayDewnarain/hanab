@@ -64,7 +64,7 @@
                             <div class="relative">
                                 <Icon
                                     class="pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-[var(--color-primary)]"
-                                    icon="material-symbols:lock-outline-rounded"
+                                    icon="material-symbols:key-outline-rounded"
                                 />
                                 <input
                                     id="login-password"
