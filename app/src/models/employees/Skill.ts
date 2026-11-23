@@ -16,7 +16,7 @@ import SkillDetailHelpPanel from '@/components/forms/custom/SkillDetailHelpPanel
 
 const HEX_COLOR_PATTERN = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
-const SKILL_IDENTITY_FIELD_NAMES = ['is_active', 'name', 'code', 'category'] as const;
+const SKILL_IDENTITY_FIELD_NAMES = ['is_active', 'name', 'code', 'synonyms', 'category'] as const;
 const SKILL_DESCRIPTION_FIELD_NAMES = ['description'] as const;
 const SKILL_LABEL_COLOR_FIELD_NAMES = [
     'label_background_color',
@@ -85,6 +85,10 @@ function skillDetailHelpField(): CustomField {
 export default class Skill extends Model<SkillRecord> {
     constructor() {
         super('skills', 'skill');
+    }
+
+    override transferKey(): string {
+        return 'skills';
     }
 
     override columns(): TableColumn[] {
@@ -188,6 +192,12 @@ export default class Skill extends Model<SkillRecord> {
                 placeholder: 'SKILL_CODE_PLACEHOLDER',
                 validators: { maxLength: 32 },
                 width: FieldWidth.HALF,
+            }),
+            new InputField({
+                name: 'synonyms',
+                label: 'EXPERTISE_SYNONYMS',
+                required: false,
+                placeholder: 'EXPERTISE_SYNONYMS_PLACEHOLDER',
             }),
             new SelectField({
                 name: 'category',

@@ -18,9 +18,16 @@ class EmployeeData extends BaseData
         public bool $is_active,
         public ?int $id = null,
         public ?string $phone = null,
+        public ?string $business_email = null,
+        public ?string $business_phone = null,
+        public ?string $initials = null,
         public ?string $start_date = null,
+        public ?string $date_of_birth = null,
         public ?UploadedFile $image = null,
         public ?array $skill_ids = null,
         public ?array $certificate_ids = null,
+        public ?int $manager_id = null,
+        public ?int $organization_level_id = null,
+        public ?string $introduction = null,
     ) {}
 }

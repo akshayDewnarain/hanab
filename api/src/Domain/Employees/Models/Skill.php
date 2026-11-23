@@ -35,6 +35,7 @@ class Skill extends Model
     protected $fillable = [
         'name',
         'code',
+        'synonyms',
         'label_background_color',
         'label_text_color',
         'label_border_color',
@@ -45,6 +46,7 @@ class Skill extends Model
 
     /** {@inheritdoc} */
     protected $casts = [
+        'synonyms' => 'array',
         'is_active' => 'boolean',
     ];
 

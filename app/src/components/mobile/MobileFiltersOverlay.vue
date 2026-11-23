@@ -22,15 +22,17 @@
             >
                 <section
                     v-if="open"
-                    class="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white"
+                    class="flex h-full min-h-0 w-full flex-col overflow-hidden bg-list-surface text-list-text"
                 >
-                    <header class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                        <h2 class="text-base font-semibold text-slate-900">
+                    <header
+                        class="flex shrink-0 items-center justify-between bg-gradient-to-r from-sidebar-background-gradient-from via-sidebar-background to-sidebar-background-gradient-to px-4 py-3 text-sidebar-item-text"
+                    >
+                        <h2 class="text-base font-semibold text-sidebar-item-text">
                             <slot name="title">Filters</slot>
                         </h2>
                         <button
                             type="button"
-                            class="inline-flex size-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600"
+                            class="inline-flex size-9 items-center justify-center rounded-lg border border-sidebar-border-highlight bg-sidebar-hover-background text-sidebar-icon transition hover:brightness-110"
                             @click="$emit('close')"
                         >
                             <Icon class="size-5" icon="material-symbols:close-rounded" />
@@ -41,7 +43,7 @@
                         <slot />
                     </div>
 
-                    <footer class="border-t border-slate-200 bg-white px-4 py-3">
+                    <footer class="border-t border-list-border bg-list-surface px-4 py-3">
                         <slot name="footer" />
                     </footer>
                 </section>

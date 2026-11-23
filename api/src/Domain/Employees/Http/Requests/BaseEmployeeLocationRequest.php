@@ -39,6 +39,18 @@ abstract class BaseEmployeeLocationRequest extends BaseModelRequest
                 'required',
                 'boolean',
             ],
+            'latitude' => [
+                'nullable',
+                'numeric',
+                'between:-90,90',
+                'required_with:longitude',
+            ],
+            'longitude' => [
+                'nullable',
+                'numeric',
+                'between:-180,180',
+                'required_with:latitude',
+            ],
         ];
     }
 

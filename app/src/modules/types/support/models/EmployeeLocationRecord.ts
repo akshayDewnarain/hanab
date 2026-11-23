@@ -7,5 +7,7 @@ export type EmployeeLocationRecord = {
     updated_at: string;
     name: string;
     cluster_name: string | null;
+    latitude: number | null;
+    longitude: number | null;
     is_active: boolean;
 };

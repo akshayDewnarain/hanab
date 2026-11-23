@@ -3,6 +3,7 @@
 namespace Domain\Employees\Http\Resources;
 
 use Domain\Employees\Models\Certificate;
+use Domain\Employees\Support\ExpertiseTerms;
 use Domain\Support\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,8 @@ abstract class CertificateResource extends BaseResource
             'description',
             'requires_expiry_date',
             'is_active',
+        ], [
+            'synonyms' => ExpertiseTerms::stringify($this->resource->synonyms),
         ]);
     }
 }

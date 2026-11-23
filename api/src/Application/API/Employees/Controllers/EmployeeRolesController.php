@@ -7,6 +7,7 @@ use Application\API\Employees\Requests\QueryBuilder\EmployeeRoleQueryRequest;
 use Application\API\Employees\Requests\UpdateEmployeeRoleRequest;
 use Application\API\Employees\Resources\EmployeeRoleResource;
 use Application\API\Employees\Resources\EmployeeRoleResourceCollection;
+use Domain\Auth\Services\PermissionService;
 use Domain\Employees\Actions\CreateEmployeeRoleAction;
 use Domain\Employees\Actions\DeleteEmployeeRoleAction;
 use Domain\Employees\Actions\UpdateEmployeeRoleAction;
@@ -41,6 +42,15 @@ class EmployeeRolesController extends BaseAPICrudController
     public function destroy(EmployeeRole $employee_role): JsonResponse
     {
         return $this->handleDestroy($employee_role);
+    }
+
+    protected function permissions(): array
+    {
+        return [
+            'create' => PermissionService::createPermission(EmployeeRole::class),
+            'update' => PermissionService::updatePermission(EmployeeRole::class),
+            'delete' => PermissionService::deletePermission(EmployeeRole::class),
+        ];
     }
 
     protected function modelName(): string

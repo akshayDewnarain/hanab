@@ -30,6 +30,7 @@ export function useDropdown(onBlur?: () => void, opts: Options = {}) {
     const dropdownStyles = ref<Record<string, string>>({ zIndex: '1000' });
     /** Scroll containers between trigger and viewport (teleported fixed menus must reposition on these). */
     const scrollAncestorEls: HTMLElement[] = [];
+    let suppressOutside = false;
 
     function unregisterActive() {
         if (activeDropdownClose === closeThisInstance) {
@@ -68,6 +69,7 @@ export function useDropdown(onBlur?: () => void, opts: Options = {}) {
 
     async function openDropdown() {
         if (isOpen.value) return;
+        suppressOutside = true;
         activeDropdownClose?.();
         activeDropdownClose = closeThisInstance;
         isOpen.value = true;
@@ -101,6 +103,10 @@ export function useDropdown(onBlur?: () => void, opts: Options = {}) {
     }
 
     function handleClickOutside(event: MouseEvent) {
+        if (suppressOutside) {
+            suppressOutside = false;
+            return;
+        }
         const target = event.target as Node;
 
         const clickedInsideTrigger = triggerRef.value?.contains(target);

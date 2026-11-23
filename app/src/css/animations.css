@@ -1,3 +1,71 @@
-/*
-Todo
- */
+.ui-rich-text .ProseMirror {
+    min-height: var(--ui-rich-text-min-height, 8rem);
+    outline: none;
+    box-shadow: none;
+}
+
+.ui-rich-text .ProseMirror:focus,
+.ui-rich-text .ProseMirror:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+.notification-bell__icon {
+    transform-origin: top center;
+}
+
+.notification-bell--unread .notification-bell__icon {
+    animation: notification-bell-ring 2.4s ease-in-out infinite;
+}
+
+.notification-bell__badge {
+    animation: notification-bell-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes notification-bell-ring {
+    0%,
+    12%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    2% {
+        transform: rotate(14deg);
+    }
+
+    4% {
+        transform: rotate(-12deg);
+    }
+
+    6% {
+        transform: rotate(10deg);
+    }
+
+    8% {
+        transform: rotate(-8deg);
+    }
+
+    10% {
+        transform: rotate(4deg);
+    }
+}
+
+@keyframes notification-bell-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-topbar-notification-badge, #0284c7) 45%, transparent);
+    }
+
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-topbar-notification-badge, #0284c7) 0%, transparent);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .notification-bell--unread .notification-bell__icon,
+    .notification-bell__badge {
+        animation: none;
+    }
+}

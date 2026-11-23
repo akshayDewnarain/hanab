@@ -14,6 +14,8 @@ declare module 'vue-router' {
         requiresScope?: boolean;
         titleKey?: string;
         title?: string;
+        /** `segment` uses the URL piece. `false` omits the crumb. A string is a fixed label. */
+        breadcrumb?: string | false | 'segment';
     }
 }
 

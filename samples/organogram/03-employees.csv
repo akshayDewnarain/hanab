@@ -1,0 +1,25 @@
+employee_number;first_name;last_name;initials;email;phone;role;location;employment_type;start_date;is_active;manager_employee_number
+ORG-1001;Sara;de Vries;S.V.;sara.devries@example.test;+31610001001;Directeur;Utrecht;internal;2020-01-06;true;
+ORG-1101;Noah;Bakker;N.B.;noah.bakker@example.test;+31610001101;Regiodirecteur;Groningen;internal;2020-03-02;true;ORG-1001
+ORG-1102;Emma;Visser;E.V.;emma.visser@example.test;+31610001102;Regiodirecteur;Utrecht;internal;2020-03-02;true;ORG-1001
+ORG-1103;Lucas;Janssen;L.J.;lucas.janssen@example.test;+31610001103;Regiodirecteur;Eindhoven;internal;2020-04-01;true;ORG-1001
+ORG-1201;Milan;de Boer;M.B.;milan.deboer@example.test;+31610001201;Hoofd uitvoerder;Groningen;internal;2021-01-11;true;ORG-1101
+ORG-1202;Sophie;Meijer;S.M.;sophie.meijer@example.test;+31610001202;Hoofd uitvoerder;Utrecht;internal;2021-02-01;true;ORG-1102
+ORG-1203;Daan;Hendriks;D.H.;daan.hendriks@example.test;+31610001203;Hoofd uitvoerder;Den Haag;internal;2021-02-15;true;ORG-1102
+ORG-1204;Lotte;van Dijk;L.D.;lotte.vandijk@example.test;+31610001204;Hoofd uitvoerder;Eindhoven;internal;2021-03-01;true;ORG-1103
+ORG-1301;Finn;Mulder;F.M.;finn.mulder@example.test;+31610001301;Uitvoerder;Groningen;internal;2022-01-10;true;ORG-1201
+ORG-1302;Isa;de Groot;I.G.;isa.degroot@example.test;+31610001302;Uitvoerder;Utrecht;internal;2022-02-07;true;ORG-1202
+ORG-1303;Sem;Bos;S.B.;sem.bos@example.test;+31610001303;Uitvoerder;Den Haag;internal;2022-03-14;true;ORG-1203
+ORG-1304;Noor;Kuipers;N.K.;noor.kuipers@example.test;+31610001304;Uitvoerder;Eindhoven;internal;2022-04-04;true;ORG-1204
+ORG-1401;Teun;Smit;T.S.;teun.smit@example.test;+31610001401;Monteur;Groningen;internal;2023-01-09;true;ORG-1301
+ORG-1402;Lisa;de Jong;L.J.;lisa.dejong@example.test;;Monteur;Groningen;external;2023-05-01;true;ORG-1301
+ORG-1403;Bram;Vos;B.V.;bram.vos@example.test;;Planner;Groningen;internal;2023-02-13;true;ORG-1301
+ORG-1404;Anna;Peters;A.P.;anna.peters@example.test;;Monteur;Utrecht;internal;2023-03-06;true;ORG-1302
+ORG-1405;Ruben;Dekker;R.D.;ruben.dekker@example.test;;Calculator;Utrecht;internal;2023-06-19;true;ORG-1302
+ORG-1406;Eva;Willems;E.W.;eva.willems@example.test;;Monteur;Den Haag;internal;2024-01-08;true;ORG-1303
+ORG-1407;Tim;Hoekstra;T.H.;tim.hoekstra@example.test;;Administrateur;Den Haag;internal;2024-02-12;true;ORG-1303
+ORG-1408;Fleur;Brouwer;F.B.;fleur.brouwer@example.test;;Monteur;Eindhoven;internal;2024-03-04;true;ORG-1304
+ORG-1409;Jesse;van Leeuwen;J.L.;jesse.vanleeuwen@example.test;;Monteur;Eindhoven;external;2024-04-15;true;ORG-1304
+ORG-1410;Sanne;Prins;S.P.;sanne.prins@example.test;;Planner;Eindhoven;internal;2024-05-06;true;ORG-1304
+ORG-1501;Mark;de Wit;M.W.;mark.dewit@example.test;;Uitvoerder;Utrecht;internal;2019-09-02;false;ORG-1001
+ORG-1502;Iris;Koning;I.K.;iris.koning@example.test;;Monteur;Utrecht;internal;2024-08-01;true;ORG-1501

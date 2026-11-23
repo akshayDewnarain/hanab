@@ -13,8 +13,20 @@ export const employeeCardConfig: CardListConfig = {
     fields: [
         {
             key: 'phone',
-            label: 'GENERAL_PHONE',
+            label: 'EMPLOYEE_PERSONAL_PHONE',
             icon: 'material-symbols:phone-in-talk-outline-rounded',
+            hideEmpty: true,
+        },
+        {
+            key: 'business_email',
+            label: 'EMPLOYEE_BUSINESS_EMAIL',
+            icon: 'material-symbols:mail-outline-rounded',
+            hideEmpty: true,
+        },
+        {
+            key: 'business_phone',
+            label: 'EMPLOYEE_BUSINESS_PHONE',
+            icon: 'material-symbols:call-outline-rounded',
             hideEmpty: true,
         },
         {

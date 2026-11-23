@@ -113,7 +113,10 @@ export function useWrapperModalComponent(modal: ModalProps, component: Ref<Parti
     }
 
     function handleClickOutside(event: MouseEvent) {
-        const target = event.target as Node;
+        const target = event.target;
+        if (!(target instanceof Node) || !target.isConnected) {
+            return;
+        }
         const clickedInsideModal = modalRef.value?.contains(target);
         const clickedInsideDropdown = document.querySelector('[data-dropdown-open="true"]')?.contains(target);
 

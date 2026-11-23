@@ -11,6 +11,7 @@ use Domain\Employees\Actions\CreateEmployeeLocationAction;
 use Domain\Employees\Actions\DeleteEmployeeLocationAction;
 use Domain\Employees\Actions\UpdateEmployeeLocationAction;
 use Domain\Employees\DataTransferObjects\EmployeeLocationData;
+use Domain\Auth\Services\PermissionService;
 use Domain\Employees\Helpers\EmployeeLocationHelper;
 use Domain\Employees\Models\EmployeeLocation;
 use Domain\Support\Http\Controllers\BaseAPICrudController;
@@ -41,6 +42,15 @@ class EmployeeLocationsController extends BaseAPICrudController
     public function destroy(EmployeeLocation $employee_location): JsonResponse
     {
         return $this->handleDestroy($employee_location);
+    }
+
+    protected function permissions(): array
+    {
+        return [
+            'create' => PermissionService::createPermission(EmployeeLocation::class),
+            'update' => PermissionService::updatePermission(EmployeeLocation::class),
+            'delete' => PermissionService::deletePermission(EmployeeLocation::class),
+        ];
     }
 
     protected function modelName(): string

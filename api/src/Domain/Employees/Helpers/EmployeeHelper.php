@@ -12,17 +12,22 @@ class EmployeeHelper extends BaseHelper
         return [
             'first_name',
             'last_name',
+            'initials',
             'email',
             'phone',
+            'business_email',
+            'business_phone',
             'employee_number',
             'employment_type',
             'skills' => [
                 'name',
                 'code',
+                'synonyms',
             ],
             'certificates' => [
                 'name',
                 'code',
+                'synonyms',
             ],
             'employeeRole' => [
                 'name',
@@ -39,6 +44,7 @@ class EmployeeHelper extends BaseHelper
         return array_merge(parent::sortable(), [
             'first_name',
             'last_name',
+            'initials',
             'email',
             'employee_number',
             'employment_type',
@@ -54,6 +60,7 @@ class EmployeeHelper extends BaseHelper
         return array_merge(parent::filterable(), [
             AllowedFilter::partial('first_name'),
             AllowedFilter::partial('last_name'),
+            AllowedFilter::partial('initials'),
             AllowedFilter::partial('email'),
             AllowedFilter::partial('employee_number'),
             AllowedFilter::exact('employment_type'),
@@ -64,6 +71,11 @@ class EmployeeHelper extends BaseHelper
             AllowedFilter::scope('employee_location_name'),
             AllowedFilter::scope('skill_ids'),
             AllowedFilter::scope('certificate_ids'),
+            AllowedFilter::scope('missing_skill'),
+            AllowedFilter::scope('missing_certificate'),
+            AllowedFilter::scope('missing_location'),
+            AllowedFilter::scope('missing_email'),
+            AllowedFilter::scope('missing_phone'),
         ]);
     }
 
@@ -72,6 +84,8 @@ class EmployeeHelper extends BaseHelper
         return [
             'employeeRole',
             'employeeLocation',
+            'manager.employeeRole',
+            'organizationLevel',
             'skills',
             'certificates',
             'employeeSkills',

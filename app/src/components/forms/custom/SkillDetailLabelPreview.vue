@@ -16,12 +16,14 @@
         <div
             class="mt-4 flex flex-col items-center justify-center rounded-md border border-dashed border-slate-200/90 bg-gradient-to-br from-slate-50 to-white px-4 py-8"
         >
-            <span
-                class="inline-flex max-w-full items-center rounded-full border px-3 py-1.5 text-sm font-semibold shadow-sm"
-                :style="chipStyle"
-            >
-                <span class="truncate">{{ displayText }}</span>
-            </span>
+            <ColorLabel
+                size="md"
+                :label="displayText"
+                :description="fullName"
+                :background-color="previewRow.label_background_color"
+                :text-color="previewRow.label_text_color"
+                :border-color="previewRow.label_border_color"
+            />
             <p v-if="categoryLabel" class="mt-3 text-xs font-medium text-slate-600">
                 {{ categoryLabel }}
             </p>
@@ -37,7 +39,7 @@
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
     import type { BaseInputFieldOptions } from '@/modules/types/support/inputs/BaseInputFieldOptions.ts';
-    import { relationRowChipStyle } from '@/modules/utils/groupedRelationPicker.ts';
+    import { ColorLabel } from '@freelance/vue-ui';
     import type { CategoryGroupedRelationRow } from '@/modules/types/support/forms/CategoryGroupedRelationRow.ts';
 
     const props = defineProps<{
@@ -76,7 +78,12 @@
         return label || t('SKILL_DETAIL_PREVIEW_PLACEHOLDER');
     });
 
-    const chipStyle = computed(() => relationRowChipStyle(previewRow.value));
+    const fullName = computed(() => {
+        const name = previewRow.value.name?.trim() ?? '';
+        const code = previewRow.value.code?.trim() ?? '';
+        if (!name || !code || name.toLowerCase() === code.toLowerCase()) return '';
+        return name;
+    });
 
     const categoryLabel = computed(() => {
         const cat = previewRow.value.category;

@@ -3,6 +3,7 @@
 namespace Domain\Employees\Http\Resources;
 
 use Domain\Employees\Models\Skill;
+use Domain\Employees\Support\ExpertiseTerms;
 use Domain\Support\Http\Resources\BaseResource;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,8 @@ abstract class SkillResource extends BaseResource
             'category',
             'description',
             'is_active',
+        ], [
+            'synonyms' => ExpertiseTerms::stringify($this->resource->synonyms),
         ]);
     }
 }

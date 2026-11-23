@@ -35,6 +35,7 @@ class Certificate extends Model
     protected $fillable = [
         'name',
         'code',
+        'synonyms',
         'label_background_color',
         'label_text_color',
         'label_border_color',
@@ -46,6 +47,7 @@ class Certificate extends Model
 
     /** {@inheritdoc} */
     protected $casts = [
+        'synonyms' => 'array',
         'requires_expiry_date' => 'boolean',
         'is_active' => 'boolean',
     ];

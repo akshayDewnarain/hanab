@@ -34,12 +34,16 @@ class EmployeeLocation extends Model
     protected $fillable = [
         'name',
         'cluster_name',
+        'latitude',
+        'longitude',
         'is_active',
     ];
 
     /** {@inheritdoc} */
     protected $casts = [
         'is_active' => 'boolean',
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     /** {@inheritdoc} */

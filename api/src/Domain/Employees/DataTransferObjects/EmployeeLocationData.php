@@ -10,6 +10,8 @@ class EmployeeLocationData extends BaseData
         public string $name,
         public string $cluster_name,
         public bool $is_active,
+        public ?float $latitude = null,
+        public ?float $longitude = null,
         public ?int $id = null,
     ) {}
 }

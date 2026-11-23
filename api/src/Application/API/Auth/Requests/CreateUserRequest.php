@@ -18,12 +18,8 @@ class CreateUserRequest extends BaseUserRequest
 
         return [
             ...parent::rules(),
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-            ],
+            'password' => ['prohibited'],
+            'password_confirmation' => ['prohibited'],
             'email' => [
                 'required',
                 'email',
@@ -35,6 +31,18 @@ class CreateUserRequest extends BaseUserRequest
                 'required',
                 'integer',
                 $roleExistsRule,
+            ],
+            'is_internal_account' => ['prohibited'],
+            'employee_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('employees', 'id'),
+                Rule::unique('users', 'employee_id'),
+            ],
+            'name' => [
+                'nullable',
+                'string',
+                'max:255',
             ],
         ];
     }

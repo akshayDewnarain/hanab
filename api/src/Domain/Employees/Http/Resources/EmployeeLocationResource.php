@@ -14,6 +14,8 @@ abstract class EmployeeLocationResource extends BaseResource
         return $this->withAttributes([
             'name',
             'cluster_name',
+            'latitude',
+            'longitude',
             'is_active',
         ]);
     }

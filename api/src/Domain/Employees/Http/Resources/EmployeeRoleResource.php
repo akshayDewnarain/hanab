@@ -15,6 +15,9 @@ abstract class EmployeeRoleResource extends BaseResource
             'name',
             'description',
             'is_active',
+            'parent_id',
+            'sort_order',
+            'organization_level_id',
         ]);
     }
 }

@@ -7,6 +7,7 @@ export type CertificateRecord = {
     updated_at: string;
     name: string;
     code: string | null;
+    synonyms: string | null;
     label_background_color: string | null;
     label_text_color: string | null;
     label_border_color: string | null;

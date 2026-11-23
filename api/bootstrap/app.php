@@ -20,8 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function(Middleware $middleware): void {
-        $middleware->api(append: [
+        $middleware->api(prepend: [
+            \Application\API\Auth\Middleware\RememberedSessionLifetime::class,
+        ], append: [
             EnsureFrontendRequestsAreStateful::class,
+        ]);
+        $middleware->alias([
+            'security.complete' => \Application\API\Auth\Middleware\EnsureSecurityComplete::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

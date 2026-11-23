@@ -15,6 +15,11 @@ abstract class UserResource extends BaseResource
             'name',
             'email',
             'email_verified_at',
+            'employee_id',
+            'status',
+            'password_set_at',
+            'invited_at',
+            'last_invitation_sent_at',
         ]);
     }
 }

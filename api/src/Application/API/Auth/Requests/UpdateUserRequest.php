@@ -20,12 +20,8 @@ class UpdateUserRequest extends BaseUserRequest
 
         return [
             ...parent::rules(),
-            'password' => [
-                'nullable',
-                'string',
-                'min:8',
-                'confirmed',
-            ],
+            'password' => ['prohibited'],
+            'password_confirmation' => ['prohibited'],
             'email' => [
                 'required',
                 'email',
@@ -39,6 +35,19 @@ class UpdateUserRequest extends BaseUserRequest
                 'integer',
                 $roleExistsRule,
             ],
+            'employee_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('employees', 'id'),
+                Rule::unique('users', 'employee_id')->ignore($user->getKey()),
+            ],
+            'status' => [
+                'sometimes',
+                'required',
+                Rule::in(['active', 'disabled']),
+            ],
+            'is_internal_account' => ['prohibited'],
         ];
     }
 }

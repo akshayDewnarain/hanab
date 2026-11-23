@@ -122,7 +122,7 @@
         sendingReset.value = true;
         try {
             await prepareApiCsrf();
-            await http.post(`users/${id}/send-password-reset`);
+            await http.post('public/forgot-password', { email: displayEmail.value });
             toast.success(t('USER_PASSWORD_RESET_EMAIL_SENT'));
         } catch {
             toast.error(t('USER_PASSWORD_RESET_EMAIL_FAILED'));

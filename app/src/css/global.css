@@ -3,40 +3,15 @@
 @import url('./smooth-expand.css');
 @import 'tailwindcss';
 @import 'tailwindcss/utilities';
+@import '@freelance/vue-ui/tailwind-source.css';
+@import './themes/project.css';
+@import './themes/light.css';
+@import './themes/dark.css';
+@import './navigation.css';
+@import './list-view.css';
 
-@theme {
-    --color-primary: #00416e;
-    --color-primary-light: rgba(0, 65, 110, 0.12);
-    --color-secondary: #e63223;
-    --color-ternary: green;
-    --color-ternary-highlight-dark: #015b01;
-    --color-accent: #e63223;
-    --color-background: #00416e;
-    --color-text: #1f2937;
-
-    --color-text-blocked: #888888;
-    --color-bg-blocked: #ececec;
-
-    --color-placeholder: #7d7d7d;
-    --color-error: #c90400;
-    --color-warning: #da8f00;
-    --color-success: #0b7500;
-
-    --color-warning-light: rgba(218, 143, 0, 0.2);
-    --color-success-light: rgba(11, 117, 0, 0.15);
-
-    --color-highlight-dark: #002d4d;
-    --color-highlight-light: #eaf3f8;
-
-    --color-sidebar-background: #b8241b;
-    --color-sidebar-icon: #ffffff;
-    --color-sidebar-item-text: #ffffff;
-    --color-sidebar-item-highlight-dark: #62120e;
-
-    --font-family: 'Titillium Web', sans-serif;
-    --line-height: 1.5;
-    --font-weight: 400;
-}
+/* Class and data-theme dark mode, so `dark:` utilities follow the selected theme. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 @layer components {
     .button {
@@ -44,40 +19,40 @@
     }
 
     .button-primary {
-        @apply bg-[var(--color-primary)] text-white hover:bg-[var(--color-highlight-dark)];
+        @apply bg-primary text-on-brand hover:bg-highlight-dark;
         @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
     }
 
     .button-primary-outline {
-        @apply border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-light)];
+        @apply border border-primary text-emphasis bg-transparent hover:bg-primary-light;
         @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
     }
 
     .button-dismiss {
-        @apply bg-gray-300 text-gray-700 hover:bg-gray-400;
+        @apply bg-bg-blocked text-text hover:bg-list-row-hover;
         @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
     }
 
     .button-default {
-        @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-100;
+        @apply bg-list-surface text-text border border-list-border hover:bg-list-row-hover;
         @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
     }
 
     .button-success {
-        @apply bg-green-600 text-white hover:bg-green-700;
+        @apply bg-green-600 text-on-brand hover:bg-green-700;
         @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
     }
 
     .button-danger {
-        @apply bg-red-600 text-white hover:bg-red-700;
+        @apply bg-red-600 text-on-brand hover:bg-red-700;
         @apply px-4 py-2 rounded-md font-medium transition-colors duration-200 cursor-pointer min-w-32;
     }
 
     .input-base {
-        @apply border border-gray-200 w-full rounded px-2 py-1 shadow
+        @apply border border-list-border bg-list-surface text-text w-full rounded px-2 py-1 shadow
     transition-all duration-200 ease-in-out
-    hover:ring-2 hover:ring-[var(--color-primary)] hover:ring-offset-0
-    focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-0;
+    hover:ring-2 hover:ring-primary hover:ring-offset-0
+    focus:ring-2 focus:ring-primary focus:ring-offset-0;
     }
 
     .base-hover {
@@ -85,11 +60,11 @@
     }
 
     .badge-primary {
-        @apply text-xs font-semibold border border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-primary-light)] px-2 py-1;
+        @apply text-xs font-semibold border border-primary text-emphasis bg-primary-light px-2 py-1;
     }
 
     .badge-secondary {
-        @apply text-xs font-semibold border border-gray-300 text-black bg-gray-200 px-2 py-1;
+        @apply text-xs font-semibold border border-list-border text-text bg-list-row-hover px-2 py-1;
     }
 
     .slide-fade-enter-active {
@@ -112,6 +87,7 @@
 }
 
 :root {
+    color-scheme: light;
     font-family: 'Titillium Web', sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -128,6 +104,8 @@ body {
     width: 100%;
     margin: 0;
     overflow: hidden;
+    background: var(--color-list-canvas);
+    color: var(--color-text);
 }
 
 #app {
@@ -260,4 +238,72 @@ textarea::placeholder {
     right: -24px;
     top: 22px;
     transform: rotate(-45deg);
+}
+
+/* Temporarily off so the theme slider animation is not frozen during a theme change. */
+/*
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+    transition: none !important;
+}
+*/
+
+/* Full-viewport snapshots. Only the new snapshot's mask moves. */
+@media (prefers-reduced-motion: no-preference) {
+    :root::view-transition-old(root),
+    :root::view-transition-new(root) {
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        object-position: top left;
+        mix-blend-mode: normal !important;
+    }
+
+    :root::view-transition-old(root) {
+        z-index: 1;
+        opacity: 1;
+        animation: none !important;
+    }
+
+    :root::view-transition-new(root) {
+        z-index: 2;
+        mask-image: var(--theme-wave-mask);
+        -webkit-mask-image: var(--theme-wave-mask);
+        /* Important so an animated mask-position cannot fall back to repeat/auto and tile. */
+        mask-repeat: no-repeat !important;
+        -webkit-mask-repeat: no-repeat !important;
+        mask-size: 500% 500% !important;
+        -webkit-mask-size: 500% 500% !important;
+        mask-clip: border-box;
+        -webkit-mask-clip: border-box;
+        mask-origin: border-box;
+        -webkit-mask-origin: border-box;
+        mask-position: 70% 46.25%;
+        -webkit-mask-position: 70% 46.25%;
+        mask-mode: alpha;
+        animation: theme-wave 850ms cubic-bezier(0.45, 0, 0.55, 1) 1 normal both !important;
+    }
+}
+
+@keyframes theme-wave {
+    from,
+    to {
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-size: 500% 500%;
+        -webkit-mask-size: 500% 500%;
+    }
+
+    from {
+        mask-position: 70% 46.25%;
+        -webkit-mask-position: 70% 46.25%;
+    }
+
+    /* Stops inside the solid part of the same mask, after the crest has left the top-right. */
+    to {
+        mask-position: 20% 55%;
+        -webkit-mask-position: 20% 55%;
+    }
 }

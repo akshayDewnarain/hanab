@@ -120,7 +120,7 @@
     );
 
     function fieldCellClass(name: string): string {
-        if (name === 'address' || name === 'description' || name === 'is_active') {
+        if (name === 'address' || name === 'description' || name === 'is_active' || name === 'employee_number' || name === 'last_name' || name === 'introduction') {
             return 'md:col-span-2';
         }
         return '';

@@ -1,0 +1,567 @@
+.organogram-page {
+    height: 100%;
+    min-height: 0;
+}
+
+.organogram-page .organogram-canvas {
+    height: 100%;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+}
+
+.organogram-float {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: min(42rem, calc(100% - 1.5rem));
+}
+
+.organogram-float-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: flex-start;
+}
+
+.organogram-chip,
+.organogram-popover button,
+.organogram-settings label {
+    color: var(--color-list-text, #1e293b);
+}
+
+.organogram-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.12));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-sidebar-logo-background, #fff) 94%, transparent);
+    padding: 0 0.8rem;
+    font-size: 0.8125rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.organogram-icon-chip {
+    position: relative;
+    width: 2.25rem;
+    justify-content: center;
+    padding: 0;
+}
+
+.organogram-filter-dot {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--color-primary, #00416e);
+}
+
+.organogram-pop {
+    position: relative;
+}
+
+.organogram-popover,
+.organogram-settings {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    z-index: 7;
+    display: flex;
+    min-width: 14rem;
+    flex-direction: column;
+    gap: 0.35rem;
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.12));
+    border-radius: 0.75rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    padding: 0.5rem;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+}
+
+.organogram-popover button,
+.organogram-search button {
+    border: 0;
+    border-radius: 0.45rem;
+    background: transparent;
+    padding: 0.35rem 0.5rem;
+    text-align: left;
+}
+
+.organogram-popover button.is-active,
+.organogram-popover button:hover,
+.organogram-search button:hover {
+    background: var(--color-sidebar-hover-background, #e4ebf3);
+}
+
+.organogram-search {
+    width: 16rem;
+}
+
+.organogram-search input,
+.organogram-filters select {
+    width: 100%;
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.12));
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.8125rem;
+}
+
+.organogram-filters label,
+.organogram-settings label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.organogram-settings {
+    position: static;
+    min-width: 16rem;
+}
+
+.organogram-settings label {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.organogram-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0.25rem 0 0;
+    list-style: none;
+    font-size: 0.75rem;
+}
+
+.organogram-legend li {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.organogram-legend span {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+}
+
+.organogram-legend-pin {
+    width: max-content;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-sidebar-logo-background, #fff) 94%, transparent);
+    padding: 0.45rem 0.6rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.organogram-status,
+.organogram-unassigned {
+    position: absolute;
+    left: 50%;
+    z-index: 5;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-sidebar-logo-background, #fff) 92%, transparent);
+    color: var(--color-list-text-muted, #64748b);
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+}
+
+.organogram-status {
+    top: 0.8rem;
+}
+
+.organogram-unassigned {
+    bottom: 0.8rem;
+}
+
+.organogram-list-panel {
+    position: absolute;
+    top: 4.5rem;
+    left: 0.75rem;
+    z-index: 5;
+    max-height: calc(100% - 8rem);
+    overflow: auto;
+    border-radius: 0.75rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    padding: 0.6rem 0.8rem;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+}
+
+.organogram-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.organogram-views,
+.organogram-toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.organogram-views button,
+.organogram-toolbar-actions button,
+.organogram-controls button,
+.organogram-banner button {
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.12));
+    border-radius: 0.5rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    color: var(--color-list-text, #1e293b);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.8125rem;
+}
+
+.organogram-views button.is-active {
+    background: var(--color-sidebar-active-gradient-from, rgba(0, 65, 110, 0.14));
+    font-weight: 600;
+}
+
+.organogram-field input,
+.organogram-field select {
+    min-width: 11rem;
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.12));
+    border-radius: 0.5rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    color: var(--color-list-text, #1e293b);
+    padding: 0.4rem 0.65rem;
+    font-size: 0.8125rem;
+}
+
+.organogram-canvas {
+    position: relative;
+    min-height: 28rem;
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.08));
+    border-radius: 0.75rem;
+    background: var(--color-list-canvas, #f4f7fb);
+}
+
+.organogram-canvas .vue-flow {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.organogram-canvas .vue-flow__minimap {
+    right: 0.85rem;
+    bottom: 4.15rem;
+    z-index: 5;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 0.85rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.organogram-canvas .vue-flow__minimap svg {
+    display: block;
+    background: transparent;
+}
+
+.organogram-controls {
+    position: absolute;
+    right: 0.85rem;
+    bottom: 0.7rem;
+    z-index: 6;
+    display: flex;
+    gap: 0.45rem;
+}
+
+.organogram-controls button {
+    display: grid;
+    width: 2.7rem;
+    height: 2.7rem;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0.85rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    color: var(--color-list-text, #1e293b);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+}
+
+.organogram-controls button svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.organogram-controls button[aria-pressed='true'] {
+    color: var(--color-primary, #00416e);
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--color-primary, #00416e) 22%, transparent),
+        0 6px 16px rgba(15, 23, 42, 0.1);
+}
+
+.organogram-empty,
+.organogram-banner {
+    color: var(--color-list-text-muted, #64748b);
+    font-size: 0.875rem;
+}
+
+.organogram-empty {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+
+.organogram-banner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.organogram-canvas .vue-flow__node.organogram-group-node {
+    pointer-events: none;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.organogram-group {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed color-mix(in srgb, var(--color-list-text, #0f172a) 18%, transparent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--color-list-text, #0f172a) 4%, transparent);
+}
+
+.organogram-group.is-unassigned {
+    border: 0;
+    background: transparent;
+}
+
+.organogram-group-head {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0.7rem 0.9rem 0;
+    pointer-events: auto;
+    border: 0;
+    background: transparent;
+    color: var(--color-list-text, #1e293b);
+    font-size: 0.875rem;
+    font-weight: 650;
+    text-align: left;
+}
+
+.organogram-group.is-unassigned .organogram-group-head {
+    padding-top: 0.15rem;
+    font-size: 0.8125rem;
+}
+
+.organogram-group-head span:last-child {
+    color: var(--color-list-text-muted, #64748b);
+    font-size: 0.75rem;
+    font-weight: 550;
+}
+
+.organogram-places {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.organogram-places > p:first-child {
+    margin: 0.15rem 0.5rem 0.1rem;
+    color: var(--color-list-text-muted, #64748b);
+    font-size: 0.75rem;
+    font-weight: 650;
+}
+
+.organogram-places button {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.organogram-places button span:last-child,
+.organogram-popover-note {
+    color: var(--color-list-text-muted, #64748b);
+    font-size: 0.75rem;
+}
+
+.organogram-node {
+    overflow: hidden;
+    border: 1px solid var(--color-sidebar-border-highlight, rgba(15, 23, 42, 0.12));
+    border-top: 4px solid #8b95a4;
+    border-radius: 0.75rem;
+    background: var(--color-sidebar-logo-background, #fff);
+    color: var(--color-list-text, #1e293b);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.organogram-node.is-context {
+    border-style: dashed;
+}
+
+.organogram-node.is-highlighted {
+    box-shadow: 0 0 0 3px rgba(0, 65, 110, 0.35);
+}
+
+.organogram-node-main,
+.organogram-people button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+}
+
+.organogram-node-main {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 0.75rem 0.35rem;
+}
+
+.organogram-avatar {
+    display: grid;
+    width: 2.15rem;
+    height: 2.15rem;
+    flex: none;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-sidebar-hover-background, #e4ebf3);
+    font-size: 0.75rem;
+    font-weight: 650;
+}
+
+.organogram-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.organogram-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.organogram-name {
+    font-size: 0.875rem;
+    font-weight: 650;
+}
+
+.organogram-role,
+.organogram-meta,
+.organogram-level,
+.organogram-note,
+.organogram-kicker {
+    color: var(--color-list-text-muted, #64748b);
+    font-size: 0.75rem;
+}
+
+.organogram-meta {
+    display: inline-flex;
+    gap: 0.15rem;
+    align-items: center;
+}
+
+.organogram-level::before {
+    content: '';
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-right: 0.3rem;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.organogram-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0.75rem 0.5rem;
+    color: var(--color-list-text-muted, #64748b);
+    font-size: 0.75rem;
+}
+
+.organogram-toggle {
+    display: grid;
+    width: 1.5rem;
+    height: 1.5rem;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-sidebar-hover-background, #e4ebf3);
+    color: inherit;
+}
+
+.organogram-role-head,
+.organogram-people,
+.organogram-role .organogram-note {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+}
+
+.organogram-role-head {
+    padding-top: 0.7rem;
+}
+
+.organogram-people {
+    margin: 0.35rem 0 0;
+    padding-bottom: 0.25rem;
+    list-style: none;
+}
+
+.organogram-people button {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.15rem 0;
+}
+
+.organogram-handle {
+    width: 6px;
+    height: 6px;
+    background: var(--color-sidebar-text-muted, #64748b);
+    border: 0;
+}
+
+.organogram-outline {
+    margin: 0.25rem 0 0;
+    padding-left: 1rem;
+    color: var(--color-list-text, #1e293b);
+    font-size: 0.875rem;
+}
+
+.organogram-outline button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

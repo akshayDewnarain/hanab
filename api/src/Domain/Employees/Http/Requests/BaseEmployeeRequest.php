@@ -3,6 +3,7 @@
 namespace Domain\Employees\Http\Requests;
 
 use Domain\Employees\Models\Employee;
+use Domain\Employees\Support\EmployeeReporting;
 use Domain\Support\Http\Requests\BaseModelRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,6 +32,16 @@ abstract class BaseEmployeeRequest extends BaseModelRequest
                 'integer',
                 Rule::exists('employee_locations', 'id'),
             ],
+            'manager_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('employees', 'id'),
+            ],
+            'organization_level_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('organization_levels', 'id'),
+            ],
             'first_name' => [
                 'required',
                 'string',
@@ -40,6 +51,11 @@ abstract class BaseEmployeeRequest extends BaseModelRequest
                 'required',
                 'string',
                 'max:255',
+            ],
+            'initials' => [
+                'nullable',
+                'string',
+                'max:32',
             ],
             'email' => [
                 'required',
@@ -51,6 +67,21 @@ abstract class BaseEmployeeRequest extends BaseModelRequest
                 'nullable',
                 'string',
                 'max:255',
+            ],
+            'business_email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+            'business_phone' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'introduction' => [
+                'nullable',
+                'string',
+                'max:500',
             ],
             'employee_number' => [
                 'required',
@@ -67,11 +98,49 @@ abstract class BaseEmployeeRequest extends BaseModelRequest
                 'nullable',
                 'date',
             ],
+            'date_of_birth' => [
+                'nullable',
+                'date',
+            ],
             'is_active' => [
                 'required',
                 'boolean',
             ],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $empty = [];
+        foreach (['manager_id', 'organization_level_id', 'phone', 'business_email'] as $field) {
+            if ($this->input($field) === '') {
+                $empty[$field] = null;
+            }
+        }
+        if ($empty !== []) {
+            $this->merge($empty);
+        }
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator): void {
+            $employee = $this->route('employee');
+            $managerId = $this->input('manager_id');
+            if (! $employee instanceof Employee || $managerId === null || $managerId === '') {
+                return;
+            }
+
+            if ((int) $managerId === $employee->id) {
+                $validator->errors()->add('manager_id', 'An employee cannot report to themselves.');
+
+                return;
+            }
+
+            if (EmployeeReporting::createsCycle($employee, (int) $managerId)) {
+                $validator->errors()->add('manager_id', 'This reporting line would loop back to the same employee.');
+            }
+        });
     }
 
     public function model(): mixed

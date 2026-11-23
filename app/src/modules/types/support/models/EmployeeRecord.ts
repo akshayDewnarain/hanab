@@ -14,8 +14,11 @@ import type { SkillRecord } from '@/modules/types/support/models/SkillRecord.ts'
  * @property employee_location_id - Foreign key to `employee_locations`.
  * @property first_name - Given name.
  * @property last_name - Family name.
- * @property email - Unique work email.
- * @property phone - Optional contact number.
+ * @property email - Personal email address.
+ * @property phone - Optional personal phone number.
+ * @property business_email - Optional business email address.
+ * @property business_phone - Business phone number. Required when the record is saved.
+ * @property date_of_birth - Optional date used for a birthday message. Colleagues do not see this date.
  * @property employee_number - Unique internal identifier.
  * @property employment_type - Indexed employment category string from API.
  * @property start_date - ISO date string when present; null if open-ended / unknown.
@@ -30,8 +33,15 @@ export type EmployeeRecord = {
     employee_location_id: number;
     first_name: string;
     last_name: string;
+    initials: string | null;
     email: string;
     phone: string | null;
+    business_email: string | null;
+    business_phone: string | null;
+    introduction: string | null;
+    date_of_birth: string | null;
+    manager_id: number | null;
+    organization_level_id: number | null;
     employee_number: string;
     employment_type: string;
     start_date: string | null;
@@ -39,6 +49,8 @@ export type EmployeeRecord = {
     image?: MediaURL | null;
     employee_role?: { id: number; name: string } | null;
     employee_location?: { id: number; name: string } | null;
+    manager?: { id: number; first_name: string; last_name: string; initials: string | null; role: string | null } | null;
+    organization_level?: { id: number; name: string } | null;
     skills?: SkillRecord[];
-    certificates?: CertificateRecord[];
+    certificates?: Array<CertificateRecord & { expires_at?: string | null }>;
 };

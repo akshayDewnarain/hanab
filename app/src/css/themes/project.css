@@ -1,0 +1,97 @@
+/*
+ * Project theme — current Hanab brand.
+ * Registered with @theme so utilities (bg-primary, text-sidebar-item-text, …)
+ * reference these CSS variables. Light and dark themes override the same variables.
+ */
+@theme {
+    --color-primary: #00416e;
+    --color-primary-light: rgba(0, 65, 110, 0.12);
+    --color-primary-hover: #b8241b;
+    --color-secondary: #e63223;
+    --color-ternary: green;
+    --color-ternary-highlight-dark: #015b01;
+    --color-accent: #e63223;
+    --color-background: #00416e;
+    --color-on-brand: #ffffff;
+    --color-emphasis: #00416e;
+    --color-text: #1f2937;
+
+    --color-text-blocked: #888888;
+    --color-bg-blocked: #ececec;
+
+    --color-placeholder: #7d7d7d;
+    --color-error: #c90400;
+    --color-warning: #da8f00;
+    --color-success: #0b7500;
+
+    --color-warning-light: rgba(218, 143, 0, 0.2);
+    --color-success-light: rgba(11, 117, 0, 0.15);
+
+    --color-highlight-dark: #002d4d;
+    --color-highlight-light: #eaf3f8;
+
+    --color-sidebar-background: #b8241b;
+    --color-sidebar-background-gradient-from: #b8241b;
+    --color-sidebar-background-gradient-to: #b8241b;
+    --color-sidebar-hover-background: #62120e;
+    --color-sidebar-active-gradient-from: #62120e;
+    --color-sidebar-active-gradient-to: #62120e;
+    --color-sidebar-active-accent: #ffffff;
+    --color-sidebar-icon: #ffffff;
+    --color-sidebar-item-text: #ffffff;
+    --color-sidebar-item-highlight-dark: #62120e;
+    --color-sidebar-text-muted: rgba(255, 255, 255, 0.72);
+    --color-sidebar-border-highlight: rgba(255, 255, 255, 0.18);
+    --color-sidebar-logo-background: #ffffff;
+    --color-sidebar-logo-border: rgba(255, 255, 255, 0.42);
+    --color-sidebar-tooltip-background: #0f2d36;
+    --color-sidebar-tooltip-text: #ffffff;
+
+    --color-topbar-background: rgba(255, 255, 255, 0.97);
+    --color-topbar-border: rgba(226, 232, 240, 0.92);
+    --color-topbar-shadow-tint: #0f172a;
+    --color-topbar-accent-line: rgba(0, 65, 110, 0.28);
+    --color-topbar-text: #1e293b;
+    --color-topbar-text-muted: #64748b;
+    --color-topbar-hover-background: #f1f5f9;
+    --color-topbar-search-background: rgba(248, 250, 252, 0.92);
+    --color-topbar-search-border: #e2e8f0;
+    --color-topbar-search-focus-background: #ffffff;
+    --color-topbar-breadcrumb-background: rgba(241, 245, 249, 0.95);
+    --color-topbar-breadcrumb-border: #e2e8f0;
+    --color-topbar-breadcrumb-separator: #94a3b8;
+    --color-topbar-breadcrumb-text: #64748b;
+    --color-topbar-breadcrumb-home-from: #00416e;
+    --color-topbar-breadcrumb-home-to: #002d4d;
+    --color-topbar-account-background: #ffffff;
+    --color-topbar-account-border: rgba(226, 232, 240, 0.95);
+    --color-topbar-account-hover-border: rgba(0, 65, 110, 0.35);
+    --color-topbar-avatar-from: #00416e;
+    --color-topbar-avatar-to: #002d4d;
+    --color-topbar-menu-background: #ffffff;
+    --color-topbar-menu-header-from: #f8fafc;
+    --color-topbar-menu-header-to: #ffffff;
+    --color-topbar-menu-divider: #f1f5f9;
+    --color-topbar-menu-item-active: rgba(0, 65, 110, 0.1);
+    --color-topbar-logout-hover: #fef2f2;
+    --color-topbar-notification-badge: #0284c7;
+
+    /* List view (table) */
+    --color-list-canvas: #e5e7eb;
+    --color-list-surface: #ffffff;
+    --color-list-toolbar-background: rgba(255, 255, 255, 0.97);
+    --color-list-toolbar-border: rgba(226, 232, 240, 0.92);
+    --color-list-border: #e2e8f0;
+    --color-list-text: #1e293b;
+    --color-list-text-muted: #64748b;
+    --color-list-thead-background: #f8fafc;
+    --color-list-row-hover: #f1f5f9;
+    --color-list-bulk-background: rgba(241, 245, 249, 0.95);
+    --color-list-shadow-tint: #0f172a;
+    --color-list-filter-value-background: #f1f5f9;
+    --color-list-pagination-background: #f8fafc;
+
+    --font-family: 'Titillium Web', sans-serif;
+    --line-height: 1.5;
+    --font-weight: 400;
+}

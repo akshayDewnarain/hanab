@@ -58,6 +58,7 @@ export function useListViewHelper(props: UseListViewHelperProps) {
     const quickFilterKey = ref(0);
     const filters = ref<Record<string, unknown>>({});
     const searchQuery = ref<string>('');
+    const sortQuery = ref<string>('');
     const columns = ref<TableColumn[]>([]);
     const items = ref<unknown[]>([]);
     const allSelected = ref<boolean>(false);
@@ -211,13 +212,17 @@ export function useListViewHelper(props: UseListViewHelperProps) {
             ...(props.staticFilters ?? {}),
         };
 
-        return {
+        const params: QueryParameters = {
             page: meta.value.current_page,
             per_page: meta.value.per_page,
             search: searchQuery.value,
             filter: mergedFilter,
             include: props.includes ?? [],
         };
+        if (sortQuery.value) {
+            params.sort = sortQuery.value;
+        }
+        return params;
     }
 
     async function fetchData(): Promise<void> {
@@ -285,6 +290,10 @@ export function useListViewHelper(props: UseListViewHelperProps) {
             search: params.search || '',
         };
 
+        if (params.sort) {
+            queryParams.sort = String(params.sort);
+        }
+
         if (params.filter) {
             const filter = params.filter as Record<string, unknown>;
             Object.keys(filter).forEach((key) => {
@@ -328,6 +337,10 @@ export function useListViewHelper(props: UseListViewHelperProps) {
 
         if (query.search && typeof query.search === 'string') {
             searchQuery.value = query.search;
+        }
+
+        if (typeof query.sort === 'string') {
+            sortQuery.value = query.sort;
         }
 
         const routeFilters: Record<string, unknown> = {};
@@ -410,6 +423,12 @@ export function useListViewHelper(props: UseListViewHelperProps) {
 
     function saveFilters(filters: Record<string, unknown>): void {
         setLocalStorageItem(`${modelInstance.getEntity()}_filters`, filters);
+    }
+
+    function setListSort(value: string): void {
+        sortQuery.value = value;
+        meta.value.current_page = 1;
+        void fetchData();
     }
 
     function resetFilters(): void {
@@ -678,6 +697,7 @@ export function useListViewHelper(props: UseListViewHelperProps) {
         quickFilterKey,
         filters,
         searchQuery,
+        sortQuery,
         columns,
         items,
         allSelected,
@@ -697,6 +717,7 @@ export function useListViewHelper(props: UseListViewHelperProps) {
         loadRouteParams,
         loadFilters,
         saveFilters,
+        setListSort,
         resetFilters,
         removeFilter,
         removeArrayFilter,

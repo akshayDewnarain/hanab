@@ -29,33 +29,36 @@
             </slot>
         </div>
 
-        <transition name="fade">
-            <div
-                v-if="isOpen"
-                ref="dropdownRef"
-                :class="[dropdownClasses, customDropdownClass]"
-                :style="maxHeight ? { maxHeight: maxHeight, overflowY: 'auto' } : {}"
-                aria-labelledby="options-menu"
-                aria-orientation="vertical"
-                class="absolute w-56 rounded-md border border-gray-200 bg-white shadow-lg z-[100]"
-                role="menu"
-            >
+        <Teleport to="body">
+            <transition name="fade">
                 <div
-                    v-if="showCaret"
-                    :class="triangleClasses"
-                    class="absolute w-0 h-0 border-x-8 border-x-transparent"
-                ></div>
+                    v-if="isOpen"
+                    ref="dropdownRef"
+                    :class="[matchWidth ? 'min-w-0' : 'w-56', customDropdownClass]"
+                    :style="menuStyle"
+                    aria-labelledby="options-menu"
+                    aria-orientation="vertical"
+                    class="relative z-[1000] rounded-md border border-gray-200 bg-white shadow-lg"
+                    role="menu"
+                    @click.stop
+                >
+                    <div
+                        v-if="showCaret"
+                        :class="triangleClasses"
+                        class="absolute w-0 h-0 border-x-8 border-x-transparent"
+                    ></div>
 
-                <div class="py-1" role="none">
-                    <slot name="dropdown-content"></slot>
+                    <div class="py-1" role="none">
+                        <slot name="dropdown-content"></slot>
+                    </div>
                 </div>
-            </div>
-        </transition>
+            </transition>
+        </Teleport>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, nextTick, ref } from 'vue';
+    import { computed, defineComponent, type CSSProperties } from 'vue';
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
     import { useDropdown } from '@/composables/fields/useDropdown';
@@ -74,11 +77,14 @@
             maxHeight?: string;
             /** Use in full-width form rows so the trigger can span 100% width. */
             fullWidth?: boolean;
+            /** Size the menu to the trigger. The menu is portaled so it is not clipped by the modal. */
+            matchWidth?: boolean;
         }>(),
         {
             showCaret: true,
             maxHeight: undefined,
             fullWidth: false,
+            matchWidth: false,
         },
     );
 
@@ -87,48 +93,39 @@
     }>();
 
     const { t } = useI18n();
-    const { isOpen, triggerRef, dropdownRef, toggleDropdown, closeDropdown } = useDropdown();
+    const {
+        isOpen,
+        triggerRef,
+        dropdownRef,
+        toggleDropdown,
+        closeDropdown,
+        dropdownStyles,
+        position: placement,
+    } = useDropdown(undefined, {
+        preferredPosition: props.position ?? 'bottom',
+        align: props.align ?? 'left',
+        matchWidth: props.matchWidth,
+    });
 
     defineExpose({
         closeDropdown,
+        isOpen,
     });
-
-    const dropdownStyles = ref<Record<string, string>>({});
 
     function onToggleDropdown() {
         toggleDropdown();
-        if (!isOpen.value) return;
-
-        nextTick(() => {
-            const trigger = triggerRef.value;
-            const menu = dropdownRef.value;
-
-            if (trigger && menu) {
-                const rect = trigger.getBoundingClientRect();
-                dropdownStyles.value = {
-                    position: 'absolute',
-                    top: `${rect.bottom + window.scrollY}px`,
-                    left: `${rect.left + window.scrollX}px`,
-                    minWidth: `${rect.width}px`,
-                };
-            }
-        });
     }
 
-    const dropdownClasses = computed(() => {
-        return {
-            'bottom-full mb-2': props.position === 'top',
-            'top-full mt-2': props.position !== 'top',
-            'right-0': props.align === 'right',
-            'left-0': props.align !== 'right',
-        };
-    });
+    const menuStyle = computed<CSSProperties>(() => ({
+        ...dropdownStyles.value,
+        ...(props.maxHeight ? { maxHeight: props.maxHeight, overflowY: 'auto' as const } : {}),
+    }));
 
     const triangleClasses = computed(() => {
         const alignClasses = props.align === 'right' ? 'left-[85%]' : 'right-[85%]';
 
-        return props.position === 'top'
-            ? `${alignClasses} bottom-0 -mb-2 border-t-8 border-b-gray-400`
-            : `${alignClasses} top-0 -mt-2 border-b-8 border-b-gray-400`;
+        return placement.value === 'top'
+            ? `${alignClasses} bottom-0 -mb-2 border-t-8 border-t-gray-200`
+            : `${alignClasses} top-0 -mt-2 border-b-8 border-b-gray-200`;
     });
 </script>

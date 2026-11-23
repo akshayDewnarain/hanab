@@ -18,6 +18,8 @@ function normalizePermissionNames(user: Pick<UserRecord, 'permissions'> | null):
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null as UserRecord | null,
+        onboardingToken: null as string | null,
+        challengeToken: null as string | null,
     }),
     actions: {
         async fetchUser() {
@@ -32,6 +34,9 @@ export const useAuthStore = defineStore('auth', {
         },
         logout() {
             this.user = null;
+            this.onboardingToken = null;
+            this.challengeToken = null;
+            localStorage.removeItem('token');
             http.post('/logout');
         },
     },
@@ -44,12 +49,20 @@ export const useAuthStore = defineStore('auth', {
         hasPermission:
             (state) =>
             (permissionName: string): boolean => {
+                if (state.user?.roles?.some((role) => role.name === 'super-admin')) {
+                    return true;
+                }
+
                 return normalizePermissionNames(state.user).includes(permissionName);
             },
         canViewEntity:
             (state) =>
             (entityKey: string): boolean => {
-                return normalizePermissionNames(state.user).includes(`${entityKey}_VIEW`);
+                if (state.user?.roles?.some((role) => role.name === 'super-admin')) {
+                    return true;
+                }
+
+                return normalizePermissionNames(state.user).includes(`view ${entityKey}`);
             },
         hasRole:
             (state) =>

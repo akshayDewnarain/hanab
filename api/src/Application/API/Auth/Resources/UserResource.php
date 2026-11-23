@@ -34,6 +34,9 @@ class UserResource extends DomainUserResource
                     'name' => $role->name,
                 ])->values()->all(),
             ),
+            'has_password' => $this->resource->hasPassword(),
+            'security_complete' => $this->resource->hasCompletedSecurity(),
+            'two_factor_confirmed_at' => $this->resource->two_factor_confirmed_at?->toIso8601String(),
             'profile_picture_url' => $this->resource->getFirstMediaUrl('profile_pictures'),
         ];
     }

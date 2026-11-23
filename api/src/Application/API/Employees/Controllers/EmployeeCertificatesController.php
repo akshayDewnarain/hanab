@@ -7,6 +7,7 @@ use Application\API\Employees\Requests\QueryBuilder\EmployeeCertificateQueryRequ
 use Application\API\Employees\Requests\UpdateEmployeeCertificateRequest;
 use Application\API\Employees\Resources\EmployeeCertificateResource;
 use Application\API\Employees\Resources\EmployeeCertificateResourceCollection;
+use Domain\Auth\Services\PermissionService;
 use Domain\Employees\Actions\CreateEmployeeCertificateAction;
 use Domain\Employees\Actions\DeleteEmployeeCertificateAction;
 use Domain\Employees\Actions\UpdateEmployeeCertificateAction;
@@ -41,6 +42,15 @@ class EmployeeCertificatesController extends BaseAPICrudController
     public function destroy(EmployeeCertificate $employee_certificate): JsonResponse
     {
         return $this->handleDestroy($employee_certificate);
+    }
+
+    protected function permissions(): array
+    {
+        return [
+            'create' => PermissionService::createPermission(EmployeeCertificate::class),
+            'update' => PermissionService::updatePermission(EmployeeCertificate::class),
+            'delete' => PermissionService::deletePermission(EmployeeCertificate::class),
+        ];
     }
 
     protected function modelName(): string

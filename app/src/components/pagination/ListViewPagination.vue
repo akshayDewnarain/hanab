@@ -4,7 +4,7 @@
         class="space-y-2 px-4 py-3"
     >
         <div class="flex items-center gap-2">
-            <span class="shrink-0 text-xs text-slate-500">{{ t('PAGINATION_PER_PAGE') }}</span>
+            <span class="shrink-0 text-xs text-list-text-muted">{{ t('PAGINATION_PER_PAGE') }}</span>
             <dropdown
                 compact
                 class="min-w-0 flex-1"
@@ -21,7 +21,7 @@
         <div class="flex items-center justify-between gap-1">
             <button
                 type="button"
-                class="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-500"
+                class="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-list-text-muted transition-colors hover:bg-list-row-hover hover:text-emphasis disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-list-text-muted"
                 :aria-label="t('PAGINATION_PREV')"
                 :disabled="current <= 1"
                 @click="previousPage"
@@ -30,19 +30,19 @@
             </button>
 
             <div class="flex min-w-0 flex-1 flex-col items-center">
-                <span class="text-sm tabular-nums text-slate-600">
-                    <span class="font-semibold text-[var(--color-primary)]">{{ current }}</span>
-                    <span class="text-slate-400"> / {{ pages }}</span>
+                <span class="text-sm tabular-nums text-list-text">
+                    <span class="font-semibold text-emphasis">{{ current }}</span>
+                    <span class="text-list-text-muted"> / {{ pages }}</span>
                 </span>
-                <p class="mt-0.5 text-center text-[11px] leading-tight text-slate-500">
-                    <span class="font-medium tabular-nums text-slate-600">{{ rangeStart }}–{{ rangeEnd }}</span>
+                <p class="mt-0.5 text-center text-[11px] leading-tight text-list-text-muted">
+                    <span class="font-medium tabular-nums text-list-text">{{ rangeStart }}–{{ rangeEnd }}</span>
                     {{ ' ' }}{{ t('PAGINATION_OF') }} {{ total }} {{ t('PAGINATION_RESULTS') }}
                 </p>
             </div>
 
             <button
                 type="button"
-                class="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-500"
+                class="inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-list-text-muted transition-colors hover:bg-list-row-hover hover:text-emphasis disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-list-text-muted"
                 :aria-label="t('PAGINATION_NEXT')"
                 :disabled="current >= pages"
                 @click="nextPage"
@@ -54,11 +54,11 @@
 
     <div
         v-else
-        class="flex items-center justify-between border-t border-gray-100 bg-gray-100 px-4 py-3 sm:px-6"
+        class="flex items-center justify-between border-t border-list-border bg-list-pagination-background px-4 py-3 text-list-text sm:px-6"
     >
         <div class="flex flex-1 justify-between sm:hidden">
             <a
-                class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500 hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                class="relative inline-flex items-center rounded-md border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:text-emphasis hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                 href="javascript:void(0)"
                 @click="previousPage"
             >
@@ -66,7 +66,7 @@
             </a>
 
             <a
-                class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500 hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                class="relative ml-3 inline-flex items-center rounded-md border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:text-emphasis hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                 href="javascript:void(0)"
                 @click="nextPage"
             >
@@ -105,7 +105,7 @@
 
                 <nav aria-label="Pagination" class="relative z-0 inline-flex -space-x-px rounded-md shadow">
                     <a
-                        class="relative text-white inline-flex items-center rounded-l-md border border-gray-300 px-2 py-2 text-sm font-medium bg-[var(--color-background)] transition-all duration-200 ease-in-out hover:bg-[var(--color-highlight-dark)]"
+                        class="relative text-on-brand inline-flex items-center rounded-l-md border border-list-border px-2 py-2 text-sm font-medium bg-background transition-all duration-200 ease-in-out hover:bg-highlight-dark"
                         href="javascript:void(0)"
                         @click="previousPage"
                     >
@@ -128,7 +128,7 @@
 
                     <a
                         v-if="current > 2"
-                        class="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                        class="relative inline-flex items-center border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                         href="javascript:void(0)"
                         @click="changePage(1)"
                     >
@@ -137,7 +137,7 @@
 
                     <a
                         v-if="current > 3 && pageNumbers.length !== 3"
-                        class="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                        class="relative inline-flex items-center border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                         href="javascript:void(0)"
                     >
                         ...
@@ -147,7 +147,7 @@
                         <a
                             v-if="page > current - 2 && page < current + 2"
                             :key="index"
-                            class="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                            class="relative inline-flex items-center border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                             href="javascript:void(0)"
                             @click="changePage(page)"
                         >
@@ -157,7 +157,7 @@
 
                     <a
                         v-if="current <= pageNumbers.length - 3 && pageNumbers.length !== 3"
-                        class="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                        class="relative inline-flex items-center border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                         href="javascript:void(0)"
                     >
                         ...
@@ -165,7 +165,7 @@
 
                     <a
                         v-if="current <= pageNumbers.length - 2"
-                        class="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-100 transition-all duration-200 ease-in-out"
+                        class="relative inline-flex items-center border border-list-border bg-list-surface px-4 py-2 text-sm font-medium text-list-text hover:bg-list-row-hover transition-all duration-200 ease-in-out"
                         href="javascript:void(0)"
                         @click="changePage(pages)"
                     >
@@ -173,7 +173,7 @@
                     </a>
 
                     <a
-                        class="relative text-white inline-flex items-center rounded-r-md border border-gray-300 px-2 py-2 text-sm font-medium bg-[var(--color-background)] transition-all duration-200 ease-in-out hover:bg-[var(--color-highlight-dark)]"
+                        class="relative text-on-brand inline-flex items-center rounded-r-md border border-list-border px-2 py-2 text-sm font-medium bg-background transition-all duration-200 ease-in-out hover:bg-highlight-dark"
                         href="javascript:void(0)"
                         @click="nextPage"
                     >

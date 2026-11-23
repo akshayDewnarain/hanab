@@ -1,10 +1,10 @@
 <template>
     <router-link :to="to" class="w-full my-1 items-center relative group">
-        <div v-if="isActive" class="absolute left-0 top-0 bottom-0 w-1 bg-white rounded"></div>
+        <div v-if="isActive" class="absolute left-0 top-0 bottom-0 w-1 bg-emphasis rounded"></div>
 
         <div
-            :class="{ 'bg-gray-200': isActive }"
-            class="flex items-center p-2 mx-2 gap-1 text-[var(--color-primary)] rounded-md hover:bg-gray-200 transition-colors duration-200 ease-in relative"
+            :class="{ 'bg-list-row-hover': isActive }"
+            class="flex items-center p-2 mx-2 gap-1 text-emphasis rounded-md hover:bg-list-row-hover transition-colors duration-200 ease-in relative"
         >
             <span class="font-bold text-base whitespace-nowrap">{{ t(label) }}</span>
         </div>

@@ -59,19 +59,18 @@
                                         />
                                         <label
                                             :for="`relation-pick-${row.id}`"
-                                            class="flex min-w-0 flex-1 cursor-pointer items-center justify-between gap-3"
+                                            class="min-w-0 flex-1 cursor-pointer truncate text-sm font-medium text-slate-800"
                                         >
-                                            <span class="min-w-0 truncate text-sm font-medium text-slate-800">
-                                                {{ row.name || '—' }}
-                                            </span>
-                                            <span
-                                                v-if="row.code?.trim()"
-                                                class="inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-xs font-semibold"
-                                                :style="relationRowChipStyle(row)"
-                                            >
-                                                {{ row.code }}
-                                            </span>
+                                            {{ row.name || '—' }}
                                         </label>
+                                        <ColorLabel
+                                            v-if="row.code?.trim()"
+                                            :label="row.code"
+                                            :description="row.name"
+                                            :background-color="relationRowChipStyle(row).backgroundColor"
+                                            :text-color="relationRowChipStyle(row).color"
+                                            :border-color="relationRowChipStyle(row).borderColor"
+                                        />
                                     </li>
                                 </ul>
                             </section>
@@ -87,6 +86,7 @@
     import { computed, onMounted, ref } from 'vue';
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
+    import { ColorLabel } from '@freelance/vue-ui';
     import { useComponentState } from '@/composables/components/useComponentState';
     import type { EntityPickerSelectionData } from '@/modules/types/support/modals/EntityPickerSelectionData.ts';
     import type { GroupedRelationChecklistPickerModalProps } from '@/modules/types/support/modals/GroupedRelationChecklistPickerModalProps.ts';

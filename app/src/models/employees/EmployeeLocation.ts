@@ -13,6 +13,10 @@ export default class EmployeeLocation extends Model<EmployeeLocationRecord> {
         super('employee-locations', 'employee_location');
     }
 
+    override transferKey(): string {
+        return 'employee-locations';
+    }
+
     override columns(): TableColumn[] {
         return [
             new TableColumn({
@@ -61,6 +65,22 @@ export default class EmployeeLocation extends Model<EmployeeLocationRecord> {
                 placeholder: 'EMPLOYEE_CLUSTER_NAME_PLACEHOLDER',
                 validators: { required: true, maxLength: 255 },
             }),
+            new InputField({
+                name: 'latitude',
+                label: 'EMPLOYEE_LOCATION_LATITUDE',
+                required: false,
+                placeholder: 'EMPLOYEE_LOCATION_LATITUDE_PLACEHOLDER',
+                hintKey: 'EMPLOYEE_LOCATION_COORDINATE_HINT',
+                width: FieldWidth.HALF,
+            }),
+            new InputField({
+                name: 'longitude',
+                label: 'EMPLOYEE_LOCATION_LONGITUDE',
+                required: false,
+                placeholder: 'EMPLOYEE_LOCATION_LONGITUDE_PLACEHOLDER',
+                hintKey: 'EMPLOYEE_LOCATION_COORDINATE_HINT',
+                width: FieldWidth.HALF,
+            }),
             new ToggleSwitchField({
                 name: 'is_active',
                 label: 'GENERAL_ACTIVE',
@@ -95,7 +115,7 @@ export default class EmployeeLocation extends Model<EmployeeLocationRecord> {
                             rows: [
                                 {
                                     type: 'fields',
-                                    fields: fields('name', 'cluster_name', 'is_active'),
+                                    fields: fields('name', 'cluster_name', 'latitude', 'longitude', 'is_active'),
                                     col: 12,
                                 },
                             ],

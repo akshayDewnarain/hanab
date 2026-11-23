@@ -116,6 +116,8 @@ export function resolveCardFields(
 
 export type CardListBadge = {
     label: string;
+    /** Extra identifier, such as a code, shown on hover. */
+    description?: string;
     /** Inline chip colors; omit to use the default primary card badge styling. */
     chipStyle?: Record<string, string>;
 };
@@ -163,8 +165,12 @@ export function normalizeToColoredBadges(value: unknown, displayKey = 'name'): C
             (typeof record.label_text_color === 'string' && record.label_text_color) ||
             (typeof record.label_border_color === 'string' && record.label_border_color);
 
+        const code = typeof record.code === 'string' ? record.code.trim() : '';
+        const name = typeof record.name === 'string' ? record.name.trim() : '';
+        const detail = [name !== label ? name : '', code !== label ? code : ''].filter(Boolean).join(' · ');
         return {
             label,
+            ...(detail ? { description: detail } : {}),
             ...(hasCustomColors ? { chipStyle: labelRecordChipStyle(record) } : {}),
         };
     };

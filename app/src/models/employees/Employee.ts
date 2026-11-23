@@ -2,6 +2,7 @@ import Model from '@/modules/models/support/Model.ts';
 import BaseInputField from '@/modules/models/support/inputs/BaseInputField.ts';
 import { DateField } from '@/modules/models/support/forms/DateField.ts';
 import { InputField } from '@/modules/models/support/forms/InputField.ts';
+import { TextAreaField } from '@/modules/models/support/forms/TextAreaField.ts';
 import { SelectField } from '@/modules/models/support/forms/SelectField.ts';
 import { ToggleSwitchField } from '@/modules/models/support/forms/ToggleSwitchField.ts';
 import { UploadImageField } from '@/modules/models/support/forms/UploadImageField.ts';
@@ -15,8 +16,10 @@ import type { EmployeeRoleRecord } from '@/modules/types/support/models/Employee
 import { TableColumnComponentEnum } from '@/modules/enums/support/list-views/TableColumnComponentEnum.ts';
 import EmployeeLocation from '@/models/employees/EmployeeLocation.ts';
 import EmployeeRole from '@/models/employees/EmployeeRole.ts';
+import OrganizationLevel from '@/models/employees/OrganizationLevel.ts';
 import type MediaURL from '@/modules/types/support/media/MediaURL.ts';
 import http from '@/utils/http.ts';
+import { useAuthStore } from '@/stores/auth';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CustomField } from '@/modules/models/support/forms/CustomField.ts';
 import UserDetailFieldsSection from '@/components/forms/custom/UserDetailFieldsSection.vue';
@@ -28,10 +31,20 @@ import type { CertificateRecord } from '@/modules/types/support/models/Certifica
 import type { CategoryGroupedRelationCategory } from '@/modules/types/support/forms/CategoryGroupedRelationCategory.ts';
 import type { CategoryGroupedRelationFieldProps } from '@/modules/types/support/inputs/CategoryGroupedRelationFieldProps.ts';
 
-const EMPLOYEE_INFO_FIELD_NAMES = ['employee_number', 'first_name', 'last_name', 'email', 'phone'] as const;
+const EMPLOYEE_INFO_FIELD_NAMES = ['employee_number', 'first_name', 'initials', 'last_name', 'email', 'phone', 'business_email', 'business_phone', 'introduction'] as const;
+
+function employeeInfoFieldNames(): readonly string[] {
+    if (useAuthStore().hasPermission('update employees')) {
+        return [...EMPLOYEE_INFO_FIELD_NAMES, 'date_of_birth'];
+    }
+
+    return EMPLOYEE_INFO_FIELD_NAMES;
+}
 const EMPLOYEE_DETAILS_FIELD_NAMES = [
     'employee_role_id',
     'employee_location_id',
+    'manager_id',
+    'organization_level_id',
     'employment_type',
     'start_date',
 ] as const;
@@ -174,6 +187,10 @@ export default class Employee extends Model<EmployeeRecord> {
         super('employees', 'employee');
     }
 
+    override transferKey(): string {
+        return 'employees';
+    }
+
     removeImage(id: number | string, config: AxiosRequestConfig = {}): Promise<AxiosResponse<void>> {
         return http.delete(`${this.getEntity()}/${id}/image`, config);
     }
@@ -209,6 +226,15 @@ export default class Employee extends Model<EmployeeRecord> {
                 quickFilter: true,
             }),
             new TableColumn({
+                name: 'initials',
+                label: 'EMPLOYEE_INITIALS',
+                sortable: true,
+                filterable: true,
+                visible: true,
+                quickFilter: false,
+                width: 'fit',
+            }),
+            new TableColumn({
                 name: 'last_name',
                 label: 'EMPLOYEE_LAST_NAME',
                 sortable: true,
@@ -218,7 +244,7 @@ export default class Employee extends Model<EmployeeRecord> {
             }),
             new TableColumn({
                 name: 'email',
-                label: 'GENERAL_EMAIL',
+                label: 'EMPLOYEE_PERSONAL_EMAIL',
                 sortable: true,
                 filterable: true,
                 visible: true,
@@ -226,7 +252,24 @@ export default class Employee extends Model<EmployeeRecord> {
             }),
             new TableColumn({
                 name: 'phone',
-                label: 'GENERAL_PHONE',
+                label: 'EMPLOYEE_PERSONAL_PHONE',
+                sortable: false,
+                filterable: true,
+                visible: true,
+                quickFilter: false,
+                width: 'fit',
+            }),
+            new TableColumn({
+                name: 'business_email',
+                label: 'EMPLOYEE_BUSINESS_EMAIL',
+                sortable: true,
+                filterable: true,
+                visible: true,
+                quickFilter: true,
+            }),
+            new TableColumn({
+                name: 'business_phone',
+                label: 'EMPLOYEE_BUSINESS_PHONE',
                 sortable: false,
                 filterable: true,
                 visible: true,
@@ -398,6 +441,17 @@ export default class Employee extends Model<EmployeeRecord> {
             }),
 
             new InputField({
+                name: 'initials',
+                label: 'EMPLOYEE_INITIALS',
+                required: false,
+                placeholder: 'EMPLOYEE_INITIALS_PLACEHOLDER',
+                width: FieldWidth.HALF,
+                validators: {
+                    maxLength: 32,
+                },
+            }),
+
+            new InputField({
                 name: 'last_name',
                 label: 'EMPLOYEE_LAST_NAME',
                 required: true,
@@ -411,10 +465,11 @@ export default class Employee extends Model<EmployeeRecord> {
 
             new InputField({
                 name: 'email',
-                label: 'GENERAL_EMAIL',
+                label: 'EMPLOYEE_PERSONAL_EMAIL',
                 required: true,
                 placeholder: 'GENERAL_EMAIL_PLACEHOLDER',
                 autocomplete: 'email',
+                width: FieldWidth.HALF,
                 validators: {
                     required: true,
                     maxLength: 255,
@@ -424,13 +479,64 @@ export default class Employee extends Model<EmployeeRecord> {
 
             new InputField({
                 name: 'phone',
-                label: 'GENERAL_PHONE',
+                label: 'EMPLOYEE_PERSONAL_PHONE',
                 required: false,
                 placeholder: 'GENERAL_PHONE_PLACEHOLDER',
                 autocomplete: 'tel',
+                width: FieldWidth.HALF,
                 validators: {
                     maxLength: 255,
                 },
+            }),
+
+            new InputField({
+                name: 'business_email',
+                label: 'EMPLOYEE_BUSINESS_EMAIL',
+                required: false,
+                placeholder: 'EMPLOYEE_BUSINESS_EMAIL_PLACEHOLDER',
+                autocomplete: 'email',
+                width: FieldWidth.HALF,
+                validators: {
+                    maxLength: 255,
+                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                },
+            }),
+
+            new InputField({
+                name: 'business_phone',
+                label: 'EMPLOYEE_BUSINESS_PHONE',
+                required: true,
+                placeholder: 'EMPLOYEE_BUSINESS_PHONE_PLACEHOLDER',
+                autocomplete: 'tel',
+                width: FieldWidth.HALF,
+                validators: {
+                    required: true,
+                    maxLength: 255,
+                },
+            }),
+
+            new TextAreaField({
+                name: 'introduction',
+                label: 'EMPLOYEE_INTRODUCTION',
+                required: false,
+                placeholder: 'EMPLOYEE_INTRODUCTION_PLACEHOLDER',
+                rows: 4,
+                maxLength: 500,
+                width: FieldWidth.FULL,
+                validators: {
+                    maxLength: 500,
+                },
+            }),
+
+            new DateField({
+                name: 'date_of_birth',
+                label: 'EMPLOYEE_DATE_OF_BIRTH',
+                required: false,
+                placeholder: 'EMPLOYEE_DATE_OF_BIRTH_PLACEHOLDER',
+                position: 'bottom',
+                align: 'right',
+                dropdownWidth: DropdownWidth.FULL,
+                width: FieldWidth.HALF,
             }),
 
             new SelectField({
@@ -466,6 +572,46 @@ export default class Employee extends Model<EmployeeRecord> {
                     immediate: true,
                     translate: false,
                     filter: (row) => (row as EmployeeLocationRecord).is_active,
+                },
+            }),
+
+            new SelectField({
+                name: 'manager_id',
+                label: 'EMPLOYEE_MANAGER',
+                required: false,
+                placeholder: 'EMPLOYEE_MANAGER_PLACEHOLDER',
+                position: 'bottom',
+                align: 'right',
+                remoteFetch: {
+                    instance: Employee,
+                    map: (row) => {
+                        const person = row as EmployeeRecord;
+                        return {
+                            label: `${person.first_name} ${person.last_name}`,
+                            value: person.id,
+                        };
+                    },
+                    params: { per_page: 200 },
+                    immediate: true,
+                    translate: false,
+                    filter: (row) => (row as EmployeeRecord).is_active !== false,
+                },
+            }),
+
+            new SelectField({
+                name: 'organization_level_id',
+                label: 'EMPLOYEE_ORGANIZATION_LEVEL',
+                required: false,
+                placeholder: 'EMPLOYEE_ORGANIZATION_LEVEL_PLACEHOLDER',
+                position: 'bottom',
+                align: 'right',
+                remoteFetch: {
+                    instance: OrganizationLevel,
+                    map: { label: 'name', value: 'id' },
+                    params: { per_page: 100 },
+                    immediate: true,
+                    translate: false,
+                    filter: (row) => (row as { is_active?: boolean }).is_active !== false,
                 },
             }),
 
@@ -609,7 +755,7 @@ export default class Employee extends Model<EmployeeRecord> {
                                             label: 'EMPLOYEE_DETAIL_TAB_INFO',
                                             descriptionKey: 'EMPLOYEE_DETAIL_SECTION_INFO_DESCRIPTION',
                                             headerIcon: 'material-symbols:badge-outline',
-                                            fieldNames: EMPLOYEE_INFO_FIELD_NAMES,
+                                            fieldNames: employeeInfoFieldNames(),
                                         }),
                                     ],
                                 },

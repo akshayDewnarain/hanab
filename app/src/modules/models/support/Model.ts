@@ -153,4 +153,12 @@ export default class Model<T> {
             name: 'default',
         };
     }
+
+    /**
+     * Transfer catalog key when this model can be imported and exported.
+     * Null means the list does not offer those actions.
+     */
+    transferKey(): string | null {
+        return null;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Domain\Employees\Http\Requests;
 
 use Domain\Employees\Models\EmployeeRole;
+use Domain\Employees\Support\EmployeeRoleTree;
 use Domain\Support\Http\Requests\BaseModelRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,7 +34,51 @@ abstract class BaseEmployeeRoleRequest extends BaseModelRequest
                 'required',
                 'boolean',
             ],
+            'parent_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('employee_roles', 'id'),
+            ],
+            'sort_order' => [
+                'nullable',
+                'integer',
+                'min:0',
+                'max:9999',
+            ],
+            'organization_level_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('organization_levels', 'id'),
+            ],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $empty = [];
+        foreach (['parent_id', 'organization_level_id'] as $field) {
+            if ($this->input($field) === '') {
+                $empty[$field] = null;
+            }
+        }
+        if ($empty !== []) {
+            $this->merge($empty);
+        }
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator): void {
+            $role = $this->route('employee_role');
+            $parentId = $this->input('parent_id');
+            if (! $role instanceof EmployeeRole || $parentId === null || $parentId === '') {
+                return;
+            }
+
+            if (EmployeeRoleTree::createsCycle($role, (int) $parentId)) {
+                $validator->errors()->add('parent_id', 'A role cannot sit under itself.');
+            }
+        });
     }
 
     public function model(): mixed

@@ -19,7 +19,7 @@ class PasswordResetController extends Controller
         $email = $request->validated('email');
 
         $user = User::query()->where('email', $email)->first();
-        if ($user) {
+        if ($user?->canRequestPasswordReset()) {
             $status = Password::broker()->sendResetLink(['email' => $email]);
             if ($status === Password::RESET_THROTTLED) {
                 return ApiResponse::error(__('Please wait before requesting another reset link.'), null, 429);
@@ -36,8 +36,13 @@ class PasswordResetController extends Controller
         $status = Password::broker()->reset(
             $credentials,
             function (User $user, string $password) {
+                if (! $user->canRequestPasswordReset()) {
+                    return false;
+                }
+
                 $user->forceFill([
                     'password' => $password,
+                    'password_set_at' => now(),
                 ]);
                 $user->setRememberToken(Str::random(60));
                 $user->save();
@@ -45,6 +50,10 @@ class PasswordResetController extends Controller
                 $user->tokens()->delete();
 
                 event(new PasswordReset($user));
+                activity('security')
+                    ->performedOn($user)
+                    ->withProperties(['event' => 'password_reset'])
+                    ->log('password_reset');
             }
         );
 

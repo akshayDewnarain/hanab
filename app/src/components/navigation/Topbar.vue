@@ -7,175 +7,43 @@
         leave-active-class="transform transition duration-200 ease-in"
         leave-to-class="-translate-y-full opacity-0"
     >
-        <nav class="relative z-20 h-14 flex-shrink-0 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-sm">
-            <div class="relative flex h-full w-full items-center justify-between gap-4 px-4">
-                <!-- Left -->
-                <div class="flex min-w-0 items-center">
-                    <BreadCrumb />
-                </div>
-
-                <!-- Center search -->
-                <div class="pointer-events-none absolute left-1/2 hidden -translate-x-1/2 px-2 md:pointer-events-auto md:block">
-                    <label class="relative block w-72 lg:w-80">
-                        <span class="sr-only">{{ t('GENERAL_SEARCH_PLACEHOLDER') }}</span>
-                        <Icon
-                            class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-                            icon="material-symbols:search-rounded"
-                        />
-                        <input
-                            :placeholder="t('GENERAL_SEARCH_PLACEHOLDER')"
-                            class="w-full rounded-full border border-slate-200 bg-slate-50/80 py-2 pl-10 pr-4 text-sm text-slate-700 shadow-inner transition focus:border-[var(--color-primary)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20"
-                            type="search"
-                        />
-                    </label>
-                </div>
-
-                <!-- Right: user + menu -->
-                <div class="flex items-center gap-2 sm:gap-3">
-                    <AdvancedDropdown
-                        :align="'right'"
-                        :show-caret="false"
-                        customDropdownClass="!w-72 !overflow-visible !rounded-xl !border-slate-200/90 !p-0 !shadow-xl"
-                    >
-                        <template #trigger="{ onToggleDropdown }">
-                            <button
-                                :aria-label="t('TOPBAR_ACCOUNT_MENU')"
-                                class="group flex cursor-pointer items-center gap-2.5 rounded-full border border-slate-200/90 bg-white py-1 pl-1 pr-2.5 shadow-sm transition hover:border-[var(--color-primary)]/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/40"
-                                type="button"
-                                @click="onToggleDropdown"
-                            >
-                                <span
-                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-background)] to-[var(--color-highlight-dark)] text-sm font-semibold tracking-wide text-white shadow-inner"
-                                >
-                                    {{ userInitials }}
-                                </span>
-                                <span class="hidden min-w-0 flex-col items-start text-left sm:flex">
-                                    <span class="max-w-[9rem] truncate text-sm font-semibold leading-tight text-slate-800">
-                                        {{ user?.name ?? '—' }}
-                                    </span>
-                                    <span
-                                        v-if="roleLabel"
-                                        class="max-w-[9rem] truncate text-xs font-medium text-[var(--color-primary)]"
-                                    >
-                                        {{ roleLabel }}
-                                    </span>
-                                </span>
-                                <Icon
-                                    class="h-5 w-5 shrink-0 text-slate-400 transition group-hover:text-[var(--color-primary)]"
-                                    icon="material-symbols:keyboard-arrow-down-rounded"
-                                />
-                            </button>
-                        </template>
-
-                        <template #dropdown-content>
-                            <div class="relative w-72 overflow-visible rounded-xl">
-                                <div
-                                    class="border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white px-4 py-3.5"
-                                >
-                                    <div class="flex items-center gap-3">
-                                        <span
-                                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-background)] to-[var(--color-highlight-dark)] text-sm font-bold text-white shadow-md"
-                                        >
-                                            {{ userInitials }}
-                                        </span>
-                                        <div class="min-w-0 flex-1">
-                                            <p class="truncate text-sm font-semibold text-slate-900">
-                                                {{ user?.name ?? '—' }}
-                                            </p>
-                                            <p class="truncate text-xs text-slate-500">{{ user?.email ?? '' }}</p>
-                                            <span
-                                                v-if="roleLabel"
-                                                class="mt-1.5 inline-flex rounded-full bg-[var(--color-primary)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-primary)]"
-                                            >
-                                                {{ roleLabel }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="relative px-2 py-2">
-                                    <button
-                                        :aria-expanded="languageMenuOpen"
-                                        :class="[
-                                            'flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm transition',
-                                            languageMenuOpen
-                                                ? 'bg-slate-100 text-[var(--color-primary)]'
-                                                : 'text-slate-700 hover:bg-slate-50',
-                                        ]"
-                                        type="button"
-                                        @click.stop="toggleLanguageMenu"
-                                    >
-                                        <Icon
-                                            class="h-5 w-5 shrink-0 text-slate-500"
-                                            icon="material-symbols:translate-rounded"
-                                        />
-                                        <span class="min-w-0 flex-1 font-medium">{{ t('APP_LANGUAGE') }}</span>
-                                        <span class="truncate text-xs text-slate-500">{{ activeLocaleLabel }}</span>
-                                        <Icon
-                                            class="h-5 w-5 shrink-0 text-slate-400"
-                                            icon="material-symbols:chevron-left-rounded"
-                                        />
-                                    </button>
-
-                                    <!-- Flyout opens to the left; main panel width stays fixed -->
-                                    <Transition
-                                        enter-active-class="transition duration-150 ease-out"
-                                        enter-from-class="opacity-0 translate-x-2"
-                                        enter-to-class="opacity-100 translate-x-0"
-                                        leave-active-class="transition duration-100 ease-in"
-                                        leave-from-class="opacity-100 translate-x-0"
-                                        leave-to-class="opacity-0 translate-x-2"
-                                    >
-                                        <div
-                                            v-show="languageMenuOpen"
-                                            class="absolute right-full top-0 z-10 mr-1.5 flex w-44 flex-col rounded-lg border border-slate-200/90 bg-white py-1.5 shadow-lg"
-                                            role="menu"
-                                            :aria-label="t('APP_LANGUAGE')"
-                                        >
-                                            <button
-                                                v-for="option in localeOptions"
-                                                :key="option.code"
-                                                :aria-current="currentLocale === option.code ? 'true' : undefined"
-                                                :class="[
-                                                    'mx-1.5 flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm transition',
-                                                    currentLocale === option.code
-                                                        ? 'bg-[var(--color-primary)]/10 font-medium text-[var(--color-primary)]'
-                                                        : 'text-slate-700 hover:bg-slate-50',
-                                                ]"
-                                                role="menuitem"
-                                                type="button"
-                                                @click.stop="selectLocale(option.code)"
-                                            >
-                                                <span aria-hidden="true" class="text-base leading-none">{{
-                                                    option.flag
-                                                }}</span>
-                                                <span class="min-w-0 flex-1">{{ t(option.labelKey) }}</span>
-                                                <Icon
-                                                    v-if="currentLocale === option.code"
-                                                    class="h-4 w-4 shrink-0"
-                                                    icon="material-symbols:check-rounded"
-                                                />
-                                            </button>
-                                        </div>
-                                    </Transition>
-                                </div>
-
-                                <div class="border-t border-slate-100 px-2 py-2">
-                                    <button
-                                        class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
-                                        type="button"
-                                        @click="confirmLogout"
-                                    >
-                                        <Icon class="h-5 w-5 shrink-0" icon="material-symbols:logout-rounded" />
-                                        <span>{{ t('SIDEBAR_ITEM_LOGOUT') }}</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </template>
-                    </AdvancedDropdown>
-                </div>
-            </div>
-        </nav>
+        <Topbar
+            class="z-20! shadow-sm"
+            :account="account"
+            :account-actions="accountActions"
+            :preferences="preferences"
+            :labels="{
+                search: t('GENERAL_SEARCH_PLACEHOLDER'),
+                searchPlaceholder: t('GENERAL_SEARCH_PLACEHOLDER'),
+                account: t('TOPBAR_ACCOUNT_MENU'),
+            }"
+            @account-action="onAccountAction"
+            @preference-change="onPreferenceChange"
+        >
+            <template #search>
+                <ExpertiseSearch presentation="field" shortcut />
+            </template>
+            <template #notifications>
+                <NotificationBell
+                    :items="notificationItems"
+                    :unread-count="unreadCount"
+                    :labels="notificationLabels"
+                    view-all-href="/admin/messages"
+                    @open="refreshMessages"
+                    @select="onNotificationSelect"
+                    @mark-read="markNotificationRead"
+                    @mark-all-read="markAllNotificationsRead"
+                    @dismiss="dismissNotification"
+                />
+            </template>
+            <template #breadcrumbs>
+                <BreadCrumb />
+            </template>
+            <template #account-action="{ action }">
+                <Icon v-if="action.icon" :icon="action.icon" class="h-5 w-5 shrink-0" />
+                <span>{{ action.label }}</span>
+            </template>
+        </Topbar>
     </Transition>
 </template>
 
@@ -183,13 +51,18 @@
     import { Icon } from '@iconify/vue';
     import type { AxiosError } from 'axios';
     import BreadCrumb from '@/components/navigation/BreadCrumb.vue';
+    import ExpertiseSearch from '@/components/search/ExpertiseSearch.vue';
     import ConfirmationModal from '@/components/modals/content-modals/ConfirmationModal.vue';
-    import AdvancedDropdown from '@/components/inputs/AdvancedDropdown.vue';
     import {
-        APP_LOCALE_STORAGE_KEY,
-        type AppLocale,
-        useLocalStorage,
-    } from '@/composables/useLocalStorage';
+        Topbar,
+        NotificationBell,
+        type NotificationLabels,
+        type NotificationItem,
+        type TopbarAccount,
+        type TopbarAction,
+        type TopbarPreference,
+    } from '@freelance/vue-ui';
+    import { APP_LOCALE_STORAGE_KEY, type AppLocale, useLocalStorage } from '@/composables/useLocalStorage';
     import { useModalService } from '@/composables/useModalService';
     import { ModalActionTarget } from '@/modules/enums/support/modals/ModalActionTarget.ts';
     import { ModalActionType } from '@/modules/enums/support/modals/ModalActionType.ts';
@@ -197,14 +70,26 @@
     import { ModalType } from '@/modules/enums/support/modals/ModalType.ts';
     import { ModalVariant } from '@/modules/enums/support/modals/ModalVariant.ts';
     import { useAuthStore } from '@/stores/auth';
+    import { useMessages } from '@/composables/useMessages';
+    import { messageIcon } from '@/modules/messages/messagePresentation';
+    import {
+        readDismissedMessageIds,
+        readSeenMessageIds,
+        rememberDismissedMessageIds,
+        rememberSeenMessageIds,
+    } from '@/modules/messages/seenMessages';
+    import { useThemeStore } from '@/stores/theme';
+    import { isThemeAppearance, type ThemeAppearance } from '@/modules/support/theme/themeAppearance';
     import http from '@/utils/http';
-    import { computed, defineComponent, onMounted, ref } from 'vue';
+    import { knowledgeBaseVisible } from '@/modules/knowledge/visibility';
+    import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { useRouter } from 'vue-router';
 
-    defineComponent({ name: 'Topbar' });
+    defineOptions({ name: 'HanabTopbar' });
 
     const authStore = useAuthStore();
+    const themeStore = useThemeStore();
     const router = useRouter();
     const { t, locale } = useI18n();
     const { getLocalStorageItem, setLocalStorageItem } = useLocalStorage();
@@ -216,24 +101,8 @@
     ];
 
     const user = computed(() => authStore.user);
-    const languageMenuOpen = ref(false);
 
     const currentLocale = computed(() => (locale.value === 'en' ? 'en' : 'nl'));
-
-    const activeLocaleLabel = computed(() => {
-        const active = localeOptions.find((o) => o.code === currentLocale.value);
-        return active ? t(active.labelKey) : '';
-    });
-
-    const userInitials = computed(() => {
-        const name = user.value?.name?.trim();
-        if (!name) return '?';
-        const parts = name.split(/\s+/).filter(Boolean);
-        if (parts.length >= 2) {
-            return `${parts[0]![0] ?? ''}${parts[parts.length - 1]![0] ?? ''}`.toUpperCase();
-        }
-        return name.slice(0, 2).toUpperCase();
-    });
 
     const roleLabel = computed(() => {
         const role = user.value?.role_name;
@@ -242,22 +111,197 @@
         return t(key) !== key ? t(key) : role;
     });
 
-    function closeLanguageMenu(): void {
-        languageMenuOpen.value = false;
+    // The bell shows the latest in-app messages. Reactions stay on the messages page.
+    const { feed, failed, isLoading, load: loadMessages } = useMessages();
+    const seenMessageIds = ref<Set<string>>(new Set());
+    const dismissedMessageIds = ref<Set<string>>(new Set());
+    const seenReady = ref(false);
+    let messagePoll: ReturnType<typeof setInterval> | null = null;
+
+    function rememberSeen(ids: Iterable<string>): void {
+        rememberSeenMessageIds(ids);
+        seenMessageIds.value = new Set(ids);
     }
 
-    function toggleLanguageMenu(): void {
-        languageMenuOpen.value = !languageMenuOpen.value;
+    function rememberDismissed(ids: Iterable<string>): void {
+        rememberDismissedMessageIds(ids);
+        dismissedMessageIds.value = new Set(ids);
+    }
+
+    const visibleMessages = computed(() => feed.value.filter((message) => !dismissedMessageIds.value.has(message.id)));
+
+    const reviewItems = ref<NotificationItem[]>([]);
+
+    const unreadCount = computed(() => {
+        if (!seenReady.value) return 0;
+        const messages = visibleMessages.value.filter((message) => !seenMessageIds.value.has(message.id)).length;
+        const reviews = reviewItems.value.filter((item) => item.id && !seenMessageIds.value.has(item.id)).length;
+        return messages + reviews;
+    });
+
+    const messageItems = computed<NotificationItem[]>(() =>
+        visibleMessages.value.slice(0, 10).map((message) => ({
+            id: message.id,
+            title: message.title,
+            body: message.text,
+            unread: seenReady.value && !seenMessageIds.value.has(message.id),
+            meta: t(`MESSAGE_CATEGORY_${message.category.toUpperCase()}`),
+            timeLabel: formatNotificationTime(message.publishedAt ?? message.updatedAt),
+            icon: messageIcon(message.type),
+            tone: message.type === 'contract' ? 'info' : 'success',
+            href: '/admin/messages',
+            actionLabel: t('NOTIFICATIONS_OPEN'),
+        })),
+    );
+
+    const notificationItems = computed(() => [
+        ...reviewItems.value.map((item) => ({
+            ...item,
+            unread: seenReady.value && Boolean(item.id) && !seenMessageIds.value.has(item.id),
+        })),
+        ...messageItems.value,
+    ]);
+
+    function formatNotificationTime(value: string | null): string {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return new Intl.DateTimeFormat(locale.value === 'nl' ? 'nl-NL' : 'en-GB', {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+        }).format(date);
+    }
+
+    function markNotificationRead(item: NotificationItem): void {
+        const next = new Set(seenMessageIds.value);
+        next.add(item.id);
+        rememberSeen(next);
+    }
+
+    function markAllNotificationsRead(): void {
+        const next = new Set(seenMessageIds.value);
+        for (const message of visibleMessages.value) next.add(message.id);
+        for (const item of reviewItems.value) if (item.id) next.add(item.id);
+        rememberSeen(next);
+    }
+
+    function dismissNotification(item: NotificationItem): void {
+        markNotificationRead(item);
+        const next = new Set(dismissedMessageIds.value);
+        next.add(item.id);
+        rememberDismissed(next);
+    }
+
+    function onNotificationSelect(item: NotificationItem, event: MouseEvent): void {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        if (item.id) markNotificationRead(item);
+        if (item.href) void router.push(item.href);
+    }
+
+    async function refreshMessages(): Promise<void> {
+        if (knowledgeBaseVisible && authStore.hasPermission('update knowledge articles')) {
+            try {
+                const response = await http.get<{ data: { overdue: Array<{ id: number; title: string }> } }>('knowledge/maintenance');
+                reviewItems.value = (response.data.data.overdue ?? []).map((article) => ({
+                    id: `knowledge-review-${article.id}`,
+                    title: article.title,
+                    body: t('KNOWLEDGE_REVIEW_NOTICE'),
+                    unread: !seenMessageIds.value.has(`knowledge-review-${article.id}`),
+                    meta: t('KNOWLEDGE_TITLE'),
+                    icon: 'material-symbols:rate-review-outline-rounded',
+                    tone: 'warning',
+                    href: `/admin/knowledge/articles/${article.id}/edit`,
+                    actionLabel: t('NOTIFICATIONS_OPEN'),
+                }));
+            } catch {
+                reviewItems.value = [];
+            }
+        }
+        await loadMessages();
+        if (isLoading.value || failed.value) return;
+        const stored = readSeenMessageIds();
+        seenMessageIds.value = new Set(stored ?? []);
+        dismissedMessageIds.value = new Set(readDismissedMessageIds());
+        seenReady.value = true;
+    }
+    const notificationLabels = computed<NotificationLabels>(() => ({
+        title: t('MOBILE_NOTIFICATIONS_TITLE'),
+        trigger:
+            unreadCount.value > 0
+                ? t('NOTIFICATIONS_BELL_LABEL_UNREAD', { count: unreadCount.value })
+                : t('NOTIFICATIONS_BELL_LABEL'),
+        subtitle:
+            unreadCount.value > 0
+                ? t('NOTIFICATIONS_UNREAD_COUNT', { count: unreadCount.value })
+                : t('NOTIFICATIONS_ALL_CAUGHT_UP'),
+        empty: t('NOTIFICATIONS_EMPTY'),
+        loading: t('NOTIFICATIONS_LOADING'),
+        retry: t('NOTIFICATIONS_RETRY'),
+        markRead: t('MOBILE_NOTIFICATION_MARK_READ'),
+        markAllRead: t('NOTIFICATIONS_MARK_ALL_READ'),
+        dismiss: t('NOTIFICATIONS_DISMISS'),
+        open: t('NOTIFICATIONS_OPEN'),
+        unread: t('NOTIFICATIONS_UNREAD'),
+        viewAll: t('NOTIFICATIONS_VIEW_ALL'),
+    }));
+
+    const account = computed<TopbarAccount>(() => ({
+        name: user.value?.name ?? '—',
+        email: user.value?.email ?? '',
+        role: roleLabel.value,
+    }));
+
+    const accountActions = computed<TopbarAction[]>(() => [
+        { id: 'security', label: t('ACCOUNT_SECURITY'), icon: 'material-symbols:shield-lock-outline' },
+        { id: 'logout', label: t('SIDEBAR_ITEM_LOGOUT'), icon: 'material-symbols:logout-rounded', danger: true },
+    ]);
+
+    const themeOptions: { id: ThemeAppearance; labelKey: string }[] = [
+        { id: 'light', labelKey: 'APP_THEME_LIGHT' },
+        { id: 'project', labelKey: 'APP_THEME_PROJECT' },
+        { id: 'dark', labelKey: 'APP_THEME_DARK' },
+    ];
+
+    const preferences = computed<TopbarPreference[]>(() => [
+        {
+            id: 'language',
+            label: t('APP_LANGUAGE'),
+            icon: 'translate',
+            value: currentLocale.value,
+            options: localeOptions.map((option) => ({
+                value: option.code,
+                label: `${option.flag} ${t(option.labelKey)}`,
+            })),
+        },
+        {
+            id: 'theme',
+            label: t('APP_THEME'),
+            icon: 'palette',
+            control: 'slider',
+            value: themeStore.appearance,
+            options: themeOptions.map((option) => ({
+                value: option.id,
+                label: t(option.labelKey),
+            })),
+        },
+    ]);
+
+    function onAccountAction(action: TopbarAction): void {
+        if (action.id === 'security') void router.push({ name: 'admin-settings-security' });
+        if (action.id === 'logout') confirmLogout();
+    }
+
+    function onPreferenceChange(id: string, value: string): void {
+        if (id === 'language' && (value === 'nl' || value === 'en')) setLocale(value);
+        if (id === 'theme' && isThemeAppearance(value)) themeStore.setAppearance(value);
     }
 
     function setLocale(code: AppLocale): void {
         locale.value = code;
         setLocalStorageItem(APP_LOCALE_STORAGE_KEY, code);
-    }
-
-    function selectLocale(code: AppLocale): void {
-        setLocale(code);
-        closeLanguageMenu();
     }
 
     function syncLocaleFromStorage(): void {
@@ -307,5 +351,13 @@
 
     onMounted(() => {
         syncLocaleFromStorage();
+        void refreshMessages();
+        messagePoll = setInterval(() => {
+            void refreshMessages();
+        }, 60_000);
+    });
+
+    onBeforeUnmount(() => {
+        if (messagePoll) clearInterval(messagePoll);
     });
 </script>

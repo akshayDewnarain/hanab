@@ -1,340 +1,88 @@
 <template>
-    <div class="flex flex-col w-full h-full">
-        <div class="flex items-center justify-between w-full py-2">
-            <div class="flex px-4">
-                <div
-                    v-if="displayHeader"
-                    class="bg-(--color-primary) rounded border border-gray-200 shadow px-2 py-1"
-                >
-                    <span class="text-xl font-bold text-white">
-                        {{
-                            t('ENTITY_TABLE_OVERVIEW', {
-                                entity: t(snakeCase(modelInstance.getEntity()).toUpperCase()),
-                            })
-                        }}
-                    </span>
-                </div>
-            </div>
-            <div>
-                <div class="flex p-2 gap-4">
-                    <div
-                        v-for="(customAction, index) in props.customActions || []"
-                        :key="index"
-                        class="flex items-center justify-center bg-(--color-primary)border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
-                        @click="handleCustomAction(customAction)"
-                    >
-                        <Icon :icon="customAction.icon" class="text-white w-4 h-4" />
-                        <span class="text-sm text-white mx-2">{{ t(customAction.label) }}</span>
-                    </div>
-                    <div
-                        v-if="enableDefaultActions"
-                        class="flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
-                        @click="openModal"
-                    >
-                        <Icon class="text-white w-4 h-4" icon="material-symbols:add-2-rounded" />
-                        <span class="text-sm text-white mx-2">{{ t('MODAL_CREATE') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flex p-2 bg-white items-center justify-between w-full border-t border-b border-gray-200">
-            <div class="flex items-center overflow-x-auto whitespace-nowrap p-2">
-                <span> {{ t('FILTER_QUICK_FILTERS') }} </span>
-                <QuickFilters
-                    :key="quickFilterKey"
-                    :entity="props.entity"
-                    :filters="filters"
-                    :model="props.model"
-                    @update:filters="applyFilters"
-                    @update:mounted="onQuickFiltersMounted"
-                />
-            </div>
-            <div class="flex items-center">
-                <div class="flex p-2 gap-4">
-                    <div
-                        class="flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-sm"
-                    >
-                        <Icon class="text-white w-4 h-4" icon="material-symbols:refresh-rounded" />
-                        <span class="text-sm text-white mx-2">{{ t('TABLE_REFRESH') }}</span>
-                    </div>
+    <UiListView
+        v-model:search="searchModel"
+        v-model:page="pageModel"
+        v-model:per-page="perPageModel"
+        v-model:selected="selectedModel"
+        class="h-full min-h-0"
+        :actions="listActions"
+        :bulk-actions="bulkActions"
+        :clickable="!disableRowNavigation"
+        :columns="listColumns"
+        :filters="filterChips"
+        :labels="labels"
+        :loading="isLoading"
+        :page-size-options="pageSizeOptions"
+        :rows="rows"
+        :selectable="selectable"
+        :show-header="showListHeader"
+        :show-settings="displayTableConfiguration"
+        :title="listTitle"
+        :total="meta.total"
+        @action="onAction"
+        @bulk-action="onBulkAction"
+        @refresh="fetchData"
+        @remove-filter="onRemoveFilter"
+        @reset-filters="resetFilters"
+        @row-click="onRowClick"
+        @settings="openTableConfiguration"
+    >
+        <template #filters>
+            <QuickFilters
+                :key="quickFilterKey"
+                :entity="props.entity"
+                :filters="filters"
+                :model="props.model"
+                @update:filters="applyFilters"
+                @update:mounted="onQuickFiltersMounted"
+            />
+        </template>
 
-                    <div
-                        v-if="displayTableConfiguration"
-                        class="flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded p-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-sm"
-                        @click="openTableConfiguration()"
-                    >
-                        <Icon class="text-white w-4 h-4" icon="material-symbols:tools-wrench-outline-rounded" />
-                        <span class="text-sm text-white mx-2">{{ t('TABLE_SETTINGS') }}</span>
-                    </div>
-                </div>
-                <div class="flex flex-row w-64 bg-white rounded shadow relative">
-                    <input
-                        v-model="searchQuery"
-                        :placeholder="t('GENERAL_SEARCH_PLACEHOLDER')"
-                        class="input-base"
-                        type="text"
-                        @input="handleInputChange"
-                    />
-                    <div
-                        class="absolute right-0 h-full flex items-center justify-center bg-(--color-primary) border border-gray-200 rounded-r px-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
-                    >
-                        <Icon class="text-white w-4 h-4" icon="material-symbols:search" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <Collapse
-            :customClasses="['flex bg-white border-b border-gray-200']"
-            :duration="500"
-            :max-height="'50px'"
-            :show="filterCount > 0"
-        >
-            <div
-                class="inline-flex items-center bg-white text-sm text-gray-700 border border-gray-200 rounded shadow mx-2 my-3 whitespace-nowrap"
-            >
-                <div
-                    class="px-2 py-1 font-bold bg-[var(--color-primary)] rounded-l cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
-                    @click="resetFilters"
-                >
-                    <Icon
-                        class="w-5 h-5 text-white transition-transform duration-200 ease-in-out text-xs"
-                        icon="material-symbols:delete-outline-rounded"
-                    />
-                </div>
-                <div class="px-4 py-1 bg-gray-100">
-                    <span>{{ t(`FILTER_RESET`) }}</span>
-                </div>
-            </div>
-            <transition-group
-                class="flex overflow-x-auto whitespace-nowrap scrollbar-thin min-h-[40px]"
-                name="slide-fade"
-                tag="div"
-            >
-                <div
-                    v-for="(value, key) in filters"
-                    :key="key"
-                    class="inline-flex items-center bg-white text-sm text-gray-700 rounded mx-2 my-3"
-                >
-                    <transition-group v-if="Array.isArray(value)" name="slide-fade" tag="div">
-                        <template v-for="(item, index) in value">
-                            <div
-                                v-if="item !== null && item !== undefined && item !== ''"
-                                :key="`${key}-${index}`"
-                                class="inline-flex items-center bg-white text-sm text-gray-700 border border-gray-200 rounded shadow mx-2"
-                            >
-                                <div class="px-2 py-1 font-bold bg-[var(--color-primary)] rounded-l text-white">
-                                    <span>{{ getArrayFilterLabel(key, index) }}</span>
-                                </div>
-                                <div class="px-4 py-1 bg-gray-100">
-                                    <span>{{ formatArrayFilterValue(item) }}</span>
-                                </div>
-                                <div
-                                    class="px-2 py-1 font-bold bg-[var(--color-primary)] rounded-r cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
-                                    @click="removeArrayFilter(key, item)"
-                                >
-                                    <Icon
-                                        class="w-5 h-5 text-white transition-transform duration-200 ease-in-out text-xs"
-                                        icon="material-symbols:close"
-                                    />
-                                </div>
-                            </div>
-                        </template>
-                    </transition-group>
+        <template #bulk>
+            <slot :clear="clearSelection" :selected-ids="localSelectedIds" name="bulk-actions" />
+        </template>
 
-                    <div
-                        v-else
-                        class="inline-flex items-center bg-white text-sm text-gray-700 border border-gray-200 rounded shadow"
-                    >
-                        <div class="px-2 py-1 font-bold bg-[var(--color-primary)] rounded-l text-white">
-                            <span>{{ getFilterLabel(key) }}</span>
-                        </div>
-                        <div class="px-4 py-1 bg-gray-100">
-                            <span>{{ formatFilterValue(value) }}</span>
-                        </div>
-                        <div
-                            class="px-2 py-1 font-bold bg-[var(--color-primary)] rounded-r cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in"
-                            @click="removeFilter(key)"
-                        >
-                            <Icon
-                                class="w-5 h-5 text-white transition-transform duration-200 ease-in-out text-xs"
-                                icon="material-symbols:close"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </transition-group>
-        </Collapse>
-        <div class="relative flex-grow overflow-hidden">
-            <div :style="barWrapperStyle" class="w-full overflow-hidden">
-                <Transition
-                    appear
-                    enter-active-class="transform transition duration-300 ease-out"
-                    enter-from-class="-translate-y-full opacity-0"
-                    enter-to-class="translate-y-0 opacity-100"
-                    leave-active-class="transform transition duration-200 ease-in"
-                    leave-to-class="-translate-y-full opacity-0"
-                >
-                    <div
-                        v-if="selectable && anySelected"
-                        ref="barInnerRef"
-                        class="border-b border-gray-300 bg-gray-100"
-                    >
-                        <div class="max-w-full px-4 py-2 flex items-center justify-between gap-3">
-                            <div class="text-sm text-gray-700 font-bold">
-                                {{ selectedCount }}
-                                {{ selectedCount === 1 ? t('ITEM_SELECTED') : t('ITEMS_SELECTED') }}
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <slot :clear="clearSelection" :selected-ids="localSelectedIds" name="bulk-actions" />
-
-                                <template v-if="showDefaultBulkActions">
-                                    <button
-                                        class="flex text-white items-center justify-center bg-red-600 border border-red-700 rounded py-1 px-2 cursor-pointer hover:bg-red-700 transition-colors duration-200 ease-in shadow-md"
-                                        type="button"
-                                        @click="deleteSelected"
-                                    >
-                                        {{ t('GENERAL_DELETE_SELECTED') }}
-                                    </button>
-                                    <button
-                                        class="flex text-[var(--color-primary)] items-center justify-center bg-white border border-[var(--color-primary)] rounded py-1 px-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in shadow-md"
-                                        type="button"
-                                        @click="clearSelection"
-                                    >
-                                        {{ t('CLEAR_SELECTION') }}
-                                    </button>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </Transition>
-            </div>
-            <div class="h-full overflow-auto bg-white">
-                <table class="min-w-full bg-white">
-                    <thead class="sticky top-0 bg-gray-100">
-                        <tr class="w-full border-b border-gray-300">
-                            <th
-                                v-if="selectable"
-                                class="py-2 px-4 text-center font-bold text-gray-700 border-r border-gray-300 w-10"
-                            >
-                                <input v-model="allSelected" type="checkbox" @change="toggleSelectAll" />
-                            </th>
-                            <th
-                                v-for="column in visibleColumns"
-                                :key="column.name"
-                                class="px-4 text-center font-bold border-r border-gray-300 whitespace-nowrap text-gray-700 text-sm"
-                            >
-                                {{ t(column.label).toUpperCase() }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <Transition mode="out-in" name="table-fade">
-                        <tbody v-if="isLoading" key="loading">
-                            <tr v-for="index in 8" :key="`skeleton-row-${index}`" class="border-b border-gray-300">
-                                <td v-if="selectable" class="py-2 px-6 text-center border-r border-gray-300">
-                                    <Skeleton class="h-4 w-4 mx-auto rounded" />
-                                </td>
-                                <td
-                                    v-for="column in visibleColumns"
-                                    :key="`${column.name}-skeleton-${index}`"
-                                    class="py-2 px-4"
-                                >
-                                    <Skeleton class="h-4 w-full max-w-[220px]" />
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody v-else key="content">
-                            <tr
-                                v-for="item in items"
-                                :key="getItemId(item)"
-                                :class="[
-                                    'border-b border-gray-300 transition ease-in duration-100',
-                                    props.disableRowNavigation ? 'hover:bg-gray-50' : 'cursor-pointer hover:bg-gray-100',
-                                ]"
-                                @click="onRowClick(getItemId(item))"
-                            >
-                                <td v-if="selectable" class="py-2 px-6 text-center border-r border-gray-300">
-                                    <input
-                                        :checked="localSelectedIdsSet.has(getItemId(item))"
-                                        :value="getItemId(item)"
-                                        type="checkbox"
-                                        @change="toggleOne(getItemId(item), $event)"
-                                        @click.stop
-                                    />
-                                </td>
-                                <td
-                                    v-for="column in visibleColumns"
-                                    :key="column.name"
-                                    class="py-2 px-4 text-gray-600 whitespace-nowrap"
-                                >
-                                    <component
-                                        :is="getComponentType(column.component.type)"
-                                        v-if="column.component"
-                                        :badges="column.component.badges"
-                                        :custom-classes="column.component.customClasses"
-                                        :options="column.component.options"
-                                        :item="
-                                            column.component.type === TableColumnComponentEnum.SKILL_LABEL
-                                                ? item
-                                                : undefined
-                                        "
-                                        :use-localized-string="column.component.useLocalizedString"
-                                        :value="getColumnValue(item, column)"
-                                    />
-                                    <template v-else>
-                                        {{ getColumnValue(item, column) }}
-                                    </template>
-                                </td>
-                            </tr>
-                            <tr v-if="!items.length">
-                                <td
-                                    :colspan="visibleColumns.length + (selectable ? 1 : 0)"
-                                    class="py-6 text-center text-sm text-gray-400"
-                                >
-                                    {{ t('NO_RESULTS') }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </Transition>
-                </table>
-            </div>
-        </div>
-        <ListViewPagination
-            :current="meta.current_page"
-            :per-page="meta.per_page"
-            :total="meta.total"
-            @update:currentPage="handlePageChange"
-            @update:perPage="handlePerPageChange"
-        />
-    </div>
+        <template #cell="{ row, column: listColumn }">
+            <component
+                :is="cellComponent(listColumn.id)"
+                v-if="cellComponent(listColumn.id)"
+                :badges="columnFor(listColumn.id)?.component?.badges"
+                :custom-classes="columnFor(listColumn.id)?.component?.customClasses"
+                :item="
+                    columnFor(listColumn.id)?.component?.type === TableColumnComponentEnum.SKILL_LABEL ? row : undefined
+                "
+                :options="columnFor(listColumn.id)?.component?.options"
+                :use-localized-string="columnFor(listColumn.id)?.component?.useLocalizedString"
+                :value="cellText(row, listColumn.id)"
+            />
+            <template v-else>
+                {{ cellText(row, listColumn.id) }}
+            </template>
+        </template>
+    </UiListView>
 </template>
 
 <script lang="ts" setup>
+    import { computed, type Component } from 'vue';
     import { snakeCase } from 'lodash-es';
     import { useI18n } from 'vue-i18n';
     import { useRouter } from 'vue-router';
+    import { ListView as UiListView, type ListAction, type ListFilterChip } from '@freelance/vue-ui';
+    import dayjs from 'dayjs';
     import { useModalService } from '@/composables/useModalService';
     import { useListViewHelper } from '@/composables/useListViewHelper';
-    import type { ListViewActionType } from '@/modules/types/support/list-views/ListViewActionType.ts';
-    import type { UseListViewHelperProps } from '@/modules/types/support/list-views/UseListViewHelperProps.ts';
-    import { TableColumnComponentEnum } from '@/modules/enums/support/list-views/TableColumnComponentEnum.ts';
-    import dayjs from 'dayjs';
     import type { DateRange } from '@/components/filters/list-views/DatePickerFilter.vue';
-
-    import Skeleton from '@/components/skeleton/Skeleton.vue';
-    import ListViewPagination from '@/components/pagination/ListViewPagination.vue';
-    import { Icon } from '@iconify/vue';
     import QuickFilters from '@/components/filters/list-views/QuickFilters.vue';
+    import { useTransferModals } from '@/composables/useTransferModals';
+    import { transferPermission } from '@/modules/support/transfer/transferModels';
+    import { useAuthStore } from '@/stores/auth';
+    import { TableColumnComponentEnum } from '@/modules/enums/support/list-views/TableColumnComponentEnum.ts';
+    import type { ListViewActionType } from '@/modules/types/support/list-views/ListViewActionType.ts';
+    import type { TableColumnInterface } from '@/modules/types/support/list-views/TableColumnInterface.ts';
+    import type { UseListViewHelperProps } from '@/modules/types/support/list-views/UseListViewHelperProps.ts';
     import { getColumnFilterKey } from '@/modules/utils/tableColumnFilters';
-    import Collapse from '@/components/transitions/Collapse.vue';
-    import { defineComponent } from 'vue';
 
-    const { t } = useI18n();
-    const router = useRouter();
-    const modalService = useModalService();
-
-    defineComponent({
-        name: 'ListView',
-    });
+    defineOptions({ name: 'ListView' });
 
     const props = withDefaults(defineProps<UseListViewHelperProps>(), {
         enableDefaultActions: true,
@@ -346,27 +94,26 @@
         useURLQueries: true,
     });
 
-    // Use the composable
+    const { t } = useI18n();
+    const router = useRouter();
+    const modalService = useModalService();
+    const auth = useAuthStore();
+    const { openImport, openTransfer } = useTransferModals();
+
+    const pageSizeOptions = [10, 25, 50, 100];
+
     const {
-        // State
         isLoading,
         localSelectedIds,
-        localSelectedIdsSet,
-        anySelected,
-        selectedCount,
         quickFilterKey,
         filters,
         searchQuery,
         items,
-        allSelected,
         meta,
-        barInnerRef,
         visibleColumns,
-        filterCount,
-        barWrapperStyle,
+        selectedCount,
         modelInstance,
-
-        // Methods
+        fetchData,
         handleInputChange,
         applyFilters,
         resetFilters,
@@ -375,8 +122,6 @@
         openTableConfiguration,
         handlePageChange,
         handlePerPageChange,
-        toggleSelectAll,
-        toggleOne,
         clearSelection,
         deleteSelected,
         navigateToDetail,
@@ -388,6 +133,164 @@
         convertToString,
     } = useListViewHelper(props);
 
+    const transferKey = modelInstance.transferKey();
+
+    const rows = computed(() => items.value as Record<string, unknown>[]);
+
+    const columnsByName = computed(() => {
+        const map = new Map<string, TableColumnInterface>();
+        for (const column of visibleColumns.value) {
+            map.set(column.name, column);
+        }
+        return map;
+    });
+
+    const listColumns = computed(() =>
+        visibleColumns.value.map((column) => ({
+            id: column.name,
+            label: t(column.label),
+        })),
+    );
+
+    const listTitle = computed(() =>
+        props.displayHeader
+            ? t('ENTITY_TABLE_OVERVIEW', {
+                  entity: t(snakeCase(modelInstance.getEntity()).toUpperCase()),
+              })
+            : undefined,
+    );
+
+    const listActions = computed<ListAction[]>(() => {
+        const actions: ListAction[] = (props.customActions ?? []).map((action, index) => ({
+            id: `custom:${index}`,
+            label: t(action.label),
+        }));
+
+        if (transferKey && auth.hasPermission(transferPermission(transferKey))) {
+            actions.push(
+                { id: 'transfer:import', label: t('IMPORT_DATA'), icon: 'material-symbols:upload-file-outline-rounded' },
+                { id: 'transfer:export', label: t('EXPORT_DATA'), icon: 'material-symbols:download-rounded' },
+                {
+                    id: 'transfer:template',
+                    label: t('DATA_TRANSFER_TEMPLATE'),
+                    icon: 'material-symbols:draft-outline-rounded',
+                },
+            );
+        }
+
+        if (props.enableDefaultActions) {
+            actions.push({ id: 'create', label: t('MODAL_CREATE'), icon: 'add' });
+        }
+
+        return actions;
+    });
+
+    const showListHeader = computed(() => props.displayHeader || listActions.value.length > 0);
+
+    const bulkActions = computed(() =>
+        props.showDefaultBulkActions
+            ? [{ id: 'delete', label: t('GENERAL_DELETE_SELECTED'), icon: 'trash', danger: true }]
+            : [],
+    );
+
+    const labels = computed(() => ({
+        list: listTitle.value,
+        filters: t('FILTER_QUICK_FILTERS'),
+        refresh: t('TABLE_REFRESH'),
+        settings: t('TABLE_SETTINGS'),
+        search: t('GENERAL_SEARCH_PLACEHOLDER'),
+        searchPlaceholder: t('GENERAL_SEARCH_PLACEHOLDER'),
+        emptyTitle: t('NO_RESULTS'),
+        emptyDescription: '',
+        clearFilters: t('FILTER_RESET'),
+        selected: `{count} ${selectedCount.value === 1 ? t('ITEM_SELECTED') : t('ITEMS_SELECTED')}`,
+        clearSelection: t('CLEAR_SELECTION'),
+        perPage: t('PAGINATION_PER_PAGE'),
+        showing: t('PAGINATION_SHOWING'),
+        to: t('PAGINATION_TO'),
+        of: t('PAGINATION_OF'),
+        results: t('PAGINATION_RESULTS'),
+        previous: t('PAGINATION_PREV'),
+        next: t('PAGINATION_NEXT'),
+        pagination: t('PAGINATION_PAGE_LABEL'),
+    }));
+
+    const filterChips = computed<ListFilterChip[]>(() => {
+        const chips: ListFilterChip[] = [];
+
+        for (const [key, value] of Object.entries(filters.value)) {
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => {
+                    if (item === null || item === undefined || item === '') return;
+                    chips.push({
+                        id: `array:${encodeURIComponent(key)}:${index}`,
+                        label: getArrayFilterLabel(key, index),
+                        value: formatArrayFilterValue(item),
+                    });
+                });
+                continue;
+            }
+
+            if (value === null || value === undefined || value === '') continue;
+
+            chips.push({
+                id: `scalar:${encodeURIComponent(key)}`,
+                label: getFilterLabel(key),
+                value: formatFilterValue(value),
+            });
+        }
+
+        return chips;
+    });
+
+    const searchModel = computed({
+        get: () => searchQuery.value,
+        set: (value: string) => {
+            if (value === searchQuery.value) return;
+            searchQuery.value = value;
+            handleInputChange();
+        },
+    });
+
+    const pageModel = computed({
+        get: () => meta.value.current_page,
+        set: (page: number) => {
+            if (page === meta.value.current_page) return;
+            handlePageChange(page);
+        },
+    });
+
+    const perPageModel = computed({
+        get: () => meta.value.per_page,
+        set: (perPage: number) => {
+            if (perPage === meta.value.per_page) return;
+            handlePerPageChange(perPage);
+        },
+    });
+
+    const selectedModel = computed<string[]>({
+        get: () => localSelectedIds.value.map((id) => String(id)),
+        set: (ids: string[]) => {
+            localSelectedIds.value = ids.map((id) => Number(id)).filter((id) => Number.isFinite(id));
+        },
+    });
+
+    function columnFor(id: string): TableColumnInterface | undefined {
+        return columnsByName.value.get(id);
+    }
+
+    function cellComponent(id: string): Component | null {
+        const column = columnFor(id);
+        if (!column?.component) return null;
+        return getComponentType(column.component.type);
+    }
+
+    function cellText(row: Record<string, unknown>, id: string): unknown {
+        const column = columnFor(id);
+        if (!column) return '';
+        return getColumnValue(row, column);
+    }
+
     function handleCustomAction(customAction: ListViewActionType): void {
         if (customAction.action) {
             customAction.action();
@@ -398,75 +301,102 @@
         }
     }
 
-    function onRowClick(id: number): void {
-        if (props.disableRowNavigation) return;
-        navigateToDetail(id);
-    }
-
-    // Helper function to get filter label
-    const getFilterLabel = (key: string): string => {
-        const columns = modelInstance.columns();
-        const column = columns.find((col) => getColumnFilterKey(col) === key);
-
-        if (column) {
-            return t(column.label);
+    function onAction(id: string): void {
+        if (id === 'create') {
+            openModal();
+            return;
         }
 
-        // Fallback to key if column not found
-        return t(`GENERAL_${convertToString(key).toUpperCase()}`);
-    };
+        if (transferKey && id === 'transfer:import') {
+            openImport(transferKey, () => {
+                void fetchData();
+            });
+            return;
+        }
 
-    const formatFilterValue = (value: unknown): string => {
+        if (transferKey && id === 'transfer:export') {
+            openTransfer(transferKey, 'export', { ...filters.value }, searchQuery.value);
+            return;
+        }
+
+        if (transferKey && id === 'transfer:template') {
+            openTransfer(transferKey, 'template');
+            return;
+        }
+
+        if (!id.startsWith('custom:')) return;
+
+        const index = Number(id.slice('custom:'.length));
+        const action = props.customActions?.[index];
+        if (action) handleCustomAction(action);
+    }
+
+    function onBulkAction(id: string): void {
+        if (id === 'delete') deleteSelected();
+    }
+
+    function onRowClick(row: Record<string, unknown>): void {
+        navigateToDetail(getItemId(row));
+    }
+
+    function onRemoveFilter(id: string): void {
+        const separator = id.indexOf(':');
+        if (separator === -1) return;
+
+        const kind = id.slice(0, separator);
+        const rest = id.slice(separator + 1);
+
+        if (kind === 'array') {
+            const indexSeparator = rest.lastIndexOf(':');
+            if (indexSeparator === -1) return;
+
+            const key = decodeURIComponent(rest.slice(0, indexSeparator));
+            const index = Number(rest.slice(indexSeparator + 1));
+            const value = filters.value[key];
+            if (!Array.isArray(value) || !Number.isInteger(index)) return;
+
+            removeArrayFilter(key, value[index]);
+            return;
+        }
+
+        if (kind === 'scalar') {
+            removeFilter(decodeURIComponent(rest));
+        }
+    }
+
+    function getFilterLabel(key: string): string {
+        const column = modelInstance.columns().find((col) => getColumnFilterKey(col) === key);
+        if (column) return t(column.label);
+        return t(`GENERAL_${convertToString(key).toUpperCase()}`);
+    }
+
+    function formatFilterValue(value: unknown): string {
         if (value && typeof value === 'object' && 'from' in value && 'to' in value) {
             const dateRange = value as DateRange;
             const parts: string[] = [];
-            if (dateRange.from) {
-                parts.push(dayjs(dateRange.from).format('DD MMM YYYY'));
-            }
-            if (dateRange.to) {
-                parts.push(dayjs(dateRange.to).format('DD MMM YYYY'));
-            }
-            if (parts.length > 0) {
-                return parts.join(' – ');
-            }
+            if (dateRange.from) parts.push(dayjs(dateRange.from).format('DD MMM YYYY'));
+            if (dateRange.to) parts.push(dayjs(dateRange.to).format('DD MMM YYYY'));
+            if (parts.length > 0) return parts.join(' – ');
             return '';
         }
 
         return convertToString(value);
-    };
+    }
 
-    // Helper function to get array filter label (for date range filters)
-    const getArrayFilterLabel = (key: string, index: number): string => {
-        // Check if this is a date range filter (ends with _between)
+    function getArrayFilterLabel(key: string, index: number): string {
         if (key.endsWith('_between')) {
             const labelType = index === 0 ? 'FROM' : 'TO';
             return t(`GENERAL_${key.toUpperCase()}_${labelType}`);
         }
 
-        // For non-date-range array filters, use the key name
         return t(`GENERAL_${convertToString(key).toUpperCase()}`);
-    };
+    }
 
-    // Helper function to format array filter value
-    const formatArrayFilterValue = (item: unknown): string => {
-        // If it's a date string, format it nicely
+    function formatArrayFilterValue(item: unknown): string {
         if (typeof item === 'string' && /^\d{4}-\d{2}-\d{2}/.test(item)) {
             return dayjs(item).format('DD MMM YYYY');
         }
 
-        // Otherwise, use the original conversion
         return convertToString(item);
-    };
+    }
 </script>
-
-<style scoped>
-    .table-fade-enter-active,
-    .table-fade-leave-active {
-        transition: opacity 0.2s ease;
-    }
-
-    .table-fade-enter-from,
-    .table-fade-leave-to {
-        opacity: 0;
-    }
-</style>

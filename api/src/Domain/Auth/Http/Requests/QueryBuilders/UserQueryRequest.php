@@ -11,7 +11,7 @@ abstract class UserQueryRequest extends BaseModelQueryRequest
 {
     public function queryBuilder(): BaseQueryBuilder
     {
-        return $this->baseQueryBuilder(User::class)
+        return $this->baseQueryBuilder(User::query()->clientVisible())
             ->defaultSort('-id')
             ->allowedFilters(UserHelper::filterable())
             ->allowedIncludes(UserHelper::relations())

@@ -2,6 +2,7 @@
 
 namespace Domain\Support\Http\Controllers;
 
+use Domain\Auth\Support\Maintainer;
 use Domain\Support\Actions\BaseAction;
 use Domain\Support\DataTransferObjects\BaseData;
 use Domain\Support\Enums\AppScopePrefix;
@@ -160,8 +161,30 @@ abstract class BaseCrudController extends BaseController
     /**
      * Dynamically handle the store request for the controller.
      */
+    /**
+     * @return array<string, string>
+     */
+    protected function permissions(): array
+    {
+        return [];
+    }
+
+    protected function denyUnlessMaintainer(string $ability): void
+    {
+        $permission = $this->permissions()[$ability] ?? null;
+        if (! is_string($permission) || $permission === '') {
+            return;
+        }
+
+        if (! Maintainer::allows(request()->user(), $permission)) {
+            abort(403);
+        }
+    }
+
     protected function handleStore(FormRequest $request, array $relationsToLoad = []): JsonResponse
     {
+        $this->denyUnlessMaintainer('create');
+
         try {
             $model = $this->createAction()->execute($this->dto()::from($request->validated()));
 
@@ -188,6 +211,8 @@ abstract class BaseCrudController extends BaseController
      */
     protected function handleUpdate(FormRequest $request, Model $model, array $relationsToLoad = []): JsonResponse
     {
+        $this->denyUnlessMaintainer('update');
+
         try {
             $model = $this->updateAction()->execute($model, $this->dto()::fromUpdateRequest($model, $request));
 
@@ -214,6 +239,8 @@ abstract class BaseCrudController extends BaseController
      */
     protected function handleDestroy(Model $model): JsonResponse
     {
+        $this->denyUnlessMaintainer('delete');
+
         try {
             $this->deleteAction()
                 ->execute($model);

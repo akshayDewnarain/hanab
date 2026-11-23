@@ -11,5 +11,8 @@ class EmployeeRoleData extends BaseData
         public bool $is_active,
         public ?int $id = null,
         public ?string $description = null,
+        public ?int $parent_id = null,
+        public ?int $sort_order = 0,
+        public ?int $organization_level_id = null,
     ) {}
 }

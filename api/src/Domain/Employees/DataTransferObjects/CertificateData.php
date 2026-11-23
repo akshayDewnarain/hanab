@@ -13,6 +13,8 @@ class CertificateData extends BaseData
         public bool $is_active,
         public ?int $id = null,
         public ?string $code = null,
+        /** @var list<string> */
+        public array $synonyms = [],
         public ?string $description = null,
         public ?string $label_background_color = null,
         public ?string $label_text_color = null,

@@ -10,7 +10,7 @@ class CreateRoleAction extends BaseAction
 {
     public function execute(RoleData $data): Role
     {
-        $guard = $data->guard_name ?? config('auth.defaults.guard');
+        $guard = $data->guard_name ?: 'web';
 
         $model = Role::query()->create([
             'name' => $data->name,

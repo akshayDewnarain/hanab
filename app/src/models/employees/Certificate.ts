@@ -20,6 +20,7 @@ const CERTIFICATE_IDENTITY_FIELD_NAMES = [
     'is_active',
     'name',
     'code',
+    'synonyms',
     'category',
     'requires_expiry_date',
 ] as const;
@@ -94,6 +95,10 @@ function certificateDetailHelpField(): CustomField {
 export default class Certificate extends Model<CertificateRecord> {
     constructor() {
         super('certificates', 'certificate');
+    }
+
+    override transferKey(): string {
+        return 'certificates';
     }
 
     override columns(): TableColumn[] {
@@ -207,6 +212,12 @@ export default class Certificate extends Model<CertificateRecord> {
                 placeholder: 'CERTIFICATE_CODE_PLACEHOLDER',
                 validators: { maxLength: 32 },
                 width: FieldWidth.HALF,
+            }),
+            new InputField({
+                name: 'synonyms',
+                label: 'EXPERTISE_SYNONYMS',
+                required: false,
+                placeholder: 'EXPERTISE_SYNONYMS_PLACEHOLDER',
             }),
             new SelectField({
                 name: 'category',

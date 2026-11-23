@@ -7,7 +7,6 @@
         @click="onCardClick"
         @keydown.enter.prevent="onCardClick"
     >
-        <!-- Header -->
         <div class="px-4 py-3" :style="headerGradientStyle">
             <h3 class="text-center text-base font-semibold leading-snug text-white drop-shadow-sm">
                 <span class="line-clamp-2">{{ title || '—' }}</span>
@@ -15,7 +14,6 @@
         </div>
 
         <div class="flex flex-1 flex-col px-5 pb-5 pt-5">
-            <!-- Avatar -->
             <div class="mb-4 flex justify-center">
                 <div
                     v-if="imageUrl"
@@ -31,7 +29,6 @@
                 </div>
             </div>
 
-            <!-- Email -->
             <div
                 v-if="subtitle"
                 class="mb-5 flex items-center justify-center gap-2 rounded-lg border border-slate-100 bg-slate-50/90 px-3 py-2"
@@ -44,7 +41,6 @@
                 <span class="truncate text-sm font-medium text-slate-700">{{ subtitle }}</span>
             </div>
 
-            <!-- Detail rows -->
             <dl v-if="visibleRows.length" class="min-h-0 flex-1 space-y-2">
                 <div
                     v-for="row in visibleRows"
@@ -61,26 +57,19 @@
                             {{ row.label }}
                         </dt>
                         <dd class="mt-0.5 text-sm font-medium leading-snug text-slate-800">
-                            <span
-                                v-if="row.warning"
-                                class="text-sm font-medium leading-snug text-amber-800"
-                            >
+                            <span v-if="row.warning" class="text-sm font-medium leading-snug text-amber-800">
                                 {{ row.warning }}
                             </span>
                             <div v-else-if="row.type === 'badges' && row.badges?.length" class="flex flex-wrap gap-1.5">
-                                <span
+                                <ColorLabel
                                     v-for="(badge, index) in row.badges"
                                     :key="`${row.key}-${index}`"
-                                    class="inline-flex rounded-full border px-2.5 py-0.5 text-xs font-semibold"
-                                    :class="
-                                        badge.chipStyle
-                                            ? ''
-                                            : 'border-[var(--color-primary)]/20 bg-[var(--color-primary)]/8 text-[var(--color-primary)]'
-                                    "
-                                    :style="badge.chipStyle"
-                                >
-                                    {{ badge.label }}
-                                </span>
+                                    :label="badge.label"
+                                    :description="badge.description"
+                                    :background-color="badge.chipStyle?.backgroundColor ?? 'color-mix(in srgb, var(--color-primary) 8%, white)'"
+                                    :text-color="badge.chipStyle?.color ?? 'var(--color-primary)'"
+                                    :border-color="badge.chipStyle?.borderColor ?? 'color-mix(in srgb, var(--color-primary) 20%, white)'"
+                                />
                             </div>
                             <span v-else class="break-words">{{ row.text }}</span>
                         </dd>
@@ -88,11 +77,7 @@
                 </div>
             </dl>
 
-            <!-- Footer CTA -->
-            <div
-                v-if="showFooter"
-                class="mt-5 flex items-center justify-center border-t border-dashed border-slate-200 pt-4"
-            >
+            <div v-if="showFooter" class="mt-5 flex items-center justify-center border-t border-dashed border-slate-200 pt-4">
                 <span
                     class="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--color-primary)] transition-colors group-hover:gap-2.5"
                 >
@@ -111,6 +96,7 @@
     import { computed } from 'vue';
     import { Icon } from '@iconify/vue';
     import { useI18n } from 'vue-i18n';
+    import { ColorLabel } from '@freelance/vue-ui';
     import type { CardListFieldConfig } from '@/modules/types/support/list-views/CardListConfig.ts';
     import type { TableColumnInterface } from '@/modules/types/support/list-views/TableColumnInterface.ts';
     import {

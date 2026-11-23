@@ -1,0 +1,35 @@
+/*
+ * Light theme — light navigation chrome on the same Hanab content surfaces.
+ * Unlayered so these variables win over the project @theme defaults on :root.
+ */
+:root[data-theme='light'] {
+    color-scheme: light;
+
+    --color-primary-hover: #002d4d;
+    --color-highlight-light: #f3f7fb;
+
+    --color-sidebar-background: #f4f7fb;
+    --color-sidebar-background-gradient-from: #ffffff;
+    --color-sidebar-background-gradient-to: #e7eef5;
+    --color-sidebar-hover-background: #e4ebf3;
+    --color-sidebar-active-gradient-from: rgba(0, 65, 110, 0.14);
+    --color-sidebar-active-gradient-to: rgba(0, 65, 110, 0.06);
+    --color-sidebar-active-accent: #00416e;
+    --color-sidebar-icon: #00416e;
+    --color-sidebar-item-text: #1e293b;
+    --color-sidebar-item-highlight-dark: #dbe4ee;
+    --color-sidebar-text-muted: #64748b;
+    --color-sidebar-border-highlight: rgba(15, 23, 42, 0.1);
+    --color-sidebar-logo-background: #ffffff;
+    --color-sidebar-logo-border: #e2e8f0;
+    --color-sidebar-tooltip-background: #0f172a;
+    --color-sidebar-tooltip-text: #ffffff;
+
+    --color-list-canvas: #f4f7fb;
+    --color-list-toolbar-border: rgba(226, 232, 240, 0.95);
+    --color-list-thead-background: #f8fafc;
+    --color-list-row-hover: #eef3f8;
+    --color-list-bulk-background: rgba(244, 247, 251, 0.95);
+    --color-list-filter-value-background: #eef3f8;
+    --color-list-pagination-background: #f8fafc;
+}

@@ -12,5 +12,7 @@ class UserData extends BaseData
         public ?int $role_id = null,
         public ?string $password = null,
         public ?int $id = null,
+        public ?int $employee_id = null,
+        public ?string $status = null,
     ) {}
 }

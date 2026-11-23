@@ -1,0 +1,93 @@
+/*
+ * Dark theme — dark surfaces and light text.
+ * Brand fills stay deep enough for --color-on-brand (white) labels.
+ * --color-emphasis is the readable accent on those dark surfaces.
+ */
+:root[data-theme='dark'] {
+    color-scheme: dark;
+
+    --color-primary: #00416e;
+    --color-primary-light: rgba(158, 201, 239, 0.18);
+    --color-primary-hover: #0a5a94;
+    --color-secondary: #e63223;
+    --color-ternary: #4ade80;
+    --color-ternary-highlight-dark: #86efac;
+    --color-accent: #e63223;
+    --color-background: #123a5c;
+    --color-on-brand: #ffffff;
+    --color-emphasis: #9ec9ef;
+    --color-text: #e8eef7;
+
+    --color-text-blocked: #8b98ad;
+    --color-bg-blocked: #243044;
+    --color-placeholder: #8b98ad;
+
+    --color-error: #ff6b66;
+    --color-warning: #f5b942;
+    --color-success: #3dd68c;
+    --color-warning-light: rgba(245, 185, 66, 0.18);
+    --color-success-light: rgba(61, 214, 140, 0.16);
+
+    --color-highlight-dark: #16324d;
+    --color-highlight-light: #1a2436;
+
+    --color-sidebar-background: #161b26;
+    --color-sidebar-background-gradient-from: #1c2433;
+    --color-sidebar-background-gradient-to: #10141d;
+    --color-sidebar-hover-background: #222a3a;
+    --color-sidebar-active-gradient-from: rgba(255, 255, 255, 0.12);
+    --color-sidebar-active-gradient-to: rgba(255, 255, 255, 0.05);
+    --color-sidebar-active-accent: #e63223;
+    --color-sidebar-icon: #e8eef7;
+    --color-sidebar-item-text: #e8eef7;
+    --color-sidebar-item-highlight-dark: #243044;
+    --color-sidebar-text-muted: rgba(232, 238, 247, 0.64);
+    --color-sidebar-border-highlight: rgba(255, 255, 255, 0.12);
+    --color-sidebar-logo-background: #ffffff;
+    --color-sidebar-logo-border: rgba(255, 255, 255, 0.24);
+    --color-sidebar-tooltip-background: #0b0f16;
+    --color-sidebar-tooltip-text: #ffffff;
+
+    --color-topbar-background: rgba(17, 24, 39, 0.96);
+    --color-topbar-border: rgba(51, 65, 85, 0.9);
+    --color-topbar-shadow-tint: #020617;
+    --color-topbar-accent-line: rgba(158, 201, 239, 0.45);
+    --color-topbar-text: #e8eef7;
+    --color-topbar-text-muted: #93a0b5;
+    --color-topbar-hover-background: #1e293b;
+    --color-topbar-search-background: rgba(15, 23, 42, 0.92);
+    --color-topbar-search-border: #334155;
+    --color-topbar-search-focus-background: #1e293b;
+    --color-topbar-breadcrumb-background: rgba(30, 41, 59, 0.95);
+    --color-topbar-breadcrumb-border: #334155;
+    --color-topbar-breadcrumb-separator: #64748b;
+    --color-topbar-breadcrumb-text: #93a0b5;
+    --color-topbar-breadcrumb-home-from: #1d4e7a;
+    --color-topbar-breadcrumb-home-to: #16324d;
+    --color-topbar-account-background: #1e293b;
+    --color-topbar-account-border: #334155;
+    --color-topbar-account-hover-border: rgba(158, 201, 239, 0.45);
+    --color-topbar-avatar-from: #1d4e7a;
+    --color-topbar-avatar-to: #16324d;
+    --color-topbar-menu-background: #1e293b;
+    --color-topbar-menu-header-from: #243044;
+    --color-topbar-menu-header-to: #1e293b;
+    --color-topbar-menu-divider: #334155;
+    --color-topbar-menu-item-active: rgba(158, 201, 239, 0.16);
+    --color-topbar-logout-hover: rgba(240, 113, 104, 0.16);
+    --color-topbar-notification-badge: #38bdf8;
+
+    --color-list-canvas: #0b1220;
+    --color-list-surface: #151c2c;
+    --color-list-toolbar-background: rgba(21, 28, 44, 0.96);
+    --color-list-toolbar-border: rgba(51, 65, 85, 0.9);
+    --color-list-border: #243044;
+    --color-list-text: #e8eef7;
+    --color-list-text-muted: #93a0b5;
+    --color-list-thead-background: #101828;
+    --color-list-row-hover: #1c2740;
+    --color-list-bulk-background: rgba(16, 24, 40, 0.95);
+    --color-list-shadow-tint: #020617;
+    --color-list-filter-value-background: #1c2740;
+    --color-list-pagination-background: #101828;
+}

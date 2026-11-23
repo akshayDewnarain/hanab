@@ -2,8 +2,8 @@
 
 namespace Application\API\Auth\Requests;
 
+use Domain\Auth\Support\PasswordPolicy;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 class ApiResetPasswordRequest extends FormRequest
 {
@@ -13,14 +13,14 @@ class ApiResetPasswordRequest extends FormRequest
     }
 
     /**
-     * @return array<string, list<int|string|Password>>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
             'email' => ['required', 'email', 'max:255'],
             'token' => ['required', 'string'],
-            'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()],
+            'password' => ['required', 'string', 'confirmed', 'max:'.PasswordPolicy::MAX, PasswordPolicy::rule()],
             'password_confirmation' => ['required', 'string'],
         ];
     }

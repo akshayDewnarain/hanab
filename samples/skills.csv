@@ -1,0 +1,9 @@
+name;code;synonyms;label_background_color;label_text_color;label_border_color;category;description;is_active
+Laagspanning;LSP;230V, krachtstroom, verdeelkasten;#DBEAFE;#1E3A8A;#93C5FD;technical;Aanleg en onderhoud van laagspanningsnetten.;true
+Hoogspanning;HSP;HS-stations, schakelinstallaties;#EDE9FE;#4C1D95;#C4B5FD;technical;Werken aan hoogspanningsverbindingen en stations.;true
+Gasdistributie;GD;gasaansluiting, gasleiding;#FEF9C3;#854D0E;#FDE047;domain;Distributie van aardgas tot aan de meter.;true
+Warmtenetten;WN;stadsverwarming, warmteoverdracht;#FFE4E6;#9F1239;#FECDD3;domain;Aanleg en beheer van warmtedistributie.;true
+VCA;VCAB;veiligheid, veilig werken;#DCFCE7;#166534;#86EFAC;safety;Basiskennis veilig werken op de bouwplaats.;true
+Werken op hoogte;WOH;steiger, valbeveiliging;#CFFAFE;#155E75;#67E8F9;safety;Veilig werken op hoogte met de juiste middelen.;true
+Samenwerken;SAM;overleg, communicatie;#F3E8FF;#6B21A8;#D8B4FE;soft_skill;Afstemmen met collega's, onderaannemers en opdrachtgevers.;true
+Klantcontact;KC;bewoners, storingsdienst;#F1F5F9;#334155;#CBD5E1;soft_skill;Uitleg geven aan bewoners bij werkzaamheden in de straat.;false

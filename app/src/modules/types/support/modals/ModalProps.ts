@@ -41,4 +41,6 @@ export interface ModalProps {
     heightClass?: string;
     widthClass?: string;
     disableDefaultPadding?: boolean;
+    /** When true, the shell hides its own header and footer so the body owns them. */
+    bare?: boolean;
 }

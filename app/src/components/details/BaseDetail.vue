@@ -1,93 +1,79 @@
 <template>
-    <Transition mode="out-in" name="detail-fade">
-        <div v-if="isLoading" key="loading" class="w-full h-full px-4 my-2 overflow-y-auto">
-            <div class="flex h-full min-h-65 items-center justify-center">
-                <div
-                    class="h-10 w-10 rounded-full border-2 border-gray-300 border-t-(--color-primary) animate-spin"
-                ></div>
-            </div>
-        </div>
-        <div v-else key="content" class="w-full h-full px-4 my-2 overflow-y-auto pb-20">
-            <div class="detail-stagger">
-                <div class="detail-stagger-item">
-                    <slot name="header">
-                        <h1 class="text-2xl font-bold mb-4">Detail View</h1>
-                    </slot>
-                </div>
-                <div class="detail-stagger-item">
-                    <FormBuilder v-slot="{ submit, isDirty, revertAll, applyChanges }" :instance="_instance">
-                        <!-- Viewport-fixed bar (teleported: avoids transform ancestors + no translate-x/y clash on one element) -->
-                        <Teleport to="body">
-                            <Transition
-                                enter-active-class="transform transition ease-out duration-200"
-                                enter-from-class="translate-y-[calc(100%+1rem)] opacity-0"
-                                enter-to-class="translate-y-0 opacity-100"
-                                leave-active-class="transform transition ease-in duration-150"
-                                leave-from-class="translate-y-0 opacity-100"
-                                leave-to-class="translate-y-[calc(100%+1rem)] opacity-0"
-                            >
-                                <div
-                                    v-if="isDirty"
-                                    class="fixed inset-x-0 bottom-0 z-100 flex justify-center px-4 pb-4 pointer-events-none"
-                                >
-                                    <div
-                                        class="pointer-events-auto flex h-15 w-full max-w-225 items-center justify-between rounded-lg border border-gray-200 bg-white px-4 shadow-lg"
-                                    >
-                                        <div class="flex items-center gap-2">
-                                            <Icon
-                                                class="h-5 w-5 text-warning"
-                                                icon="material-symbols:warning-outline-rounded"
-                                            />
-                                            <span class="font-semibold"> {{ t('GENERAL_UNSAVED_CHANGES') }} </span>
-                                            <span class="hidden text-sm text-gray-500 sm:inline">
-                                                {{ t('GENERAL_APPLY_OR_REVERT') }}
-                                            </span>
-                                        </div>
+    <DetailView
+        :busy="isSaving"
+        :dirty="isDirty"
+        :icon="icon"
+        :labels="labels"
+        :loading="isLoading"
+        :title="title"
+        @apply="onApply"
+        @revert="onRevert"
+    >
+        <template v-if="$slots.header" #header>
+            <slot name="header" />
+        </template>
 
-                                        <div class="flex items-center gap-2">
-                                            <button
-                                                class="flex h-full cursor-pointer items-center justify-center rounded border border-[var(--color-background)] px-3 py-1 text-[var(--color-primary)] shadow-md transition-colors duration-200 ease-in hover:bg-gray-200"
-                                                type="button"
-                                                @click="revertAll?.()"
-                                            >
-                                                Revert
-                                            </button>
-                                            <button
-                                                class="flex h-full cursor-pointer items-center justify-center rounded border border-gray-200 bg-[var(--color-background)] px-3 py-1 text-white shadow-md transition-colors duration-200 ease-in hover:bg-[var(--color-highlight-dark)]"
-                                                type="button"
-                                                @click="onApply(submit, applyChanges || (() => {}))"
-                                            >
-                                                Apply
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Transition>
-                        </Teleport>
-                    </FormBuilder>
-                </div>
-            </div>
-        </div>
-    </Transition>
+        <FormBuilder v-slot="scope" :instance="_instance">
+            <FormScopeBridge :scope="scope" @sync="syncForm" />
+        </FormBuilder>
+    </DetailView>
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, onMounted, watch } from 'vue';
+    import { computed, defineComponent, isRef, ref, watch, type ComputedRef, type PropType } from 'vue';
+    import { DetailView } from '@freelance/vue-ui';
     import { useToastService } from '@/composables/useToastService';
     import { useComponentState } from '@/composables/components/useComponentState';
     import { useRoute } from 'vue-router';
     import FormBuilder from '@/components/forms/FormBuilder.vue';
     import type { ModelConstructor } from '@/modules/types/support/models/ModelConstructor.ts';
     import { useI18n } from 'vue-i18n';
-    import { Icon } from '@iconify/vue';
 
-    defineComponent({
-        name: 'BaseDetail',
+    defineOptions({ name: 'BaseDetail' });
+
+    type FormScope = {
+        submit: () => Promise<unknown>;
+        isDirty?: boolean | ComputedRef<boolean>;
+        revertAll?: () => void;
+        applyChanges?: () => void;
+    };
+
+    function readDirty(value: FormScope['isDirty']): boolean {
+        if (value == null) return false;
+        return Boolean(isRef(value) ? value.value : value);
+    }
+
+    const FormScopeBridge = defineComponent({
+        name: 'FormScopeBridge',
+        props: {
+            scope: { type: Object as PropType<FormScope>, required: true },
+        },
+        emits: ['sync'],
+        setup(props, { emit }) {
+            watch(
+                () =>
+                    [
+                        readDirty(props.scope.isDirty),
+                        props.scope.submit,
+                        props.scope.revertAll,
+                        props.scope.applyChanges,
+                    ] as const,
+                () => emit('sync', props.scope),
+                { immediate: true },
+            );
+            return () => null;
+        },
     });
+
+    const emit = defineEmits<{ saved: [] }>();
 
     const props = withDefaults(
         defineProps<{
             model: ModelConstructor<unknown>;
+            /** Already translated title for the library header. */
+            title?: string;
+            /** Built-in header icon: info, person, note, badge, or warning. */
+            icon?: string;
             /** When provided (e.g. in a modal), use this instead of route params */
             id?: number | null;
         }>(),
@@ -97,9 +83,26 @@
     const route = useRoute();
     const _instance = new props.model();
     const _toastService = useToastService();
-
     const { isLoading, setLoading, setContent } = useComponentState();
     const { t } = useI18n();
+
+    const isDirty = ref(false);
+    const isSaving = ref(false);
+    const formActions: FormScope = {
+        submit: async () => ({}),
+        revertAll: () => {},
+        applyChanges: () => {},
+    };
+
+    const labels = computed(() => ({
+        loading: t('GENERAL_LOADING'),
+        title: props.title,
+        unsaved: t('GENERAL_UNSAVED_CHANGES'),
+        unsavedHint: t('GENERAL_APPLY_OR_REVERT'),
+        revert: t('GENERAL_REVERT'),
+        apply: t('GENERAL_APPLY'),
+    }));
+
     const id = computed(() => {
         if (props.id != null && Number.isFinite(props.id)) {
             return props.id as number;
@@ -108,7 +111,15 @@
         return Number.isFinite(n) ? n : null;
     });
 
-    async function fetch(): Promise<void> {
+    function syncForm(scope: FormScope): void {
+        formActions.submit = scope.submit;
+        formActions.revertAll = scope.revertAll ?? (() => {});
+        formActions.applyChanges = scope.applyChanges ?? (() => {});
+        const dirty = readDirty(scope.isDirty);
+        if (isDirty.value !== dirty) isDirty.value = dirty;
+    }
+
+    async function fetchRecord(): Promise<void> {
         const n = id.value;
         if (n == null || !Number.isFinite(n)) return;
 
@@ -123,59 +134,42 @@
         }
     }
 
-    async function onApply(submit: () => Promise<unknown>, applyChanges: () => void) {
+    function onRevert(): void {
+        formActions.revertAll?.();
+    }
+
+    async function onApply(): Promise<void> {
+        if (isSaving.value) return;
+
+        isSaving.value = true;
         try {
-            const res = await submit();
-            applyChanges();
+            const res = await formActions.submit();
+            formActions.applyChanges?.();
             _instance.update(_instance.id, res as Record<string, unknown>);
             _toastService.success('Changes saved');
+            emit('saved');
         } catch {
             _toastService.error('Failed to save');
+        } finally {
+            isSaving.value = false;
         }
     }
 
-    onMounted(async () => {
-        setLoading(true);
-        fetch().catch(() => console.error('Error in onMounted'));
+    watch(isLoading, (loading) => {
+        if (loading) isDirty.value = false;
     });
 
-    watch(id, (newId) => {
-        if (newId != null && Number.isFinite(newId)) {
+    watch(
+        id,
+        (newId) => {
+            if (newId == null || !Number.isFinite(newId)) {
+                setContent();
+                return;
+            }
+
             setLoading(true);
-            fetch().catch(() => console.error('Error in watch id'));
-        }
-    });
+            fetchRecord().catch(() => console.error('Error in watch id'));
+        },
+        { immediate: true },
+    );
 </script>
-
-<style scoped>
-    .detail-fade-enter-active,
-    .detail-fade-leave-active {
-        transition: opacity 0.2s ease;
-    }
-
-    .detail-fade-enter-from,
-    .detail-fade-leave-to {
-        opacity: 0;
-    }
-
-    .detail-stagger-item {
-        opacity: 0;
-        transform: translateY(4px);
-        animation: detail-stagger-in 0.25s ease-out forwards;
-    }
-
-    .detail-stagger-item:nth-child(1) {
-        animation-delay: 40ms;
-    }
-
-    .detail-stagger-item:nth-child(2) {
-        animation-delay: 120ms;
-    }
-
-    @keyframes detail-stagger-in {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>

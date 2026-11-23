@@ -7,6 +7,7 @@ use Application\API\Employees\Requests\QueryBuilder\EmployeeSkillQueryRequest;
 use Application\API\Employees\Requests\UpdateEmployeeSkillRequest;
 use Application\API\Employees\Resources\EmployeeSkillResource;
 use Application\API\Employees\Resources\EmployeeSkillResourceCollection;
+use Domain\Auth\Services\PermissionService;
 use Domain\Employees\Actions\CreateEmployeeSkillAction;
 use Domain\Employees\Actions\DeleteEmployeeSkillAction;
 use Domain\Employees\Actions\UpdateEmployeeSkillAction;
@@ -41,6 +42,15 @@ class EmployeeSkillsController extends BaseAPICrudController
     public function destroy(EmployeeSkill $employee_skill): JsonResponse
     {
         return $this->handleDestroy($employee_skill);
+    }
+
+    protected function permissions(): array
+    {
+        return [
+            'create' => PermissionService::createPermission(EmployeeSkill::class),
+            'update' => PermissionService::updatePermission(EmployeeSkill::class),
+            'delete' => PermissionService::deletePermission(EmployeeSkill::class),
+        ];
     }
 
     protected function modelName(): string

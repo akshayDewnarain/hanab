@@ -11,6 +11,7 @@
             <div v-show="visible" ref="modalRef" :class="panelClasses">
                 <!-- Header -->
                 <div
+                    v-if="!modal.bare"
                     class="flex font-bold text-white justify-between p-4 border-b bg-(--color-background) items-center shadow-md"
                 >
                     <span class="text-xl"> {{ t(_modal.title) }}</span>
@@ -36,7 +37,7 @@
                 </div>
 
                 <!-- Footer -->
-                <div class="p-4 border-t border-t-gray-300 flex justify-between bg-gray-200">
+                <div v-if="!modal.bare" class="p-4 border-t border-t-gray-300 flex justify-between bg-gray-200">
                     <!-- Left Side: Dismiss Actions -->
                     <div class="flex space-x-2">
                         <button
@@ -68,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, onMounted, ref } from 'vue';
+    import { computed, defineComponent, onMounted, provide, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { useWrapperModalComponent } from '@/composables/modals/useWrapperModalComponent';
     import type { ModalAction } from '@/modules/types/support/modals/ModalAction.ts';
@@ -125,6 +126,10 @@
     const { t } = useI18n();
     const _modal = props.modal;
     const { handleClick, visible, modalRef } = useWrapperModalComponent(_modal, modalComponentRef);
+
+    provide('dismissModal', () => {
+        void handleAction({ name: 'GENERAL_CLOSE', type: ModalResultType.DISMISS });
+    });
 
     const dismissActions = computed(() => {
         return props.modal.actions?.filter((action: ModalAction) => action.type === ModalResultType.DISMISS);

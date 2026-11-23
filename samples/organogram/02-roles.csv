@@ -1,0 +1,9 @@
+name;description;is_active;sort_order;organization_level_id
+Directeur;Leiding van de voorbeeldorganisatie;true;10;1
+Regiodirecteur;Leiding van een regio;true;20;2
+Hoofd uitvoerder;Leiding van de projecten in een regio;true;30;3
+Uitvoerder;Leiding op de werkvloer;true;40;4
+Monteur;Uitvoering;true;50;5
+Planner;Planning;true;60;5
+Calculator;Calculatie;true;70;5
+Administrateur;Administratie;true;80;5

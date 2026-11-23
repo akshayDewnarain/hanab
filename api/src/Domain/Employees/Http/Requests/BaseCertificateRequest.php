@@ -3,11 +3,23 @@
 namespace Domain\Employees\Http\Requests;
 
 use Domain\Employees\Models\Certificate;
+use Domain\Employees\Support\ExpertiseTerms;
 use Domain\Support\Http\Requests\BaseModelRequest;
 use Illuminate\Validation\Rule;
 
 abstract class BaseCertificateRequest extends BaseModelRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if (! $this->exists('synonyms')) {
+            return;
+        }
+
+        $this->merge([
+            'synonyms' => ExpertiseTerms::normalize($this->input('synonyms')),
+        ]);
+    }
+
     public function rules(): array
     {
         $certificate = $this->route('certificate');
@@ -37,6 +49,14 @@ abstract class BaseCertificateRequest extends BaseModelRequest
                 'string',
                 'max:32',
                 $codeUnique,
+            ],
+            'synonyms' => [
+                'nullable',
+                'array',
+            ],
+            'synonyms.*' => [
+                'string',
+                'max:255',
             ],
             'label_background_color' => $hexColor,
             'label_text_color' => $hexColor,

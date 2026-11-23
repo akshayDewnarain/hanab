@@ -44,14 +44,21 @@ class Employee extends Model implements HasMedia
     protected $fillable = [
         'employee_role_id',
         'employee_location_id',
+        'manager_id',
+        'organization_level_id',
         'first_name',
         'last_name',
+        'initials',
         'email',
         'phone',
+        'business_email',
+        'business_phone',
+        'introduction',
         'employee_number',
         'employment_type',
         'start_date',
         'is_active',
+        'date_of_birth',
     ];
 
     /** {@inheritdoc} */
@@ -60,6 +67,7 @@ class Employee extends Model implements HasMedia
         'employee_location_id' => 'integer',
         'is_active' => 'boolean',
         'start_date' => 'date',
+        'date_of_birth' => 'date',
     ];
 
     /** {@inheritdoc} */
@@ -96,6 +104,21 @@ class Employee extends Model implements HasMedia
     public function employeeLocation(): BelongsTo
     {
         return $this->belongsTo(EmployeeLocation::class);
+    }
+
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'manager_id');
+    }
+
+    public function directReports(): HasMany
+    {
+        return $this->hasMany(self::class, 'manager_id');
+    }
+
+    public function organizationLevel(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationLevel::class);
     }
 
     public function skills(): BelongsToMany
@@ -203,6 +226,49 @@ class Employee extends Model implements HasMedia
             'certificates',
             fn (Builder $certificateQuery) => $certificateQuery->whereIn('certificates.id', $ids),
         );
+    }
+
+    public function scopeMissingSkill(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged($query, $value, fn (Builder $builder): Builder => $builder->whereDoesntHave('skills'));
+    }
+
+    public function scopeMissingCertificate(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged($query, $value, fn (Builder $builder): Builder => $builder->whereDoesntHave('certificates'));
+    }
+
+    public function scopeMissingLocation(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged($query, $value, fn (Builder $builder): Builder => $builder->whereNull('employee_location_id'));
+    }
+
+    public function scopeMissingEmail(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged(
+            $query,
+            $value,
+            fn (Builder $builder): Builder => $builder->where(fn (Builder $inner) => $inner->whereNull('email')->orWhere('email', '')),
+        );
+    }
+
+    public function scopeMissingPhone(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged(
+            $query,
+            $value,
+            fn (Builder $builder): Builder => $builder->where(fn (Builder $inner) => $inner->whereNull('phone')->orWhere('phone', '')),
+        );
+    }
+
+    /**
+     * @param  callable(Builder): Builder  $apply
+     */
+    protected function whenFlagged(Builder $query, mixed $value, callable $apply): Builder
+    {
+        $flag = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        return $flag ? $apply($query) : $query;
     }
 
     /**

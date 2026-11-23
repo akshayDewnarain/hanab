@@ -27,7 +27,14 @@ export function handleAuthSessionLost(): void {
     delete axios.defaults.headers.common['X-Location-Id'];
 
     const path = window.location.pathname || '';
-    if (path === '/login' || path.startsWith('/login/')) {
+    const publicAuth = path === '/login'
+        || path.startsWith('/login/')
+        || path.startsWith('/forgot-password')
+        || path.startsWith('/reset-password')
+        || path.startsWith('/invitations/')
+        || path.startsWith('/security/setup')
+        || path.startsWith('/two-factor');
+    if (publicAuth) {
         redirectScheduled = false;
         return;
     }

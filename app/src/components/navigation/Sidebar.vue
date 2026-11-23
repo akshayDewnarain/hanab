@@ -1,158 +1,32 @@
 <template>
-    <Transition
-        appear
-        enter-active-class="transition-[width,opacity] duration-300 ease-out overflow-hidden"
-        enter-from-class="!w-0 opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-[width,opacity] duration-200 ease-in overflow-hidden"
-        leave-to-class="!w-0 opacity-0"
-    >
-        <aside
-            ref="asideRef"
-            :class="sidebarCollapsed ? 'w-44' : 'w-14'"
-            class="relative bg-(--color-sidebar-background) small-scrollbar isolate z-10 flex h-full shrink-0 flex-col gap-2 transition-all duration-200 ease-in-out"
+    <div ref="asideRef" class="h-full shrink-0">
+        <Sidebar
+            v-model:expanded="sidebarExpanded"
+            :items="navigationItems"
+            :footer-items="footerItems"
+            :navigation-label="t('SIDEBAR_NAVIGATION')"
+            :footer-label="t('SIDEBAR_ACTIONS')"
+            :collapse-label="t('SIDEBAR_COLLAPSE')"
+            :expand-label="t('SIDEBAR_EXPAND')"
+            @select="onSelect"
         >
-            <div class="relative flex h-full flex-1 flex-col justify-between bg-(--color-sidebar-background)">
-                <div class="flex flex-col items-center my-2">
-                    <div class="w-full my-1 items-center relative group" @click="goToEmployees()">
-                        <div
-                            class="relative mx-2 flex cursor-pointer items-center justify-center gap-1 rounded-md text-(--color-sidebar-item-text) transition-colors duration-200 ease-in hover:bg-(--color-sidebar-item-highlight-dark)"
-                        >
-                            <div
-                                :class="
-                                    sidebarCollapsed
-                                        ? 'w-full px-1.5 py-1'
-                                        : 'size-11 p-0.5'
-                                "
-                                class="flex items-center justify-center rounded-sm border border-slate-200/80 bg-white shadow-sm"
-                            >
-                                <img
-                                    alt="Hanab"
-                                    :class="
-                                        sidebarCollapsed
-                                            ? 'h-9 w-auto max-w-full object-contain'
-                                            : 'h-10 w-10 object-contain'
-                                    "
-                                    :src="sidebarCollapsed ? '/hanab-logo-long.png' : '/hanab-logo.png'"
-                                />
-                            </div>
-                        </div>
-                        <div
-                            v-if="!sidebarCollapsed"
-                            class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in bg-gray-800 text-white text-sm font-medium py-1 px-2 rounded shadow-lg whitespace-nowrap"
-                        >
-                            {{ 'test' }}
-                            <div
-                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-gray-800"
-                            ></div>
-                        </div>
-                    </div>
-
-                    <SidebarItem
-                        v-for="item in getSidebarItems()"
-                        :key="item.label"
-                        :active-exact="item.activeExact"
-                        :collapsed="sidebarCollapsed"
-                        :icon="item.icon"
-                        :inactive-when-path-starts-with="item.inactiveWhenPathStartsWith"
-                        :label="item.label"
-                        :to="item.to"
+            <template #brand="{ expanded }">
+                <RouterLink
+                    to="/admin/employees"
+                    class="flex items-center justify-center rounded-sm border border-sidebar-logo-border bg-sidebar-logo-background p-1 shadow-sm"
+                >
+                    <img
+                        alt="Hanab"
+                        :class="expanded ? 'h-9 w-auto max-w-full object-contain' : 'h-10 w-10 object-contain'"
+                        :src="expanded ? '/hanab-logo-long.png' : '/hanab-logo.png'"
                     />
-                </div>
-                <div class="flex flex-col items-center my-2">
-                    <SidebarItem
-                        v-for="item in getBottomSidebarItems()"
-                        :key="item.label"
-                        :collapsed="sidebarCollapsed"
-                        :icon="item.icon"
-                        :label="item.label"
-                        :to="item.to"
-                    />
-                    <div class="w-full my-1 items-center relative group">
-                        <div
-                            v-if="isInSettingsSection"
-                            class="absolute top-0 bottom-0 left-0 w-1 rounded bg-(--color-sidebar-icon)"
-                        ></div>
-                        <div
-                            :class="[
-                                'flex items-center mx-2 gap-1 text-(--color-sidebar-item-text) rounded-md hover:bg-(--color-sidebar-item-highlight-dark) transition-colors duration-200 ease-in relative cursor-pointer',
-                                isInSettingsSection ? 'bg-highlight-dark' : '',
-                            ]"
-                            @click="toggleSettings"
-                        >
-                            <div class="flex items-center p-2 rounded-md">
-                                <Icon class="h-6 w-6 text-(--color-sidebar-icon)" icon="material-symbols:settings-rounded" />
-                            </div>
-                            <transition mode="out-in" name="fade">
-                                <span v-if="sidebarCollapsed" class="font-bold text-base">{{
-                                    t('SIDEBAR_ITEM_SETTINGS')
-                                }}</span>
-                            </transition>
-                        </div>
-                        <div
-                            v-if="!sidebarCollapsed"
-                            class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in bg-gray-800 text-white text-sm font-medium py-1 px-2 rounded shadow-lg whitespace-nowrap"
-                        >
-                            {{ t('SIDEBAR_ITEM_SETTINGS') }}
-                            <div
-                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-gray-800"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="w-full my-1 items-center relative group">
-                        <div
-                            class="flex items-center mx-2 gap-1 text-(--color-sidebar-item-text) rounded-md hover:bg-(--color-sidebar-item-highlight-dark) transition-colors duration-200 ease-in relative cursor-pointer"
-                            @click="logout()"
-                        >
-                            <div class="flex items-center p-2 rounded-md">
-                                <Icon class="h-6 w-6 text-(--color-sidebar-icon)" icon="material-symbols:logout-rounded" />
-                            </div>
-                            <transition mode="out-in" name="fade">
-                                <span v-if="sidebarCollapsed" class="font-bold text-base">{{
-                                    t('SIDEBAR_ITEM_LOGOUT')
-                                }}</span>
-                            </transition>
-                        </div>
-                        <div
-                            v-if="!sidebarCollapsed"
-                            class="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in bg-gray-800 text-white text-sm font-medium py-1 px-2 rounded shadow-lg whitespace-nowrap"
-                        >
-                            {{ t('SIDEBAR_ITEM_LOGOUT') }}
-                            <div
-                                class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full w-0 h-0 border-y-6 border-y-transparent border-r-6 border-r-gray-800"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="w-full">
-                        <div class="mx-1 min-h-px bg-[var(--color-sidebar-icon)]/25"></div>
-                    </div>
-                    <div class="w-full my-1 items-center relative">
-                        <div class="w-full my-1 items-center relative" @click="toggleSideBar">
-                            <div
-                                class="flex items-center mx-2 gap-1 text-[var(--color-sidebar-item-text)] rounded-md hover:bg-[var(--color-sidebar-item-highlight-dark)] transition-colors duration-200 ease-in cursor-pointer"
-                            >
-                                <div
-                                    :class="{
-                                        'transform rotate-180': sidebarCollapsed,
-                                        'transform rotate-0': !sidebarCollapsed,
-                                    }"
-                                    class="flex items-center p-2 rounded-md transition-transform duration-200 ease-in-out"
-                                >
-                                    <Icon
-                                        class="h-6 w-6 text-[var(--color-sidebar-icon)]"
-                                        icon="material-symbols:keyboard-double-arrow-right-rounded"
-                                    />
-                                </div>
-                                <span v-if="sidebarCollapsed" class="font-bold text-base">{{
-                                    t('SIDEBAR_COLLAPSE')
-                                }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    </Transition>
+                </RouterLink>
+            </template>
+            <template #icon="{ item }">
+                <Icon v-if="item.icon" :icon="item.icon" />
+            </template>
+        </Sidebar>
+    </div>
     <Teleport to="body">
         <div v-if="settingsOpen" class="fixed inset-0 z-[200] pointer-events-none">
             <!-- click-away overlay that starts at the sidebar’s right edge -->
@@ -183,26 +57,31 @@
                 <aside
                     v-if="settingsLoaded"
                     :style="{ left: panelLeft + 'px', width: '20rem' }"
-                    class="fixed top-0 h-screen bg-white shadow-2xl pointer-events-auto overflow-y-auto small-scrollbar"
+                    class="fixed top-0 h-screen bg-list-surface text-text shadow-2xl pointer-events-auto overflow-y-auto small-scrollbar"
                 >
                     <div
-                        class="flex items-center justify-between border-b border-gray-200 bg-[var(--color-sidebar-background)] px-4 py-3"
+                        class="flex items-center justify-between border-b border-sidebar-border-highlight bg-sidebar-background px-4 py-3"
                     >
-                        <h3 class="text-base font-semibold text-[var(--color-sidebar-item-text)]">{{ t('SETTINGS') }}</h3>
+                        <h3 class="text-base font-semibold text-[var(--color-sidebar-item-text)]">
+                            {{ t('SETTINGS') }}
+                        </h3>
                         <button
-                            aria-label="Close"
+                            :aria-label="t('GENERAL_CLOSE')"
                             class="rounded p-2 hover:bg-[var(--color-sidebar-item-highlight-dark)]"
                             type="button"
                             @click="toggleSettings"
                         >
-                            <Icon class="h-5 w-5 text-[var(--color-sidebar-icon)]" icon="material-symbols:close-rounded" />
+                            <Icon
+                                class="h-5 w-5 text-[var(--color-sidebar-icon)]"
+                                icon="material-symbols:close-rounded"
+                            />
                         </button>
                     </div>
 
                     <!-- Settings links -->
                     <nav class="p-3 flex flex-col gap-1">
                         <SettingSideBarItem
-                            v-for="item in settingsSideBarItems"
+                            v-for="item in visibleSettings"
                             :key="item.label"
                             :icon="item.icon"
                             :label="item.label"
@@ -217,9 +96,9 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+    import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
     import type { SidebarItemInterface } from '@/modules/types/support/navigation/SidebarItemInterface';
-    import SidebarItem from '@/components/navigation/SidebarItem.vue';
+    import { Sidebar, type SidebarItem } from '@freelance/vue-ui';
     import { Icon } from '@iconify/vue';
     import http from '@/utils/http';
     import { useRoute, useRouter } from 'vue-router';
@@ -234,12 +113,11 @@
     import { useI18n } from 'vue-i18n';
     import SettingSideBarItem from '@/components/navigation/SettingSideBarItem.vue';
     import { useAuthStore } from '@/stores/auth';
+    import { knowledgeBaseVisible } from '@/modules/knowledge/visibility';
 
-    defineComponent({
-        name: 'Sidebar',
-    });
+    defineOptions({ name: 'HanabSidebar' });
 
-    const sidebarCollapsed = ref(false);
+    const sidebarExpanded = ref(true);
     const router = useRouter();
     const currentRoute = useRoute();
 
@@ -274,14 +152,36 @@
             icon: 'material-symbols:monitoring',
         },
         {
-            label: 'GENERAL_EMPLOYEE',
+            label: 'SIDEBAR_ITEM_COLLEAGUES',
             to: '/admin/employees',
             icon: 'material-symbols:badge-outline-rounded',
+        },
+        {
+            label: 'SIDEBAR_ITEM_ORGANOGRAM',
+            to: '/admin/organogram',
+            icon: 'material-symbols:account-tree-outline-rounded',
+        },
+        {
+            label: 'SIDEBAR_ITEM_MESSAGES',
+            to: '/admin/messages',
+            icon: 'material-symbols:forum-outline-rounded',
+        },
+        {
+            label: 'KNOWLEDGE_TITLE',
+            to: '/admin/knowledge',
+            icon: 'material-symbols:menu-book-outline-rounded',
         },
         {
             label: 'EMPLOYEE_ROLE',
             to: '/admin/employee-roles',
             icon: 'material-symbols:workspace-premium-outline-rounded',
+            permissionEntity: 'employee_roles',
+        },
+        {
+            label: 'ORGANIZATION_LEVEL',
+            to: '/admin/organization-levels',
+            icon: 'material-symbols:layers-outline-rounded',
+            permissionEntity: 'organization_levels',
         },
         {
             label: 'EMPLOYEE_LOCATION',
@@ -292,11 +192,13 @@
             label: 'GENERAL_SKILL',
             to: '/admin/skills',
             icon: 'material-symbols:verified-outline-rounded',
+            permissionEntity: 'skills',
         },
         {
             label: 'GENERAL_CERTIFICATE',
             to: '/admin/certificates',
             icon: 'material-symbols:workspace-premium-outline',
+            permissionEntity: 'certificates',
         },
     ];
 
@@ -305,6 +207,11 @@
     ];
 
     const settingsSideBarItems: SidebarItemInterface[] = [
+        {
+            label: 'ACCOUNT_SECURITY',
+            to: '/admin/settings/security',
+            icon: 'material-symbols:shield-lock-outline',
+        },
         {
             label: 'ACCESS_CONTROL',
             to: '/admin/settings/access-control',
@@ -317,17 +224,78 @@
         },
     ];
 
+    const visibleSettings = computed(() => settingsSideBarItems.filter((item) => {
+        if (item.to === '/admin/settings/users') return authStore.canViewEntity('users');
+        if (item.to === '/admin/settings/access-control') return authStore.canViewEntity('roles');
+        return true;
+    }));
+
     onMounted(() => {
-        sidebarCollapsed.value = JSON.parse(localStorage.getItem('isSidebarOpen') || 'true');
+        try {
+            const stored = localStorage.getItem('isSidebarOpen');
+            if (stored !== null) sidebarExpanded.value = stored !== 'false';
+        } catch {
+            // Keep navigation usable when browser storage is unavailable.
+        }
     });
 
-    function toggleSideBar(): void {
-        sidebarCollapsed.value = !sidebarCollapsed.value;
-        localStorage.setItem('isSidebarOpen', JSON.stringify(sidebarCollapsed.value));
+    watch(sidebarExpanded, (expanded) => {
+        try {
+            localStorage.setItem('isSidebarOpen', JSON.stringify(expanded));
+        } catch {
+            // Persistence is optional.
+        }
+    });
+
+    function toSharedItem(item: SidebarItemInterface): SidebarItem {
+        const target = router.resolve(item.to);
+        const path = currentRoute.path.replace(/\/+$/, '') || '/';
+        const targetPath = target.path.replace(/\/+$/, '') || '/';
+        return {
+            id: item.to,
+            label: t(item.label),
+            icon: item.icon,
+            href: target.href,
+            active:
+                !(item.inactiveWhenPathStartsWith && path.startsWith(item.inactiveWhenPathStartsWith)) &&
+                (item.activeExact ? path === targetPath : path === targetPath || path.startsWith(`${targetPath}/`)),
+        };
     }
 
-    function goToEmployees(): void {
-        router.push('/admin/employees');
+    const navigationItems = computed(() => getSidebarItems().map(toSharedItem));
+    const footerItems = computed<SidebarItem[]>(() => [
+        ...getBottomSidebarItems().map(toSharedItem),
+        toSharedItem({
+            label: 'HELP_TITLE',
+            to: '/admin/help',
+            icon: 'material-symbols:help-outline-rounded',
+        }),
+        {
+            id: 'settings',
+            label: t('SIDEBAR_ITEM_SETTINGS'),
+            icon: 'material-symbols:settings-rounded',
+            active: isInSettingsSection.value,
+        },
+        { id: 'logout', label: t('SIDEBAR_ITEM_LOGOUT'), icon: 'material-symbols:logout-rounded' },
+    ]);
+
+    function onSelect(item: SidebarItem, event: MouseEvent): void {
+        if (event.defaultPrevented) return;
+        if (item.id === 'settings') {
+            toggleSettings();
+        } else if (item.id === 'logout') {
+            logout();
+        } else if (
+            item.href &&
+            event.button === 0 &&
+            !event.metaKey &&
+            !event.ctrlKey &&
+            !event.shiftKey &&
+            !event.altKey
+        ) {
+            event.preventDefault();
+            void router.push(item.id);
+        }
     }
 
     function getBottomSidebarItems(): SidebarItemInterface[] {
@@ -348,7 +316,15 @@
         const items: SidebarItemInterface[] = [];
 
         return [...baseSidebarItems, ...items]
+            .filter((item) => item.to !== '/admin/knowledge' || knowledgeBaseVisible)
             .map((item) => {
+                if (item.permission) {
+                    return {
+                        ...item,
+                        visible: authStore.hasPermission(item.permission),
+                    };
+                }
+
                 if (!item.permissionEntity) {
                     return item;
                 }
@@ -436,7 +412,7 @@
     });
 
     watch(
-        () => sidebarCollapsed.value,
+        () => sidebarExpanded.value,
         async () => {
             await nextTick();
             measurePanelLeft();

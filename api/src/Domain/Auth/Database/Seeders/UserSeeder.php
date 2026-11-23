@@ -11,6 +11,10 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->environment('production')) {
+            return;
+        }
+
         $user = User::query()->firstOrCreate(
             ['email' => 'admin@example.com'],
             [

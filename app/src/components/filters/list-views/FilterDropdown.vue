@@ -4,17 +4,17 @@
             <button
                 id="options-menu"
                 :class="[customClass]"
-                aria-expanded="true"
+                :aria-expanded="isOpen"
                 aria-haspopup="true"
-                class="inline-flex items-center gap-x-2 bg-white text-sm text-gray-700 border border-gray-200 w-full rounded px-4 py-2 shadow hover:outline-2 hover:outline-[var(--color-primary)] focus:outline-2 focus:outline-[var(--color-primary)] group-hover:outline-2 group-hover:outline-[var(--color-primary)] transition-colors duration-200 ease-in-out cursor-pointer"
+                class="inline-flex h-8 w-auto cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 text-[13px] font-medium text-slate-700 shadow-none ring-0 outline-none transition-colors hover:border-slate-300 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-primary/10"
                 type="button"
                 @click="onToggleDropdown"
             >
-                <span>{{ t(placeholder) }}</span>
+                <span class="max-w-44 truncate">{{ t(placeholder) }}</span>
                 <Icon
-                    :class="{ 'rotate-270': isOpen }"
-                    class="w-5 h-5 rotate-90 text-gray-500 transition-transform duration-200 ease-in-out"
-                    icon="material-symbols:chevron-right-rounded"
+                    :class="isOpen ? 'rotate-180' : ''"
+                    class="size-3.5 text-slate-400 transition-transform"
+                    icon="material-symbols:expand-more-rounded"
                 />
             </button>
         </div>
@@ -26,11 +26,10 @@
                     ref="dropdownRef"
                     :class="[dropdownClasses, customDropdownClass]"
                     :style="dropdownStyles"
-                    class="absolute w-56 rounded-md shadow-lg bg-white border border-gray-200 z-50"
+                    class="absolute z-50 min-w-56 rounded-lg border border-slate-200 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.06)]"
                     role="menu"
                 >
-                    <div :class="[triangleClasses]" class="absolute w-0 h-0 border-x-8 border-x-transparent"></div>
-                    <div class="py-1" role="none">
+                    <div role="none">
                         <slot name="dropdown-content"></slot>
                     </div>
                 </div>
@@ -74,7 +73,7 @@
                 const rect = trigger.getBoundingClientRect();
                 dropdownStyles.value = {
                     position: 'absolute',
-                    top: `${rect.bottom + window.scrollY}px`,
+                    top: `${rect.bottom + window.scrollY + 4}px`,
                     left: `${rect.left + window.scrollX}px`,
                     minWidth: `${rect.width}px`,
                 };
@@ -84,18 +83,8 @@
 
     const dropdownClasses = computed(() => {
         return {
-            'bottom-full mb-2': props.position === 'top',
-            'top-full mt-2': props.position !== 'top',
             'right-0': props.align === 'right',
             'left-0': props.align !== 'right',
         };
-    });
-
-    const triangleClasses = computed(() => {
-        const alignClasses = props.align === 'right' ? 'left-[85%]' : 'right-[85%]';
-
-        return props.position === 'top'
-            ? `${alignClasses} bottom-0 -mb-2 border-t-8 border-b-gray-400`
-            : `${alignClasses} top-0 -mt-2 border-b-8 border-b-gray-400`;
     });
 </script>
