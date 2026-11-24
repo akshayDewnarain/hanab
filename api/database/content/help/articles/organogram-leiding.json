@@ -1,0 +1,165 @@
+{
+    "slug": "organogram-leiding",
+    "title": "Het organogram: leiding",
+    "summary": "De leidingweergave toont wie aan wie rapporteert.",
+    "category": "organogram",
+    "keywords": "organogram leiding rapportage",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "organogram.management",
+    "audience_permission": null,
+    "feature_path": "/admin/organogram",
+    "app_version": null,
+    "sort_order": 60,
+    "is_getting_started": true,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "paragraph",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Open Organogram. Kies in de werkbalk de weergave Leiding."
+                    }
+                ]
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een lijn betekent een rapportagelijn."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Mensen met dezelfde rol kunnen verschillende leidinggevenden hebben."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Ontbreekt een leidinggevende, dan blijft die plek leeg."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Gebruik Zoek collega's om iemand op de kaart te vinden."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Passend maken, Inzoomen en Uitzoomen veranderen alleen de weergave."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-organogram-leiding.png",
+                    "alt": "Organogram in de weergave Leiding",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "De weergave Leiding toont de rapportagelijnen."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "De weergave Rollen groepeert functies. Dat is geen rapportagelijn."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "note"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-organogram-leiding.png",
+            "alt_text": "Organogram in de weergave Leiding",
+            "caption": "De weergave Leiding toont de rapportagelijnen.",
+            "mime": "image/png",
+            "sha256": "c61cf27c591e45479442686f45fefccf7c48757ded737289c896fd3dd8e32284"
+        }
+    ]
+}

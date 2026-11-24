@@ -1,0 +1,127 @@
+{
+    "slug": "organogram-locatie",
+    "title": "Het organogram: locatie",
+    "summary": "De locatieweergave groepeert mensen per vestiging.",
+    "category": "organogram",
+    "keywords": "organogram locatie",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "organogram.location",
+    "audience_permission": null,
+    "feature_path": "/admin/organogram",
+    "app_version": null,
+    "sort_order": 70,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open Organogram en kies Locatie."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Elke vestiging staat in een eigen groep."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een lijn binnen dezelfde vestiging hoort bij die groep."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een lijn tussen twee vestigingen ziet er anders uit, omdat de groepen naast elkaar staan."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Filter desgewenst op één locatie."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-organogram-locatie.png",
+                    "alt": "Organogram in de weergave Locatie",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "De weergave Locatie groepeert mensen per vestiging."
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-organogram-locatie.png",
+            "alt_text": "Organogram in de weergave Locatie",
+            "caption": "De weergave Locatie groepeert mensen per vestiging.",
+            "mime": "image/png",
+            "sha256": "f177c08661a5dbae3ef5268c4515f7658451543a50cdcb8c675916abda0d6705"
+        }
+    ]
+}

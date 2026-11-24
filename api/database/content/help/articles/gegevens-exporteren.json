@@ -1,0 +1,113 @@
+{
+    "slug": "gegevens-exporteren",
+    "title": "Gegevens exporteren",
+    "summary": "Download de gegevens die je nu gefilterd hebt.",
+    "category": "importeren-en-exporteren",
+    "keywords": "exporteren download",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "employees.export",
+    "audience_permission": null,
+    "feature_path": "/admin/employees",
+    "app_version": null,
+    "sort_order": 90,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open Collega's en stel zoekterm en filters in."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Kies Acties en daarna Gegevens exporteren."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Het bestand bevat de velden die voor dit model geëxporteerd mogen worden."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een gefilterde export gebruikt de huidige filters en zoekterm, niet alleen de rijen op deze pagina."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-acties.png",
+                    "alt": "Actiemenu met importeren en exporteren",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Open Acties en kies Gegevens exporteren."
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-acties.png",
+            "alt_text": "Actiemenu met importeren en exporteren",
+            "caption": "Open Acties en kies Gegevens exporteren.",
+            "mime": "image/png",
+            "sha256": "7c093ee7af76ef78daed4518905d5ea310aa1416b792f2fdf8bc67781babe904"
+        }
+    ]
+}

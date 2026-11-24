@@ -1,0 +1,108 @@
+{
+    "slug": "vaardigheden-certificaten",
+    "title": "Vaardigheden en certificaten",
+    "summary": "Labels op een profiel komen uit de catalogus.",
+    "category": "vaardigheden-en-certificaten",
+    "keywords": "vaardigheid certificaat label",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "skills.certificates",
+    "audience_permission": null,
+    "feature_path": "/admin/skills",
+    "app_version": null,
+    "sort_order": 100,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "paragraph",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Op een profiel zie je vaardigheden en certificaten als gekleurde labels. De kleuren horen bij die vaardigheid of dat certificaat."
+                    }
+                ]
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "De catalogus voor vaardigheden staat onder Vaardigheid."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "De catalogus voor certificaten staat onder Certificaat."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een label op een profiel betekent niet dat iemand die vaardigheid zojuist heeft behaald door een pagina te lezen."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-vaardigheden.png",
+                    "alt": "Catalogus van vaardigheden met labelkleuren",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "De labelkleur in de catalogus is dezelfde kleur op het profiel."
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-vaardigheden.png",
+            "alt_text": "Catalogus van vaardigheden met labelkleuren",
+            "caption": "De labelkleur in de catalogus is dezelfde kleur op het profiel.",
+            "mime": "image/png",
+            "sha256": "c3324c0856f763fc1817790c497cefa9833f010d52fc84d9c587b90bdca5d4b1"
+        }
+    ]
+}

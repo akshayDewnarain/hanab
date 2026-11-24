@@ -1,0 +1,141 @@
+{
+    "slug": "berichten",
+    "title": "Berichten schrijven en publiceren",
+    "summary": "Een bedrijfsbericht is een mededeling voor collega's.",
+    "category": "berichten",
+    "keywords": "bericht publiceren concept",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "messages.compose",
+    "audience_permission": null,
+    "feature_path": "/admin/messages",
+    "app_version": null,
+    "sort_order": 110,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open Berichten."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Kies een nieuw bericht."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Vul een titel in en schrijf de mededeling."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Voorbeeld toont de tekst en publiceert niets."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Concept opslaan bewaart het bericht zonder het te publiceren."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Publiceren maakt de mededeling beschikbaar voor collega's die berichten mogen lezen."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-berichten.png",
+                    "alt": "Venster om een bedrijfsbericht te schrijven",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Voorbeeld publiceert niets. Concept opslaan bewaart het bericht."
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-berichten.png",
+            "alt_text": "Venster om een bedrijfsbericht te schrijven",
+            "caption": "Voorbeeld publiceert niets. Concept opslaan bewaart het bericht.",
+            "mime": "image/png",
+            "sha256": "3437cd90ea07fc3c60592baa45ffb08fc57dd63db4c995a6c4648af6dd75aea7"
+        }
+    ]
+}

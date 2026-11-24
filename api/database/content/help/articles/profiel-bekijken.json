@@ -1,0 +1,142 @@
+{
+    "slug": "profiel-bekijken",
+    "title": "Een profiel bekijken",
+    "summary": "Het profiel is alleen-lezen.",
+    "category": "collegas",
+    "keywords": "profiel bekijk profiel",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "employees.profile",
+    "audience_permission": null,
+    "feature_path": "/admin/employees",
+    "app_version": null,
+    "sort_order": 40,
+    "is_getting_started": true,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Zoek de collega en kies Bekijk profiel."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Je ziet rol, locatie, contact, introductie, vaardigheden en certificaten als die zijn ingevuld."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een gekleurde label hoort bij die vaardigheid of dat certificaat."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Heb je rechten om te wijzigen, dan staat Bewerken op het profiel."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-profiel.png",
+                    "alt": "Profiel van een collega",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Het profiel toont rol, locatie, expertise en certificaten."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Een inactieve collega is niet zichtbaar voor gewone gebruikers."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "note"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-profiel.png",
+            "alt_text": "Profiel van een collega",
+            "caption": "Het profiel toont rol, locatie, expertise en certificaten.",
+            "mime": "image/png",
+            "sha256": "95661d900eac4742f7dee2feb1b56464eb273343d5a943f8ead69f43df15b6b6"
+        }
+    ]
+}

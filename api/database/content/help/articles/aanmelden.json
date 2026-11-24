@@ -1,0 +1,142 @@
+{
+    "slug": "aanmelden",
+    "title": "Aanmelden",
+    "summary": "Log in op het beheerpaneel.",
+    "category": "aan-de-slag",
+    "keywords": "inloggen wachtwoord",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "auth.sign-in",
+    "audience_permission": null,
+    "feature_path": "/login",
+    "app_version": null,
+    "sort_order": 10,
+    "is_getting_started": true,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open het beheerpaneel."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Vul je e-mailadres in bij E-mail."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Vul je wachtwoord in bij Wachtwoord."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Kies Inloggen."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-aanmelden.png",
+                    "alt": "Aanmeldscherm van het beheerpaneel",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Vul je e-mail en wachtwoord in en kies Inloggen."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Ben je je wachtwoord kwijt, gebruik dan Wachtwoord vergeten? Daarmee vraag je een nieuw wachtwoord aan."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "note"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-aanmelden.png",
+            "alt_text": "Aanmeldscherm van het beheerpaneel",
+            "caption": "Vul je e-mail en wachtwoord in en kies Inloggen.",
+            "mime": "image/png",
+            "sha256": "b09d6c04759ceed1e3ec7e7c5e44c08c671c01932dfd1b7c18b0e31596fffa8f"
+        }
+    ]
+}

@@ -1,0 +1,156 @@
+{
+    "slug": "gebruikers",
+    "title": "Gebruikers en rechten",
+    "summary": "Nodig iemand uit en ken een rol toe.",
+    "category": "gebruikersbeheer",
+    "keywords": "gebruiker uitnodigen rol",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "settings.users",
+    "audience_permission": "update users",
+    "feature_path": "/admin/settings/users",
+    "app_version": null,
+    "sort_order": 120,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open Instellingen en daarna Gebruikers."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Vul e-mail, naam en rol in en verstuur de uitnodiging."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een uitgenodigd account heeft nog geen wachtwoord. Je kunt de uitnodiging opnieuw sturen of intrekken."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een actief account kun je uitschakelen."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "De rol bepaalt wat die persoon mag wijzigen. Super-admin blijft beschermd."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-gebruikers.png",
+                    "alt": "Scherm om gebruikers uit te nodigen",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Vul e-mail, naam en rol in en verstuur de uitnodiging."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Rechten op een hulptekst veranderen niets aan wat de applicatie zelf afdwingt."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "note"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-gebruikers.png",
+            "alt_text": "Scherm om gebruikers uit te nodigen",
+            "caption": "Vul e-mail, naam en rol in en verstuur de uitnodiging.",
+            "mime": "image/png",
+            "sha256": "11e211c44334afc623311eb15bc290a1dc13ab53d5282e992eb8fe0e3760a7b8"
+        }
+    ]
+}

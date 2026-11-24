@@ -1,0 +1,113 @@
+{
+    "slug": "collegas-filteren",
+    "title": "Collega's filteren",
+    "summary": "Beperk de lijst met de filters links.",
+    "category": "collegas",
+    "keywords": "filter expertise locatie rol actief",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "employees.directory",
+    "audience_permission": null,
+    "feature_path": "/admin/employees",
+    "app_version": null,
+    "sort_order": 30,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open Collega's."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Gebruik links de filters Expertise, Certificaten, Locatie, Rol en Actief."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Een gekozen filter blijft staan tot je Filters resetten kiest."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Schakel tussen Lijst en Kaarten als je de resultaten anders wilt zien."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-collegas.png",
+                    "alt": "Filters naast de collega's",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "De filters staan links van de lijst."
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-collegas.png",
+            "alt_text": "Filters naast de collega's",
+            "caption": "De filters staan links van de lijst.",
+            "mime": "image/png",
+            "sha256": "926c60abc1be1d78393f4e63841e452859548a0722ba3e98e19f5ab073dca3bc"
+        }
+    ]
+}

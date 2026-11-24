@@ -1,0 +1,83 @@
+[
+    {
+        "slug": "aan-de-slag",
+        "name": "Aan de slag",
+        "description": "De eerste stappen in Hanab.",
+        "icon": "material-symbols:flag-outline-rounded",
+        "sort_order": 10,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "collegas",
+        "name": "Collega's",
+        "description": "Zoeken, filteren en profielen bekijken.",
+        "icon": "material-symbols:groups-outline-rounded",
+        "sort_order": 20,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "medewerkersbeheer",
+        "name": "Medewerkersbeheer",
+        "description": "Gegevens van medewerkers bijwerken.",
+        "icon": "material-symbols:edit-outline-rounded",
+        "sort_order": 30,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "organogram",
+        "name": "Organogram",
+        "description": "Leiding, locatie en rollen.",
+        "icon": "material-symbols:account-tree-outline-rounded",
+        "sort_order": 40,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "importeren-en-exporteren",
+        "name": "Importeren en exporteren",
+        "description": "Bestanden inlezen en uitdraaien.",
+        "icon": "material-symbols:upload-file-outline-rounded",
+        "sort_order": 50,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "vaardigheden-en-certificaten",
+        "name": "Vaardigheden en certificaten",
+        "description": "Labels op profielen en in het beheer.",
+        "icon": "material-symbols:workspace-premium-outline-rounded",
+        "sort_order": 60,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "berichten",
+        "name": "Berichten",
+        "description": "Mededelingen voor collega's.",
+        "icon": "material-symbols:forum-outline-rounded",
+        "sort_order": 70,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "gebruikersbeheer",
+        "name": "Gebruikersbeheer",
+        "description": "Accounts en rollen.",
+        "icon": "material-symbols:manage-accounts-outline-rounded",
+        "sort_order": 80,
+        "is_active": true,
+        "parent": null
+    },
+    {
+        "slug": "instellingen",
+        "name": "Instellingen",
+        "description": "Toegang en configuratie.",
+        "icon": "material-symbols:settings-outline-rounded",
+        "sort_order": 90,
+        "is_active": true,
+        "parent": null
+    }
+]

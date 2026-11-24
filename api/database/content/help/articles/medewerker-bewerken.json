@@ -1,0 +1,142 @@
+{
+    "slug": "medewerker-bewerken",
+    "title": "Een medewerker bewerken",
+    "summary": "Wijzig een medewerker en keer terug naar het profiel.",
+    "category": "medewerkersbeheer",
+    "keywords": "bewerken opslaan introductie",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "employees.edit",
+    "audience_permission": "update employees",
+    "feature_path": "/admin/employees",
+    "app_version": null,
+    "sort_order": 50,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open het profiel en kies Bewerken."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Pas de velden aan. De introductie is gewone tekst."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Sla de wijzigingen op. Je komt terug op het profiel."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Annuleren laat je op het bewerkingsscherm."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-bewerken.png",
+                    "alt": "Scherm om een medewerker te bewerken",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Pas de velden aan en sla de wijzigingen op."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Verlaat je het scherm met onopgeslagen wijzigingen, dan vraagt Hanab om bevestiging."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "note"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-bewerken.png",
+            "alt_text": "Scherm om een medewerker te bewerken",
+            "caption": "Pas de velden aan en sla de wijzigingen op.",
+            "mime": "image/png",
+            "sha256": "196fcf2726c8fce7947783c34328c40799d97ac3ead3f5067be3fc42d445dea5"
+        }
+    ]
+}

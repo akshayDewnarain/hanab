@@ -1,0 +1,151 @@
+{
+    "slug": "collegas-zoeken",
+    "title": "Collega's zoeken op expertise",
+    "summary": "Zoek een collega op naam, vaardigheid, certificaat of synoniem.",
+    "category": "collegas",
+    "keywords": "zoeken expertise vaardigheid certificaat synoniem",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "employees.directory",
+    "audience_permission": null,
+    "feature_path": "/admin/employees",
+    "app_version": null,
+    "sort_order": 20,
+    "is_getting_started": true,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "paragraph",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Open Collega's. Bovenaan de pagina staat Vind de juiste collega."
+                    }
+                ]
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Typ een naam, vaardigheid, certificaat of synoniem in Zoek op expertise."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Je kunt ook de zoekbalk bovenin gebruiken: Naam, vaardigheid, certificaat of synoniem."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Kies een suggestie onder de zoekbalk als die past."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open een resultaat met Bekijk profiel."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-collegas.png",
+                    "alt": "Overzicht van collega's met zoeken en filters",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Zoek op expertise of kies een suggestie onder de zoekbalk."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Een synoniem vindt de bijbehorende vaardigheid of het certificaat, ook als je de officiële naam niet intypt."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "tip"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-collegas.png",
+            "alt_text": "Overzicht van collega's met zoeken en filters",
+            "caption": "Zoek op expertise of kies een suggestie onder de zoekbalk.",
+            "mime": "image/png",
+            "sha256": "926c60abc1be1d78393f4e63841e452859548a0722ba3e98e19f5ab073dca3bc"
+        }
+    ]
+}

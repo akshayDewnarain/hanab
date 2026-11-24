@@ -1,0 +1,184 @@
+{
+    "slug": "gegevens-importeren",
+    "title": "Gegevens importeren",
+    "summary": "Lees een bestand in via Acties.",
+    "category": "importeren-en-exporteren",
+    "keywords": "importeren upload kolommen controleren",
+    "status": "published",
+    "visibility": "authenticated",
+    "context_key": "employees.import",
+    "audience_permission": "import employees",
+    "feature_path": "/admin/employees",
+    "app_version": null,
+    "sort_order": 80,
+    "is_getting_started": false,
+    "review_due_on": null,
+    "content": {
+        "type": "doc",
+        "content": [
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Stappen"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "stepList",
+                "content": [
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Open Collega's."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Kies Acties en daarna Gegevens importeren."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Uploaden: kies het bestand."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Kolommen koppelen: accepteer een voorstel, kies een ander veld, of laat een kolom weg. Een verplicht veld heeft één kolom nodig. Elk veld kan één keer worden gebruikt."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Controleren: bekijk nieuwe, gewijzigde en ongeldige rijen."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Bevestigen: importeer de rijen die akkoord zijn."
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "listItem",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "Controleer daarna de collega's in de lijst."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "docImage",
+                "attrs": {
+                    "id": "help-importeren.png",
+                    "alt": "Dialoog om collega's te importeren",
+                    "size": "lg",
+                    "align": "center",
+                    "caption": "Kies een bestand. De stappen Uploaden, Velden koppelen, Controleren en Afronden staan bovenaan."
+                }
+            },
+            {
+                "type": "heading",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Goed om te weten"
+                    }
+                ],
+                "attrs": {
+                    "level": 2
+                }
+            },
+            {
+                "type": "callout",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Een voorbeeld is geen import. Pas na bevestigen worden records opgeslagen."
+                            }
+                        ]
+                    }
+                ],
+                "attrs": {
+                    "kind": "warning"
+                }
+            }
+        ]
+    },
+    "images": [
+        {
+            "file": "help-importeren.png",
+            "alt_text": "Dialoog om collega's te importeren",
+            "caption": "Kies een bestand. De stappen Uploaden, Velden koppelen, Controleren en Afronden staan bovenaan.",
+            "mime": "image/png",
+            "sha256": "2563ca383fd7688d1e2bdf650970f1d8796c91f1f813975f002dd4d1df7fb41a"
+        }
+    ]
+}
