@@ -16,6 +16,8 @@ class DemoAccessSeeder extends Seeder
             return;
         }
 
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         $guard = config('auth.defaults.guard');
         $reader = [
             'view employees',

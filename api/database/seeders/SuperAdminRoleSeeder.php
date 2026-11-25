@@ -6,6 +6,7 @@ use Domain\Auth\Models\Role;
 use Domain\Auth\Support\BootstrapRoleNames;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class SuperAdminRoleSeeder extends Seeder
 {
@@ -21,6 +22,10 @@ class SuperAdminRoleSeeder extends Seeder
             ],
         );
 
-        $role->syncPermissions(Permission::query()->where('guard_name', $guard)->pluck('name')->all());
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $role->syncPermissions(
+            Permission::query()->where('guard_name', $guard)->get()->all(),
+        );
     }
 }

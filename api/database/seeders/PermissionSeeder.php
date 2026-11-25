@@ -17,6 +17,7 @@ use Domain\Auth\Models\UserInvitation;
 use Domain\Messages\Models\Message;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionSeeder extends Seeder
 {
@@ -63,12 +64,22 @@ class PermissionSeeder extends Seeder
 
         foreach ($models as $modelClass) {
             foreach (PermissionService::crudPermissions($modelClass) as $permissionName) {
-                Permission::findOrCreate($permissionName, $guard);
+                $this->ensurePermission($permissionName, $guard);
             }
         }
 
         foreach ($extra as $permissionName) {
-            Permission::findOrCreate($permissionName, $guard);
+            $this->ensurePermission($permissionName, $guard);
         }
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+    }
+
+    private function ensurePermission(string $name, string $guard): void
+    {
+        Permission::query()->firstOrCreate([
+            'name' => $name,
+            'guard_name' => $guard,
+        ]);
     }
 }
