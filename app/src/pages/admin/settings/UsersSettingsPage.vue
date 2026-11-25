@@ -20,19 +20,17 @@
                 </label>
                 <label class="flex flex-col gap-1 text-sm">
                     <span class="font-medium text-list-text">{{ t('USERS_ROLE') }}</span>
-                    <select v-model="form.role_id" class="h-10 rounded-lg border border-list-border bg-list-surface px-3" required>
-                        <option disabled value="">{{ t('USERS_CHOOSE_ROLE') }}</option>
-                        <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
-                    </select>
+                    <ChoiceDropdown v-model="form.role_id" :placeholder="t('USERS_CHOOSE_ROLE')" :options="roles.map((role) => ({ value: String(role.id), label: role.name }))" />
                 </label>
                 <label class="flex flex-col gap-1 text-sm">
                     <span class="font-medium text-list-text">{{ t('USERS_EMPLOYEE') }}</span>
-                    <select v-model="form.employee_id" class="h-10 rounded-lg border border-list-border bg-list-surface px-3">
-                        <option value="">{{ t('USERS_NO_EMPLOYEE') }}</option>
-                        <option v-for="employee in employees" :key="employee.id" :value="employee.id">
-                            {{ employee.first_name }} {{ employee.last_name }}
-                        </option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="form.employee_id"
+                        :options="[
+                            { value: '', label: t('USERS_NO_EMPLOYEE') },
+                            ...employees.map((employee) => ({ value: String(employee.id), label: `${employee.first_name} ${employee.last_name}` })),
+                        ]"
+                    />
                 </label>
                 <div class="md:col-span-2 flex items-center justify-between gap-3">
                     <p v-if="notice" class="text-sm text-list-text-muted">{{ notice }}</p>
@@ -59,9 +57,12 @@
                             <td class="px-4 py-3 text-list-text">{{ user.email }}</td>
                             <td class="px-4 py-3 text-list-text">{{ user.status }}</td>
                             <td class="px-4 py-3">
-                                <select class="h-9 rounded-lg border border-list-border bg-list-surface px-2" :value="user.role_id ?? ''" @change="changeRole(user, $event)">
-                                    <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
-                                </select>
+                                <ChoiceDropdown
+                                    :model-value="user.role_id == null ? '' : String(user.role_id)"
+                                    :aria-label="t('USERS_ROLE')"
+                                    :options="roles.map((role) => ({ value: String(role.id), label: role.name }))"
+                                    @update:model-value="changeRole(user, String($event ?? ''))"
+                                />
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex justify-end gap-2">
@@ -82,6 +83,7 @@
     import { onMounted, reactive, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { PageLayout } from '@freelance/vue-ui';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import http from '@/utils/http';
     import HelpTrigger from '@/components/help/HelpTrigger.vue';
 
@@ -168,8 +170,8 @@
         }
     }
 
-    async function changeRole(user: Account, event: Event): Promise<void> {
-        const roleId = Number((event.target as HTMLSelectElement).value);
+    async function changeRole(user: Account, roleValue: string): Promise<void> {
+        const roleId = Number(roleValue);
         try {
             await http.put(`users/${user.id}`, {
                 name: user.name,

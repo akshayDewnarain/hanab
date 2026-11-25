@@ -6,7 +6,12 @@
             <Topbar />
             <div class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
                 <div class="h-full min-h-0 min-w-0 overflow-hidden">
-                    <router-view></router-view>
+                    <router-view v-slot="{ Component, route }">
+                        <UiPageTransition v-if="isHelpRoute(route)">
+                            <component :is="Component" :key="route.path" />
+                        </UiPageTransition>
+                        <component :is="Component" v-else />
+                    </router-view>
                 </div>
             </div>
             <ModalContainer />
@@ -21,7 +26,13 @@
     import ModalContainer from '@/components/modals/ModalContainer.vue';
     import MobileLayout from '@/layouts/MobileLayout.vue';
     import HelpDrawer from '@/components/help/HelpDrawer.vue';
+    import { UiPageTransition } from '@freelance/vue-ui';
     import { useViewport } from '@/composables/useViewport';
+    import type { RouteLocationNormalizedLoaded } from 'vue-router';
+
+    function isHelpRoute(route: RouteLocationNormalizedLoaded): boolean {
+        return String(route.name ?? '').startsWith('admin-help');
+    }
 
     const { isMobile } = useViewport();
 

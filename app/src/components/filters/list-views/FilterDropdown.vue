@@ -6,14 +6,14 @@
                 :class="[customClass]"
                 :aria-expanded="isOpen"
                 aria-haspopup="true"
-                class="inline-flex h-8 w-auto cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 text-[13px] font-medium text-slate-700 shadow-none ring-0 outline-none transition-colors hover:border-slate-300 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-primary/10"
+                class="inline-flex h-8 w-auto cursor-pointer items-center gap-1.5 rounded-lg border border-list-border bg-list-surface px-2 text-[13px] font-medium text-list-text shadow-none ring-0 outline-none transition-colors hover:border-list-border hover:bg-list-row-hover focus-visible:ring-2 focus-visible:ring-emphasis/15"
                 type="button"
                 @click="onToggleDropdown"
             >
                 <span class="max-w-44 truncate">{{ t(placeholder) }}</span>
                 <Icon
                     :class="isOpen ? 'rotate-180' : ''"
-                    class="size-3.5 text-slate-400 transition-transform"
+                    class="size-3.5 text-list-text-muted transition-transform"
                     icon="material-symbols:expand-more-rounded"
                 />
             </button>
@@ -26,7 +26,7 @@
                     ref="dropdownRef"
                     :class="[dropdownClasses, customDropdownClass]"
                     :style="dropdownStyles"
-                    class="absolute z-50 min-w-56 rounded-lg border border-slate-200 bg-white shadow-[0_4px_16px_rgba(15,23,42,0.06)]"
+                    class="absolute z-50 min-w-56 rounded-lg border border-list-border bg-list-surface text-list-text shadow-[0_4px_16px_color-mix(in_srgb,var(--color-list-shadow-tint)_16%,transparent)]"
                     role="menu"
                 >
                     <div role="none">

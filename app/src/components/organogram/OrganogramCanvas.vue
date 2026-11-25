@@ -3,7 +3,7 @@
         <VueFlow
             id="organogram"
             :nodes="flowNodes"
-            :edges="flowEdges"
+            :edges="displayEdges"
             :node-types="nodeTypes"
             :edge-types="edgeTypes"
             :min-zoom="0.15"
@@ -36,7 +36,6 @@
             />
         </VueFlow>
         <slot />
-        <p v-if="empty" class="organogram-empty">{{ emptyLabel }}</p>
         <div class="organogram-controls" role="group" :aria-label="controlsLabel">
             <button type="button" :aria-label="zoomInLabel" @click="zoomIn()">
                 <Icon icon="material-symbols:add-rounded" />
@@ -62,7 +61,7 @@
     import { MiniMap } from '@vue-flow/minimap';
     import { VueFlow, useVueFlow, type Edge, type Node, type NodeTypesObject } from '@vue-flow/core';
     import { Icon } from '@iconify/vue';
-    import { computed, markRaw, nextTick, onMounted, ref, watch } from 'vue';
+    import { computed, markRaw, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
     import '@vue-flow/core/dist/style.css';
     import '@vue-flow/core/dist/theme-default.css';
     import '@vue-flow/minimap/dist/style.css';
@@ -81,8 +80,6 @@
         focusRequest: number;
         focusId: string | null;
         resetRequest: number;
-        empty: boolean;
-        emptyLabel: string;
         controlsLabel: string;
         zoomInLabel: string;
         zoomOutLabel: string;
@@ -107,8 +104,10 @@
     const dotColor = ref('#c5ced8');
     const minimapNodeColor = ref('#d5dbe3');
     const minimapGroupColor = ref('#e7eef5');
+    const minimapGroupStroke = ref('rgba(100, 116, 139, 0.55)');
     const minimapMaskColor = ref('rgba(241, 245, 249, 0.92)');
-    const { zoomIn, zoomOut, fitView, setViewport, setCenter } = useVueFlow({ id: 'organogram' });
+    const { zoomIn, zoomOut, fitView, setViewport, setCenter, updateNodeInternals } = useVueFlow({ id: 'organogram' });
+    const displayEdges = ref<Edge[]>([]);
 
     const flowNodes = computed<Node[]>(() =>
         props.nodes.map((node) => ({
@@ -142,7 +141,16 @@
     }
 
     function minimapStroke(node: Node): string {
-        return node.type === 'group' ? 'rgba(100, 116, 139, 0.55)' : 'transparent';
+        return node.type === 'group' ? minimapGroupStroke.value : 'transparent';
+    }
+
+    function applyCanvasTheme(): void {
+        const dark = document.documentElement.dataset.theme === 'dark';
+        dotColor.value = dark ? '#475569' : '#c5ced8';
+        minimapNodeColor.value = dark ? '#64748b' : '#d5dbe3';
+        minimapGroupColor.value = dark ? '#334155' : '#e7eef5';
+        minimapGroupStroke.value = dark ? 'rgba(148, 163, 184, 0.45)' : 'rgba(100, 116, 139, 0.55)';
+        minimapMaskColor.value = dark ? 'rgba(15, 23, 42, 0.72)' : 'rgba(241, 245, 249, 0.92)';
     }
 
     function fit(): void {
@@ -215,6 +223,17 @@
     }
 
     watch(
+        () => `${props.nodes.map((node) => node.id).join('|')}#${props.edges.map((edge) => edge.id).join('|')}`,
+        () => {
+            displayEdges.value = props.nodes.length === 0 ? [] : flowEdges.value;
+            if (props.nodes.length > 0) {
+                updateNodeInternals(props.nodes.map((node) => node.id));
+            }
+        },
+        { flush: 'post', immediate: true },
+    );
+
+    watch(
         () => props.fitRequest,
         () => {
             void nextTick(() => readableFit());
@@ -250,15 +269,21 @@
         },
     );
 
+    let themeObserver: MutationObserver | null = null;
+
+    function onFullscreenChange(): void {
+        isFullscreen.value = document.fullscreenElement === root.value;
+    }
+
     onMounted(() => {
-        const theme = document.documentElement.dataset.theme;
-        const dark = theme === 'dark';
-        dotColor.value = dark ? '#475569' : '#c5ced8';
-        minimapNodeColor.value = dark ? '#64748b' : '#d5dbe3';
-        minimapGroupColor.value = dark ? '#334155' : '#e7eef5';
-        minimapMaskColor.value = dark ? 'rgba(51, 65, 85, 0.72)' : 'rgba(241, 245, 249, 0.92)';
-        document.addEventListener('fullscreenchange', () => {
-            isFullscreen.value = document.fullscreenElement === root.value;
-        });
+        applyCanvasTheme();
+        themeObserver = new MutationObserver(applyCanvasTheme);
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+    });
+
+    onUnmounted(() => {
+        themeObserver?.disconnect();
+        document.removeEventListener('fullscreenchange', onFullscreenChange);
     });
 </script>

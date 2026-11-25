@@ -167,6 +167,11 @@ export function useMessages() {
     const managed = computed(() => library.value.map((message) => toFeed(message, t)));
     const draftItems = computed(() => drafts.value.map((message) => toFeed(message, t)));
 
+    async function loadPreferences(): Promise<void> {
+        const preferences = await http.get<{ data: Preference }>('message-preferences');
+        preference.value = preferences.data.data;
+    }
+
     async function load(scope: 'feed' | 'manage' = 'feed'): Promise<void> {
         isLoading.value = true;
         if (scope === 'manage') manageFailed.value = false;
@@ -201,9 +206,84 @@ export function useMessages() {
         if (manageReady.value) await load('manage');
     }
 
+    type ReactionJob = {
+        want: string | null;
+        baseline: ApiMessage;
+        settled: string | null;
+        running: boolean;
+    };
+
+    const reactionJobs = new Map<string, ReactionJob>();
+
+    function cloneMessage(message: ApiMessage): ApiMessage {
+        return { ...message, reactions: (message.reactions ?? []).map((item) => ({ ...item })) };
+    }
+
+    function withReaction(message: ApiMessage, emoji: string | null): ApiMessage {
+        if ((message.reaction ?? null) === emoji) return message;
+        const reactions = (message.reactions ?? []).map((item) => ({ ...item }));
+        const adjust = (value: string, delta: number) => {
+            const row = reactions.find((item) => item.emoji === value);
+            if (row) row.count = Math.max(0, row.count + delta);
+            else if (delta > 0) reactions.push({ emoji: value, count: delta });
+        };
+        if (message.reaction) adjust(message.reaction, -1);
+        if (emoji) adjust(emoji, 1);
+        return { ...message, reaction: emoji, reactions };
+    }
+
+    function replaceMessage(next: ApiMessage): void {
+        const id = String(next.id);
+        const swap = (list: ApiMessage[]) => list.map((item) => (String(item.id) === id ? next : item));
+        messages.value = swap(messages.value);
+        library.value = swap(library.value);
+    }
+
+    function findMessage(id: string): ApiMessage | undefined {
+        return messages.value.find((item) => String(item.id) === id) ?? library.value.find((item) => String(item.id) === id);
+    }
+
+    async function pumpReaction(id: string): Promise<void> {
+        const job = reactionJobs.get(id);
+        if (!job || job.running) return;
+        job.running = true;
+        let failed = false;
+        try {
+            while (job.want !== job.settled) {
+                const sending = job.want;
+                try {
+                    const response = await http.put<{ data: ApiMessage }>(`messages/${id}/reaction`, { emoji: sending });
+                    job.baseline = response.data.data;
+                    job.settled = response.data.data.reaction ?? null;
+                    replaceMessage(job.want === sending ? job.baseline : withReaction(job.baseline, job.want));
+                    if (job.want === sending) break;
+                } catch (error) {
+                    if (job.want !== sending) continue;
+                    replaceMessage(job.baseline);
+                    failed = true;
+                    throw error;
+                }
+            }
+        } finally {
+            job.running = false;
+            if (!failed && job.want !== job.settled) void pumpReaction(id);
+            else reactionJobs.delete(id);
+        }
+    }
+
     async function react(id: string, emoji: string | null): Promise<void> {
-        await http.put(`messages/${id}/reaction`, { emoji });
-        await reload();
+        const current = findMessage(id);
+        if (!current) return;
+        let job = reactionJobs.get(id);
+        if (!job) {
+            const baseline = cloneMessage(current);
+            job = { want: emoji, baseline, settled: baseline.reaction ?? null, running: false };
+            reactionJobs.set(id, job);
+        } else {
+            job.want = emoji;
+        }
+        replaceMessage(withReaction(job.baseline, job.want));
+        await pumpReaction(id);
     }
 
     async function publish(id: string): Promise<void> {
@@ -230,10 +310,14 @@ export function useMessages() {
         await reload();
     }
 
-    async function savePreference(next: Preference): Promise<void> {
+    async function savePreference(next: Preference, refreshFeed = true): Promise<Preference> {
         const response = await http.put<{ data: Preference }>('message-preferences', next);
-        preference.value = response.data.data;
-        await reload();
+        const saved = response.data.data;
+        if (refreshFeed) {
+            preference.value = saved;
+            await reload();
+        }
+        return saved;
     }
 
     return {
@@ -250,6 +334,7 @@ export function useMessages() {
         manageFailed,
         isLoading,
         load,
+        loadPreferences,
         react,
         publish,
         saveCompanyMessage,

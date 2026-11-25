@@ -372,6 +372,12 @@ const routes: RouteRecordRaw[] = [
                 },
             },
             {
+                path: 'account',
+                name: 'admin-account',
+                component: () => import('@/pages/admin/settings/AccountProfilePage.vue'),
+                meta: { requiresAuth: true, titleKey: 'ACCOUNT_PROFILE' },
+            },
+            {
                 path: 'settings/security',
                 name: 'admin-settings-security',
                 component: () => import('@/pages/admin/settings/AccountSecurityPage.vue'),

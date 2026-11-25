@@ -96,6 +96,13 @@ class AccountSecurityController
         return ApiResponse::success('Scan the new authenticator, then confirm it.', $setup);
     }
 
+    public function cancelReplacement(Request $request, TwoFactorService $twoFactor): JsonResponse
+    {
+        $twoFactor->cancelReplacement($this->user($request));
+
+        return ApiResponse::success('Authenticator replacement was cancelled. The current authenticator is unchanged.');
+    }
+
     public function confirmReplacement(Request $request, TwoFactorService $twoFactor): JsonResponse
     {
         $code = (string) $request->validate([

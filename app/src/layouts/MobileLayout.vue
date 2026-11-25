@@ -37,7 +37,12 @@
         </header>
 
         <div class="min-h-0 flex-1 overflow-hidden">
-            <router-view v-if="isStandalone" />
+            <router-view v-if="isStandalone" v-slot="{ Component, route }">
+                <UiPageTransition v-if="String(route.name ?? '').startsWith('admin-help')">
+                    <component :is="Component" :key="route.path" />
+                </UiPageTransition>
+                <component :is="Component" v-else />
+            </router-view>
             <EmployeeListView
                 v-else
                 class="h-full"
@@ -50,11 +55,21 @@
         <nav
             class="shrink-0 border-t border-sidebar-border-highlight bg-gradient-to-r from-highlight-dark via-primary to-primary px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-2 text-on-brand backdrop-blur"
         >
-            <ul class="grid grid-cols-3 gap-2">
+            <ul class="grid grid-cols-4 gap-1">
+                <li>
+                    <RouterLink
+                        to="/admin/dashboard"
+                        class="flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-on-brand/80"
+                        active-class="bg-primary/35 text-on-brand shadow-sm ring-1 ring-on-brand/20"
+                    >
+                        <Icon class="size-5" icon="material-symbols:monitoring" />
+                        <span class="text-[11px] font-semibold">{{ t('SIDEBAR_ITEM_DASHBOARD') }}</span>
+                    </RouterLink>
+                </li>
                 <li>
                     <RouterLink
                         to="/admin/employees"
-                        class="flex flex-col items-center gap-1 rounded-lg px-2 py-2 text-on-brand/80"
+                        class="flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-on-brand/80"
                         active-class="bg-primary/35 text-on-brand shadow-sm ring-1 ring-on-brand/20"
                     >
                         <Icon class="size-5" icon="material-symbols:groups-rounded" />
@@ -64,7 +79,7 @@
                 <li>
                     <RouterLink
                         to="/admin/organogram"
-                        class="flex flex-col items-center gap-1 rounded-lg px-2 py-2 text-on-brand/80"
+                        class="flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-on-brand/80"
                         active-class="bg-primary/35 text-on-brand shadow-sm ring-1 ring-on-brand/20"
                     >
                         <Icon class="size-5" icon="material-symbols:account-tree-outline-rounded" />
@@ -74,7 +89,7 @@
                 <li>
                     <RouterLink
                         to="/admin/messages"
-                        class="flex flex-col items-center gap-1 rounded-lg px-2 py-2 text-on-brand/80"
+                        class="flex flex-col items-center gap-1 rounded-lg px-1 py-2 text-on-brand/80"
                         active-class="bg-primary/35 text-on-brand shadow-sm ring-1 ring-on-brand/20"
                     >
                         <Icon class="size-5" icon="material-symbols:forum-outline-rounded" />
@@ -95,15 +110,32 @@
     import ExpertiseSearch from '@/components/search/ExpertiseSearch.vue';
     import EmployeeListView from '@/pages/admin/list-views/EmployeeListView.vue';
     import HelpDrawer from '@/components/help/HelpDrawer.vue';
+    import { UiPageTransition } from '@freelance/vue-ui';
 
     const { t } = useI18n();
     const route = useRoute();
-    const standaloneNames = ['admin-data-transfer', 'admin-organogram', 'admin-messages'];
+    const standaloneNames = [
+        'admin-dashboard',
+        'admin-data-transfer',
+        'admin-organogram',
+        'admin-messages',
+        'admin-account',
+        'admin-settings-access-control',
+        'admin-settings-security',
+        'admin-employees-detail',
+        'admin-employees-edit',
+    ];
     const isStandalone = computed(() => standaloneNames.includes(String(route.name)) || String(route.name).startsWith('admin-help'));
     const pageTitle = computed(() => {
+        if (route.name === 'admin-dashboard') return t('DASHBOARD_TITLE');
         if (route.name === 'admin-data-transfer') return t('DATA_TRANSFER_TITLE');
         if (route.name === 'admin-organogram') return t('ORGANOGRAM_TITLE');
         if (route.name === 'admin-messages') return t('MESSAGES_TITLE');
+        if (route.name === 'admin-account') return t('ACCOUNT_PROFILE');
+        if (route.name === 'admin-settings-access-control') return t('ACCESS_CONTROL');
+        if (route.name === 'admin-settings-security') return t('ACCOUNT_SECURITY');
+        if (route.name === 'admin-employees-detail') return t('EMPLOYEE_PROFILE');
+        if (route.name === 'admin-employees-edit') return t('EMPLOYEE_EDIT');
         if (String(route.name).startsWith('admin-help')) return t('HELP_TITLE');
         return t('PAGE_TITLE_EMPLOYEES');
     });

@@ -8,76 +8,64 @@
             />
         </div>
         <p v-else-if="!employee" class="m-0 text-sm font-medium text-list-text">{{ t('EMPLOYEE_PROFILE_UNAVAILABLE') }}</p>
-        <div v-else class="mx-auto flex w-full max-w-[84rem] flex-col gap-4">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <button
-                    type="button"
-                    class="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-lg px-2 text-sm font-medium text-list-text transition-colors duration-200 hover:bg-list-surface motion-reduce:transition-none"
-                    @click="goBack"
-                >
-                    <Icon class="size-[18px]" icon="material-symbols:arrow-back-rounded" />
-                    {{ t('EMPLOYEE_BACK') }}
-                </button>
-                <div class="flex items-center gap-2">
-                    <HelpTrigger context="employees.profile" />
-                <router-link
-                    v-if="canEdit"
-                    class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-white transition-colors duration-200 hover:brightness-95 motion-reduce:transition-none"
-                    :to="{ name: 'admin-employees-edit', params: { id: String(employee.id) } }"
-                >
-                    <Icon class="size-[18px]" icon="material-symbols:edit-outline-rounded" />
-                    {{ t('EMPLOYEE_EDIT') }}
-                </router-link>
-                </div>
-            </div>
+        <div v-else class="mx-auto flex w-full max-w-6xl flex-col gap-4">
             <EmployeeProfileHeader
                 :active="employee.is_active"
                 :business-email="employee.business_email"
                 :business-phone="employee.business_phone"
-                :email="employee.email"
-                :given-initials="employee.initials"
+                :can-edit="canEdit"
+                :employee-id="employee.id"
                 :initials="initials"
                 :location="employee.employee_location?.name ?? null"
                 :name="name"
-                :phone="employee.phone"
                 :photo="photo"
                 :role="employee.employee_role?.name ?? null"
+                @back="goBack"
             />
-            <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-                <div class="flex flex-col gap-4">
+            <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+                <div class="flex min-w-0 flex-col gap-4">
                     <section
-                        v-if="employee.introduction"
+                        v-if="employee.introduction || canEdit"
                         class="rounded-xl border border-list-border bg-list-surface px-5 py-4 shadow-sm"
                     >
-                        <h2 class="m-0 flex items-center gap-2 text-sm font-semibold text-list-text">
-                            <Icon class="size-4 text-list-text-muted" icon="material-symbols:notes-rounded" />
-                            {{ t('EMPLOYEE_INTRODUCTION') }}
+                        <h2 class="m-0 flex items-center gap-2 text-base font-semibold text-list-text">
+                            <Icon class="size-5 text-list-text-muted" icon="material-symbols:person-outline-rounded" />
+                            {{ t('EMPLOYEE_PROFILE_ABOUT', { name: employee.first_name }) }}
                         </h2>
-                        <p class="m-0 mt-3 whitespace-pre-wrap text-sm leading-relaxed text-list-text">
+                        <p v-if="employee.introduction" class="m-0 mt-3 max-w-prose whitespace-pre-wrap text-sm leading-relaxed text-list-text">
                             {{ employee.introduction }}
                         </p>
+                        <p v-else class="m-0 mt-3 max-w-prose text-sm leading-relaxed text-list-text-muted">
+                            {{ t('EMPLOYEE_INTRODUCTION_EMPTY') }}
+                        </p>
+                        <router-link
+                            v-if="canEdit && !employee.introduction"
+                            class="mt-3 inline-flex text-sm font-medium text-emphasis"
+                            :to="{ name: 'admin-employees-edit', params: { id: String(employee.id) } }"
+                        >
+                            {{ t('EMPLOYEE_ADD_INTRODUCTION') }}
+                        </router-link>
                     </section>
-                    <router-link
-                        v-else-if="canEdit"
-                        class="text-sm font-medium text-primary"
-                        :to="{ name: 'admin-employees-edit', params: { id: String(employee.id) } }"
-                    >
-                        {{ t('EMPLOYEE_ADD_INTRODUCTION') }}
-                    </router-link>
                     <EmployeeBusinessInformation
+                        v-if="hasBusinessFacts"
                         :location="employee.employee_location?.name ?? null"
                         :manager="manager"
                         :organization-level="employee.organization_level?.name ?? null"
                         :role="employee.employee_role?.name ?? null"
                     />
+                    <EmployeeDirectReports v-if="reports.length" :reports="reports" />
                 </div>
-                <div class="flex flex-col gap-4">
+                <div class="flex min-w-0 flex-col gap-4">
                     <EmployeeExpertiseSection
                         :can-edit="canEdit"
                         :employee-id="employee.id"
                         :skills="employee.skills ?? []"
                     />
-                    <EmployeeCertificatesSection :certificates="employee.certificates ?? []" />
+                    <EmployeeCertificatesSection
+                        :can-edit="canEdit"
+                        :certificates="employee.certificates ?? []"
+                        :employee-id="employee.id"
+                    />
                 </div>
             </div>
         </div>
@@ -91,10 +79,10 @@
     import { Icon } from '@iconify/vue';
     import http from '@/utils/http';
     import { useAuthStore } from '@/stores/auth';
-    import type { EmployeeRecord } from '@/modules/types/support/models/EmployeeRecord.ts';
+    import type { EmployeeDirectReport, EmployeeRecord } from '@/modules/types/support/models/EmployeeRecord.ts';
     import EmployeeProfileHeader from '@/components/employees/EmployeeProfileHeader.vue';
-    import HelpTrigger from '@/components/help/HelpTrigger.vue';
     import EmployeeBusinessInformation from '@/components/employees/EmployeeBusinessInformation.vue';
+    import EmployeeDirectReports from '@/components/employees/EmployeeDirectReports.vue';
     import EmployeeExpertiseSection from '@/components/employees/EmployeeExpertiseSection.vue';
     import EmployeeCertificatesSection from '@/components/employees/EmployeeCertificatesSection.vue';
 
@@ -124,6 +112,12 @@
             name: `${person.first_name} ${person.last_name}`,
             role: person.role,
         };
+    });
+    const reports = computed<EmployeeDirectReport[]>(() => employee.value?.direct_reports ?? []);
+    const hasBusinessFacts = computed(() => {
+        const person = employee.value;
+        if (!person) return false;
+        return Boolean(person.employee_role?.name || person.employee_location?.name || manager.value || person.organization_level?.name);
     });
 
     async function load(id: number): Promise<void> {

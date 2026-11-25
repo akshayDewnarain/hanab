@@ -43,6 +43,8 @@ class PeopleOverviewTest extends TestCase
             'employee_role_id' => $role->id,
             'employee_location_id' => $utrecht->id,
             'phone' => '+31612345678',
+            'business_email' => 'complete@hanab.test',
+            'business_phone' => '+31611111111',
             'is_active' => true,
         ]);
         $complete->skills()->attach([$skill->id => ['level' => 1], $secondSkill->id => ['level' => 1]]);
@@ -52,6 +54,8 @@ class PeopleOverviewTest extends TestCase
             'employee_role_id' => $role->id,
             'employee_location_id' => $unmapped->id,
             'phone' => null,
+            'business_email' => 'gap@hanab.test',
+            'business_phone' => null,
             'is_active' => true,
         ]);
 
@@ -59,6 +63,8 @@ class PeopleOverviewTest extends TestCase
             'employee_role_id' => $role->id,
             'employee_location_id' => $utrecht->id,
             'phone' => '',
+            'business_email' => 'partial@hanab.test',
+            'business_phone' => '',
             'is_active' => true,
         ]);
         $partial->skills()->attach($skill->id, ['level' => 1]);
@@ -100,6 +106,10 @@ class PeopleOverviewTest extends TestCase
             ->assertJsonPath('data.0.id', $gap->id);
 
         $this->getJson('/api/v1/employees?filter[missing_phone]=1&filter[is_active]=1')
+            ->assertOk()
+            ->assertJsonCount(2, 'data');
+
+        $this->getJson('/api/v1/employees?filter[missing_business_phone]=1&filter[is_active]=1')
             ->assertOk()
             ->assertJsonCount(2, 'data');
     }

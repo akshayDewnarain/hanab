@@ -72,12 +72,30 @@ class EmployeeResource extends DomainEmployeeResource
             'certificates' => $this->whenLoaded('certificates', function () {
                 return $this->resource->certificates->map(function ($certificate) {
                     $expires = $certificate->pivot?->expires_at;
+                    $number = trim((string) ($certificate->pivot?->certificate_number ?? ''));
 
                     return [
                         ...(new CertificateResource($certificate))->toArray(request()),
                         'expires_at' => $expires instanceof \DateTimeInterface ? $expires->format('Y-m-d') : $expires,
+                        'certificate_number' => $number !== '' ? $number : null,
                     ];
                 })->values();
+            }),
+            'direct_reports' => $this->whenLoaded('directReports', function () {
+                return $this->resource->directReports
+                    ->map(function (Employee $report) {
+                        $media = $report->getFirstMedia('image');
+
+                        return [
+                            'id' => $report->id,
+                            'first_name' => $report->first_name,
+                            'last_name' => $report->last_name,
+                            'initials' => $this->initials($report),
+                            'role' => $report->relationLoaded('employeeRole') ? $report->employeeRole?->name : null,
+                            'photo_url' => $media?->getUrl('thumb') ?: $media?->getUrl(),
+                        ];
+                    })
+                    ->values();
             }),
             ...$this->searchMetadata($request),
         ];
@@ -97,5 +115,23 @@ class EmployeeResource extends DomainEmployeeResource
             'expertise_matches' => ExpertiseExplanation::forEmployee($this->resource, $term),
             'match_reason' => ExpertiseExplanation::reason($this->resource, $term),
         ];
+    }
+
+    private function initials(Employee $employee): string
+    {
+        $stored = trim((string) $employee->initials);
+        if ($stored !== '') {
+            return $stored;
+        }
+
+        $letters = '';
+        foreach ([$employee->first_name, $employee->last_name] as $part) {
+            $part = trim((string) $part);
+            if ($part !== '') {
+                $letters .= mb_strtoupper(mb_substr($part, 0, 1));
+            }
+        }
+
+        return $letters;
     }
 }

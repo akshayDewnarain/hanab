@@ -6,11 +6,19 @@ import type { CardListConfig } from '@/modules/types/support/list-views/CardList
 export const employeeCardConfig: CardListConfig = {
     titleFields: ['first_name', 'last_name'],
     imageField: 'image',
-    subtitleField: 'email',
-    headerColor: 'var(--color-primary)',
+    variant: 'profile',
+    profileRoleField: 'employee_role',
+    profileLocationField: 'employee_location',
+    profileBadgeLimit: 6,
     deriveFromColumns: false,
     emptyStateKey: 'EMPLOYEE_CARD_LIST_EMPTY',
     fields: [
+        {
+            key: 'email',
+            label: 'EMPLOYEE_CARD_EMAIL',
+            icon: 'material-symbols:mail-outline-rounded',
+            hideEmpty: true,
+        },
         {
             key: 'phone',
             label: 'EMPLOYEE_PERSONAL_PHONE',
@@ -65,7 +73,7 @@ export const employeeCardConfig: CardListConfig = {
         },
         {
             key: 'skills',
-            label: 'EMPLOYEE_SKILLS',
+            label: 'EMPLOYEE_CARD_SKILLS',
             icon: 'material-symbols:verified-outline-rounded',
             type: 'badges',
             columnName: 'skills',
@@ -75,7 +83,7 @@ export const employeeCardConfig: CardListConfig = {
         },
         {
             key: 'certificates',
-            label: 'EMPLOYEE_CERTIFICATES',
+            label: 'EMPLOYEE_CARD_CERTIFICATES',
             icon: 'material-symbols:workspace-premium-outline',
             type: 'badges',
             columnName: 'certificates',

@@ -1,7 +1,11 @@
 <template>
     <div class="organogram-float">
+        <HelpTrigger
+            class="organogram-help"
+            :context="view === 'location' ? 'organogram.location' : 'organogram.management'"
+        />
+        <div class="organogram-float-main">
         <div class="organogram-float-bar">
-            <HelpTrigger :context="view === 'location' ? 'organogram.location' : 'organogram.management'" />
             <div class="organogram-pop">
                 <button type="button" class="organogram-chip" :aria-expanded="viewOpen" aria-haspopup="menu" @click="toggle('view')">
                     {{ viewLabel }}
@@ -52,12 +56,14 @@
                     <span v-if="filtersActive" class="organogram-filter-dot" />
                 </button>
                 <div v-if="filtersOpen" class="organogram-popover organogram-filters">
-                    <label>
+                    <label class="flex flex-col gap-1 text-sm">
                         {{ t('ORGANOGRAM_ALL_LOCATIONS') }}
-                        <select :value="locationId" @change="emit('update:locationId', ($event.target as HTMLSelectElement).value)">
-                            <option value="">{{ t('ORGANOGRAM_ALL_LOCATIONS') }}</option>
-                            <option v-for="location in locations" :key="location.id" :value="String(location.id)">{{ location.name }}</option>
-                        </select>
+                        <ChoiceDropdown
+                            :model-value="locationId"
+                            :aria-label="t('ORGANOGRAM_ALL_LOCATIONS')"
+                            :options="locationOptions"
+                            @update:model-value="emit('update:locationId', String($event ?? ''))"
+                        />
                     </label>
                     <div v-if="view === 'location' && places.length" class="organogram-places">
                         <p>{{ t('ORGANOGRAM_LOCATIONS') }}</p>
@@ -67,13 +73,14 @@
                         </button>
                         <p class="organogram-popover-note">{{ t('ORGANOGRAM_CROSS_HINT') }}</p>
                     </div>
-                    <label>
+                    <label class="flex flex-col gap-1 text-sm">
                         {{ t('ORGANOGRAM_ALL_LEVELS') }}
-                        <select :value="levelId" @change="emit('update:levelId', ($event.target as HTMLSelectElement).value)">
-                            <option value="">{{ t('ORGANOGRAM_ALL_LEVELS') }}</option>
-                            <option value="none">{{ t('ORGANOGRAM_UNCLASSIFIED') }}</option>
-                            <option v-for="level in levels" :key="level.id" :value="String(level.id)">{{ level.name }}</option>
-                        </select>
+                        <ChoiceDropdown
+                            :model-value="levelId"
+                            :aria-label="t('ORGANOGRAM_ALL_LEVELS')"
+                            :options="levelOptions"
+                            @update:model-value="emit('update:levelId', String($event ?? ''))"
+                        />
                     </label>
                     <ul v-if="legend.length" class="organogram-legend">
                         <li v-for="level in legend" :key="level.id">
@@ -102,12 +109,13 @@
             <label><input :checked="showMinimap" type="checkbox" @change="emit('update:showMinimap', ($event.target as HTMLInputElement).checked)" /> {{ t('ORGANOGRAM_MINIMAP') }}</label>
         </div>
 
-        <ul v-if="showLegend && !filtersOpen" class="organogram-legend organogram-legend-pin">
+        <ul v-if="showLegend && !viewOpen && !searchOpen && !filtersOpen" class="organogram-legend organogram-legend-pin">
             <li v-for="level in legend" :key="level.id">
                 <span :style="{ background: level.color }" />
                 {{ level.name }}
             </li>
         </ul>
+        </div>
     </div>
 </template>
 
@@ -115,6 +123,7 @@
     import { Icon } from '@iconify/vue';
     import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import ExpandableCardActions, { type ExpandableCardAction } from '@/components/ui/ExpandableCardActions.vue';
     import HelpTrigger from '@/components/help/HelpTrigger.vue';
     import type { OrganogramNode, OrganogramView } from '@/modules/support/organogram/types';
@@ -174,6 +183,15 @@
 
     const viewLabel = computed(() => t(views.find((item) => item.id === props.view)?.label ?? 'ORGANOGRAM_VIEW_MANAGEMENT'));
     const filtersActive = computed(() => props.locationId !== '' || props.levelId !== '');
+    const locationOptions = computed(() => [
+        { value: '', label: t('ORGANOGRAM_ALL_LOCATIONS') },
+        ...props.locations.map((location) => ({ value: String(location.id), label: location.name })),
+    ]);
+    const levelOptions = computed(() => [
+        { value: '', label: t('ORGANOGRAM_ALL_LEVELS') },
+        { value: 'none', label: t('ORGANOGRAM_UNCLASSIFIED') },
+        ...props.levels.map((level) => ({ value: String(level.id), label: level.name })),
+    ]);
     const legend = computed(() => props.levels.filter((level) => level.color));
     const moreActions = computed<ExpandableCardAction[]>(() => {
         const actions: ExpandableCardAction[] = [
@@ -221,9 +239,9 @@
     }
 
     function onDocumentClick(event: MouseEvent): void {
-        const target = event.target as Node | null;
+        const target = event.target instanceof Element ? event.target : (event.target as Node | null)?.parentElement ?? null;
         const root = (event.currentTarget as Document).querySelector('.organogram-float');
-        if (root && target && root.contains(target)) {
+        if (target?.closest('.ui-select-menu, .organogram-float') || (root && target && root.contains(target))) {
             return;
         }
         viewOpen.value = false;

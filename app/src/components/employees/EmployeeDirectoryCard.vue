@@ -119,7 +119,7 @@
         return '';
     });
 
-    const email = computed(() => (typeof props.employee.email === 'string' ? props.employee.email : ''));
+    const email = computed(() => (typeof props.employee.business_email === 'string' ? props.employee.business_email : ''));
 
     const photo = computed(() => {
         const image = props.employee.image;

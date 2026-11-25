@@ -47,4 +47,14 @@ export type CardListConfig = {
     excludeColumnNames?: string[];
     /** i18n key for empty state; defaults to `NO_RESULTS`. */
     emptyStateKey?: string;
+    /**
+     * `classic` keeps the centered header card.
+     * `profile` is the compact identity, field rows, badge groups, and footer.
+     */
+    variant?: 'classic' | 'profile';
+    /** Field keys shown under the title in the profile variant, then omitted from the rows. */
+    profileRoleField?: string;
+    profileLocationField?: string;
+    /** How many badges to show before "+N more". */
+    profileBadgeLimit?: number;
 };

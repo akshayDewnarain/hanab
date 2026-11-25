@@ -208,6 +208,11 @@
 
     const settingsSideBarItems: SidebarItemInterface[] = [
         {
+            label: 'ACCOUNT_PROFILE',
+            to: '/admin/account',
+            icon: 'material-symbols:account-circle-outline',
+        },
+        {
             label: 'ACCOUNT_SECURITY',
             to: '/admin/settings/security',
             icon: 'material-symbols:shield-lock-outline',

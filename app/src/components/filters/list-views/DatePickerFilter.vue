@@ -2,12 +2,12 @@
     <div class="flex flex-col gap-3 p-2 min-w-80">
         <!-- From Date Picker -->
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-bold text-gray-700"> {{ t('FILTER_FROM') }}: </label>
+            <label class="text-sm font-bold text-list-text"> {{ t('FILTER_FROM') }}: </label>
             <div ref="fromTriggerRef" class="relative inline-block text-left group">
                 <div>
                     <div
                         :class="[
-                            'inline-flex items-center gap-x-2 bg-white text-sm text-gray-700 border border-gray-200 w-full rounded px-3 py-2 shadow cursor-pointer',
+                            'inline-flex items-center gap-x-2 bg-list-canvas text-sm text-list-text border border-list-border w-full rounded px-3 py-2 shadow cursor-pointer',
                             'transition-all duration-200 ease-in-out',
                             fromIsOpen ? 'ring-2 ring-[var(--color-primary)] ring-offset-0' : 'ring-0',
                             'hover:ring-2 hover:ring-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]',
@@ -32,7 +32,7 @@
                         </span>
                         <Icon
                             :class="{ 'rotate-270': fromIsOpen }"
-                            class="w-4 h-4 rotate-90 text-gray-500 transition-transform duration-200 ease-in-out"
+                            class="w-4 h-4 rotate-90 text-list-text-muted transition-transform duration-200 ease-in-out"
                             icon="material-symbols:chevron-right-rounded"
                         />
                     </div>
@@ -43,7 +43,7 @@
                         v-if="fromIsOpen"
                         ref="fromDropdownRef"
                         :class="fromDropdownClasses"
-                        class="absolute rounded-md shadow-lg bg-white border border-gray-200 z-10 w-full"
+                        class="absolute rounded-md shadow-lg bg-list-surface border border-list-border z-10 w-full"
                         role="menu"
                     >
                         <div id="datepicker-from">
@@ -82,7 +82,7 @@
                                     <div
                                         v-for="dayLabel in weekdays"
                                         :key="dayLabel"
-                                        class="flex justify-center items-center py-3 text-gray-600"
+                                        class="flex justify-center items-center py-3 text-list-text"
                                     >
                                         {{ t(dayLabel) }}
                                     </div>
@@ -106,13 +106,13 @@
                                                             ? 'bg-[var(--color-bg-blocked)] text-[var(--color-text-blocked)]'
                                                             : 'group/cell',
                                                     ]"
-                                                    class="p-1 relative bg-gray-50 text-gray-600"
+                                                    class="p-1 relative bg-list-thead-background text-list-text-muted"
                                                 >
                                                     <div
                                                         :class="[
                                                             !day.selectable
                                                                 ? 'cursor-not-allowed'
-                                                                : 'cursor-pointer rounded hover:bg-[var(--color-primary-light)] hover:text-white transition-colors duration-200 ease-in',
+                                                                : 'cursor-pointer rounded hover:bg-list-row-hover hover:text-list-text transition-colors duration-200 ease-in',
                                                             isFromSelected(day)
                                                                 ? 'bg-[var(--color-primary)] text-white'
                                                                 : '',
@@ -127,7 +127,7 @@
                                                         <!-- Blue dot indicator -->
                                                         <div
                                                             v-if="isToday(day)"
-                                                            class="absolute top-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-500 group-hover/cell:bg-white transition-colors duration-200"
+                                                            class="absolute top-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emphasis group-hover/cell:bg-list-text transition-colors duration-200"
                                                         ></div>
                                                     </div>
                                                 </div>
@@ -144,12 +144,12 @@
 
         <!-- To Date Picker -->
         <div class="flex flex-col gap-1">
-            <label class="text-sm font-bold text-gray-700"> {{ t('FILTER_TO') }}: </label>
+            <label class="text-sm font-bold text-list-text"> {{ t('FILTER_TO') }}: </label>
             <div ref="toTriggerRef" class="relative inline-block text-left group">
                 <div>
                     <div
                         :class="[
-                            'inline-flex items-center gap-x-2 bg-white text-sm text-gray-700 border border-gray-200 w-full rounded px-3 py-2 shadow cursor-pointer',
+                            'inline-flex items-center gap-x-2 bg-list-canvas text-sm text-list-text border border-list-border w-full rounded px-3 py-2 shadow cursor-pointer',
                             'transition-all duration-200 ease-in-out',
                             toIsOpen ? 'ring-2 ring-[var(--color-primary)] ring-offset-0' : 'ring-0',
                             'hover:ring-2 hover:ring-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]',
@@ -174,7 +174,7 @@
                         </span>
                         <Icon
                             :class="{ 'rotate-270': toIsOpen }"
-                            class="w-4 h-4 rotate-90 text-gray-500 transition-transform duration-200 ease-in-out"
+                            class="w-4 h-4 rotate-90 text-list-text-muted transition-transform duration-200 ease-in-out"
                             icon="material-symbols:chevron-right-rounded"
                         />
                     </div>
@@ -185,7 +185,7 @@
                         v-if="toIsOpen"
                         ref="toDropdownRef"
                         :class="toDropdownClasses"
-                        class="absolute rounded-md shadow-lg bg-white border border-gray-200 z-10 w-full"
+                        class="absolute rounded-md shadow-lg bg-list-surface border border-list-border z-10 w-full"
                         role="menu"
                     >
                         <div id="datepicker-to">
@@ -224,7 +224,7 @@
                                     <div
                                         v-for="dayLabel in weekdays"
                                         :key="dayLabel"
-                                        class="flex justify-center items-center py-3 text-gray-600"
+                                        class="flex justify-center items-center py-3 text-list-text"
                                     >
                                         {{ t(dayLabel) }}
                                     </div>
@@ -246,13 +246,13 @@
                                                             ? 'bg-[var(--color-bg-blocked)] text-[var(--color-text-blocked)]'
                                                             : 'group/cell',
                                                     ]"
-                                                    class="p-1 relative bg-gray-50 text-gray-600"
+                                                    class="p-1 relative bg-list-thead-background text-list-text-muted"
                                                 >
                                                     <div
                                                         :class="[
                                                             !day.selectable
                                                                 ? 'cursor-not-allowed'
-                                                                : 'cursor-pointer rounded hover:bg-[var(--color-primary-light)] hover:text-white transition-colors duration-200 ease-in',
+                                                                : 'cursor-pointer rounded hover:bg-list-row-hover hover:text-list-text transition-colors duration-200 ease-in',
                                                             isToSelected(day)
                                                                 ? 'bg-[var(--color-primary)] text-white'
                                                                 : '',
@@ -267,7 +267,7 @@
                                                         <!-- Blue dot indicator -->
                                                         <div
                                                             v-if="isToday(day)"
-                                                            class="absolute top-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-500 group-hover/cell:bg-white transition-colors duration-200"
+                                                            class="absolute top-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-emphasis group-hover/cell:bg-list-text transition-colors duration-200"
                                                         ></div>
                                                     </div>
                                                 </div>
@@ -285,7 +285,7 @@
         <!-- Reset Button -->
         <button
             v-if="hasValue"
-            class="w-full px-3 py-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600 transition-colors duration-200 ease-in-out flex items-center justify-center gap-2"
+            class="w-full px-3 py-2 text-sm font-medium text-on-brand bg-error rounded hover:brightness-110 transition-colors duration-200 ease-in-out flex items-center justify-center gap-2"
             @click="reset"
         >
             <Icon class="w-4 h-4" icon="material-symbols:delete-outline-rounded" />

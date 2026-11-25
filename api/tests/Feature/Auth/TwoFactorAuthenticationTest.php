@@ -135,6 +135,35 @@ class TwoFactorAuthenticationTest extends TestCase
         $this->assertTrue($fresh->hasCompletedSecurity());
     }
 
+    public function test_cancelling_replacement_keeps_the_current_authenticator(): void
+    {
+        $user = User::factory()->create();
+        $secret = app(Totp::class)->generateSecret();
+        $user->forceFill(['two_factor_secret' => $secret])->save();
+        $token = $user->createToken('auth_token', ['access-api'])->plainTextToken;
+        $code = app(Totp::class)->codeAt($secret, intdiv(time(), 30));
+
+        $this->postJson('/api/v1/security/two-factor/replace', [
+            'current_password' => 'password',
+            'code' => $code,
+        ], $this->bearer($token))->assertOk();
+
+        $started = $user->fresh();
+        $this->assertNotSame($secret, $started->two_factor_pending_secret);
+        $this->assertNotNull($started->two_factor_pending_secret);
+        $this->assertSame($secret, $started->two_factor_secret);
+
+        $this->postJson('/api/v1/security/two-factor/replace/confirm', [
+            'code' => '000000',
+        ], $this->bearer($token))->assertStatus(422);
+        $this->assertSame($secret, $user->fresh()->two_factor_secret);
+
+        $this->postJson('/api/v1/security/two-factor/replace/cancel', [], $this->bearer($token))->assertOk();
+        $cancelled = $user->fresh();
+        $this->assertNull($cancelled->two_factor_pending_secret);
+        $this->assertSame($secret, $cancelled->two_factor_secret);
+    }
+
     public function test_failed_confirmations_are_rate_limited(): void
     {
         $user = User::factory()->withoutTwoFactor()->create();

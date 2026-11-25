@@ -52,8 +52,8 @@ class SearchColleaguesByExpertiseAction extends BaseAction
                 'name' => trim($employee->first_name.' '.$employee->last_name),
                 'role' => $employee->employeeRole?->name,
                 'location' => $employee->employeeLocation?->name,
-                'email' => $employee->email,
-                'phone' => $employee->phone,
+                'email' => $employee->business_email,
+                'phone' => $employee->business_phone,
                 'matches' => array_map(
                     fn (array $match): array => [
                         'kind' => $match['kind'],

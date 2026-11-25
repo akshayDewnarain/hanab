@@ -12,7 +12,11 @@ final class HelpResponse
     /**
      * @return array<string, mixed>
      */
-    public static function category(HelpCategory $category, int $count): array
+    /**
+     * @param  array<int, array<string, mixed>>  $previews
+     * @return array<string, mixed>
+     */
+    public static function category(HelpCategory $category, int $count, array $previews = []): array
     {
         return [
             'id' => $category->id,
@@ -24,6 +28,7 @@ final class HelpResponse
             'parent_id' => $category->parent_id,
             'is_active' => $category->is_active,
             'article_count' => $count,
+            'previews' => $previews,
         ];
     }
 

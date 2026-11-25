@@ -8,12 +8,17 @@
                 </router-link>
             </div>
             <div class="flex flex-wrap gap-2">
-                <select v-model="status" class="h-9 rounded-lg border border-list-border bg-list-surface px-2 text-sm" @change="load">
-                    <option value="">{{ t('KNOWLEDGE_FILTER_STATUS') }}</option>
-                    <option value="draft">{{ t('KNOWLEDGE_STATUS_DRAFT') }}</option>
-                    <option value="published">{{ t('KNOWLEDGE_STATUS_PUBLISHED') }}</option>
-                    <option value="archived">{{ t('KNOWLEDGE_STATUS_ARCHIVED') }}</option>
-                </select>
+                <ChoiceDropdown
+                    v-model="status"
+                    class="max-w-xs"
+                    :options="[
+                        { value: '', label: t('KNOWLEDGE_FILTER_STATUS') },
+                        { value: 'draft', label: t('KNOWLEDGE_STATUS_DRAFT') },
+                        { value: 'published', label: t('KNOWLEDGE_STATUS_PUBLISHED') },
+                        { value: 'archived', label: t('KNOWLEDGE_STATUS_ARCHIVED') },
+                    ]"
+                    @update:model-value="load"
+                />
             </div>
             <section class="rounded-xl border border-list-border bg-list-surface">
                 <table class="w-full text-left text-sm">
@@ -45,10 +50,7 @@
                 <h2 class="m-0 text-sm font-semibold">{{ t('KNOWLEDGE_CATEGORY') }}</h2>
                 <form class="mt-3 grid gap-2 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_6rem_auto_auto]" @submit.prevent="createCategory">
                     <input v-model="draft.name" required class="h-9 rounded-lg border border-list-border px-3 text-sm" :placeholder="t('KNOWLEDGE_CATEGORY')" :aria-label="t('KNOWLEDGE_CATEGORY')" />
-                    <select v-model="draft.parent_id" class="h-9 rounded-lg border border-list-border px-2 text-sm" :aria-label="t('KNOWLEDGE_PARENT')">
-                        <option :value="null">{{ t('KNOWLEDGE_PARENT') }}</option>
-                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                    </select>
+                    <ChoiceDropdown v-model="draft.parent_id" :aria-label="t('KNOWLEDGE_PARENT')" :options="parentOptions()" />
                     <input v-model="draft.icon" class="h-9 rounded-lg border border-list-border px-3 text-sm" :placeholder="t('KNOWLEDGE_ICON')" :aria-label="t('KNOWLEDGE_ICON')" />
                     <input v-model.number="draft.sort_order" type="number" min="0" class="h-9 rounded-lg border border-list-border px-3 text-sm" :aria-label="t('KNOWLEDGE_SORT')" />
                     <label class="flex items-center gap-2 text-sm">
@@ -60,10 +62,7 @@
                 <ul class="mt-4 list-none p-0">
                     <li v-for="category in categories" :key="category.id" class="grid items-center gap-2 border-t border-list-border py-2 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_8rem_6rem_auto_auto]">
                         <input v-model="category.name" class="h-9 rounded-lg border border-list-border px-3 text-sm" :aria-label="t('KNOWLEDGE_CATEGORY')" />
-                        <select v-model="category.parent_id" class="h-9 rounded-lg border border-list-border px-2 text-sm" :aria-label="t('KNOWLEDGE_PARENT')">
-                            <option :value="null">{{ t('KNOWLEDGE_PARENT') }}</option>
-                            <option v-for="option in categories.filter((item) => item.id !== category.id)" :key="option.id" :value="option.id">{{ option.name }}</option>
-                        </select>
+                        <ChoiceDropdown v-model="category.parent_id" :aria-label="t('KNOWLEDGE_PARENT')" :options="parentOptions(category.id)" />
                         <input v-model="category.icon" class="h-9 rounded-lg border border-list-border px-3 text-sm" :aria-label="t('KNOWLEDGE_ICON')" />
                         <input v-model.number="category.sort_order" type="number" min="0" class="h-9 rounded-lg border border-list-border px-3 text-sm" :aria-label="t('KNOWLEDGE_SORT')" />
                         <label class="flex items-center gap-2 text-sm">
@@ -111,6 +110,7 @@
     import { computed, onMounted, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { PageLayout } from '@freelance/vue-ui';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import http from '@/utils/http';
     import { useAuthStore } from '@/stores/auth';
     import type { KnowledgeCard, KnowledgeCategory } from '@/modules/types/knowledge/Knowledge.ts';
@@ -123,6 +123,15 @@
     const maintenance = ref<{ overdue: KnowledgeCard[]; drafts: KnowledgeCard[]; negative: KnowledgeCard[] } | null>(null);
     const canManageCategories = computed(() => auth.hasPermission('manage knowledge categories'));
     const draft = ref({ name: '', parent_id: null as number | null, icon: '', sort_order: 0, is_active: true });
+
+    function parentOptions(excludeId?: number) {
+        return [
+            { value: null, label: t('KNOWLEDGE_PARENT') },
+            ...categories.value
+                .filter((category) => category.id !== excludeId)
+                .map((category) => ({ value: category.id, label: category.name })),
+        ];
+    }
 
     function statusKey(value: string): string {
         if (value === 'published') return 'KNOWLEDGE_STATUS_PUBLISHED';

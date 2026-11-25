@@ -47,10 +47,11 @@
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('KNOWLEDGE_CATEGORY') }}</span>
-                    <select v-model="categoryId" class="mt-1 h-10 w-full rounded-lg border border-list-border px-2">
-                        <option :value="null">{{ t('KNOWLEDGE_NO_CATEGORY') }}</option>
-                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="categoryId"
+                        class="mt-1"
+                        :options="[{ value: null, label: t('KNOWLEDGE_NO_CATEGORY') }, ...categories.map((category) => ({ value: category.id, label: category.name }))]"
+                    />
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('KNOWLEDGE_TAGS') }}</span>
@@ -58,10 +59,14 @@
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('KNOWLEDGE_VISIBILITY') }}</span>
-                    <select v-model="visibility" class="mt-1 h-10 w-full rounded-lg border border-list-border px-2">
-                        <option value="authenticated">{{ t('KNOWLEDGE_VISIBILITY_AUTHENTICATED') }}</option>
-                        <option value="private">{{ t('KNOWLEDGE_VISIBILITY_PRIVATE') }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="visibility"
+                        class="mt-1"
+                        :options="[
+                            { value: 'authenticated', label: t('KNOWLEDGE_VISIBILITY_AUTHENTICATED') },
+                            { value: 'private', label: t('KNOWLEDGE_VISIBILITY_PRIVATE') },
+                        ]"
+                    />
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('KNOWLEDGE_REVIEW_DATE') }}</span>
@@ -73,15 +78,23 @@
                 </label>
                 <label v-if="skills.length" class="text-sm">
                     <span class="text-list-text-muted">{{ t('KNOWLEDGE_SKILLS') }}</span>
-                    <select v-model="skillIds" multiple class="mt-1 h-24 w-full rounded-lg border border-list-border px-2">
-                        <option v-for="skill in skills" :key="skill.id" :value="skill.id">{{ skill.name }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="skillIds"
+                        multiple
+                        class="mt-1"
+                        :placeholder="t('KNOWLEDGE_SKILLS')"
+                        :options="skills.map((skill) => ({ value: skill.id, label: skill.name }))"
+                    />
                 </label>
                 <label v-if="certificates.length" class="text-sm">
                     <span class="text-list-text-muted">{{ t('KNOWLEDGE_CERTIFICATES') }}</span>
-                    <select v-model="certificateIds" multiple class="mt-1 h-24 w-full rounded-lg border border-list-border px-2">
-                        <option v-for="certificate in certificates" :key="certificate.id" :value="certificate.id">{{ certificate.name }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="certificateIds"
+                        multiple
+                        class="mt-1"
+                        :placeholder="t('KNOWLEDGE_CERTIFICATES')"
+                        :options="certificates.map((certificate) => ({ value: certificate.id, label: certificate.name }))"
+                    />
                 </label>
                 <label class="flex items-center gap-2 text-sm">
                     <input v-model="featured" type="checkbox" />
@@ -104,6 +117,7 @@
     import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
     import { useI18n } from 'vue-i18n';
     import { PageLayout } from '@freelance/vue-ui';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import { emptyDocument, UiRichTextContent, UiRichTextEditor, type RichTextDocument, type RichTextEditorLabels } from '@freelance/vue-ui/editor';
     import http from '@/utils/http';
     import { useAuthStore } from '@/stores/auth';

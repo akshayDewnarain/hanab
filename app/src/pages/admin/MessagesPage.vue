@@ -1,23 +1,26 @@
 <template>
-    <PageLayout class="h-full" :label="t('MESSAGES_TITLE')">
-        <div class="flex h-full min-h-0 flex-col gap-4 overflow-auto">
-            <header class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <Icon icon="material-symbols:article-outline" class="size-6 text-list-text" aria-hidden="true" />
-                    <h1 class="text-lg font-semibold text-list-text">{{ t('MESSAGES_TITLE') }}</h1>
-                    <HelpTrigger context="messages.compose" />
+    <PageLayout class="!overflow-hidden" :label="t('MESSAGES_TITLE')">
+        <div class="flex h-full min-h-0 flex-col overflow-hidden">
+            <header class="mb-3 flex shrink-0 flex-wrap items-start justify-between gap-3">
+                <div class="min-w-0">
+                    <h1 class="inline-flex items-center gap-2 text-lg font-semibold text-list-text">
+                        <Icon class="size-5 shrink-0 text-list-text-muted" icon="material-symbols:forum-outline-rounded" aria-hidden="true" />
+                        {{ t('MESSAGES_TITLE') }}
+                        <HelpTrigger context="messages.compose" />
+                    </h1>
+                    <p class="mt-1 text-sm text-list-text-muted">{{ t('MESSAGES_INTRO') }}</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
                     <span
-                        v-if="unreadCount > 0"
-                        class="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-on-brand"
+                        v-if="!managing && unreadCount > 0"
+                        class="inline-flex h-9 items-center rounded-full bg-primary-light px-3 text-xs font-semibold text-emphasis"
                     >
                         {{ t('MESSAGES_UNREAD', { count: unreadCount }) }}
                     </span>
-                </div>
-                <div class="flex flex-wrap gap-2">
                     <button
                         v-if="managing"
                         type="button"
-                        class="inline-flex h-10 cursor-pointer items-center rounded-full border border-list-border bg-list-surface px-4 text-sm font-semibold text-list-text"
+                        class="inline-flex h-9 cursor-pointer items-center rounded-lg border border-list-border bg-list-surface px-3 text-sm font-semibold text-list-text"
                         @click="managing = false"
                     >
                         {{ t('MESSAGES_BACK') }}
@@ -25,7 +28,7 @@
                     <button
                         v-else-if="canManage"
                         type="button"
-                        class="inline-flex h-10 cursor-pointer items-center rounded-full border border-list-border bg-list-surface px-4 text-sm font-semibold text-list-text"
+                        class="inline-flex h-9 cursor-pointer items-center rounded-lg border border-list-border bg-list-surface px-3 text-sm font-semibold text-list-text"
                         @click="openManage"
                     >
                         {{ t('MESSAGES_MANAGE') }}
@@ -33,7 +36,7 @@
                     <button
                         v-if="canCreate"
                         type="button"
-                        class="inline-flex h-10 cursor-pointer items-center gap-1 rounded-full bg-primary px-4 text-sm font-semibold text-on-brand"
+                        class="inline-flex h-9 cursor-pointer items-center gap-1 rounded-lg bg-primary px-3 text-sm font-semibold text-on-brand"
                         @click="openCompose(null)"
                     >
                         <Icon icon="material-symbols:add" class="size-4" />
@@ -42,96 +45,126 @@
                 </div>
             </header>
 
-            <MessageManageView
-                v-if="managing"
-                :drafts="draftItems"
-                :published="managed"
-                :can-publish="canPublish"
-                :can-update="canUpdate"
-                :can-delete="canDelete"
-                :failed="manageFailed"
-                @view="openReader"
-                @edit="openCompose"
-                @publish="confirmPublish"
-                @remove="confirmDelete"
-            />
+            <div class="min-h-0 flex-1 overflow-y-auto">
+                <MessageManageView
+                    v-if="managing"
+                    :drafts="draftItems"
+                    :published="managed"
+                    :can-publish="canPublish"
+                    :can-update="canUpdate"
+                    :can-delete="canDelete"
+                    :failed="manageFailed"
+                    @view="openReader"
+                    @edit="openCompose"
+                    @publish="confirmPublish"
+                    @remove="confirmDelete"
+                />
 
-            <template v-else>
-                <div class="flex flex-wrap gap-2" role="tablist" :aria-label="t('MESSAGES_TITLE')">
-                    <button
-                        v-for="filter in filters"
-                        :key="filter.id"
-                        type="button"
-                        class="h-9 cursor-pointer rounded-full px-4 text-sm font-semibold"
-                        :class="category === filter.id ? 'bg-list-text text-list-surface' : 'border border-list-border bg-list-surface text-list-text'"
-                        :aria-selected="category === filter.id"
-                        role="tab"
-                        @click="selectCategory(filter.id)"
-                    >
-                        {{ filter.label }}
-                    </button>
-                </div>
-
-                <section class="rounded-xl border border-list-border bg-list-surface px-4 py-3">
-                    <h2 class="m-0 text-sm font-semibold text-list-text">{{ t('MESSAGES_PREFERENCES') }}</h2>
-                    <p class="m-0 mt-1 text-sm text-list-text-muted">{{ t('MESSAGES_PUSH_NOTIFICATIONS_HINT') }}</p>
-                    <div class="mt-3 flex flex-wrap gap-4">
-                        <label v-for="item in preferenceItems" :key="item.key" class="flex items-center gap-2 text-sm text-list-text">
-                            <ToggleSwitch
-                                :model-value="item.value"
-                                :disabled="item.locked"
-                                :label="item.label"
-                                @update:model-value="item.save($event)"
-                            />
-                            <span>{{ item.label }}</span>
-                        </label>
-                    </div>
-                </section>
-
-                <p v-if="isLoading && feed.length === 0" role="status" class="text-sm text-list-text-muted">{{ t('MESSAGES_LOADING') }}</p>
-                <p v-else-if="failed" role="alert" class="flex items-center gap-3 text-sm text-list-text">
-                    {{ t('MESSAGES_ERROR') }}
-                    <button type="button" class="cursor-pointer font-semibold underline" @click="load('feed')">{{ t('MESSAGES_RETRY') }}</button>
-                </p>
-                <p
-                    v-else-if="filtered.length === 0"
-                    role="status"
-                    class="rounded-xl border border-list-border bg-list-surface px-4 py-10 text-center text-sm text-list-text-muted"
-                >
-                    {{ category === 'all' ? t('MESSAGES_EMPTY') : t('MESSAGES_EMPTY_FILTER') }}
-                </p>
                 <template v-else>
-                    <div class="grid grid-cols-1 items-start gap-3 md:grid-cols-2">
-                        <MessageFeedCard
-                            v-for="message in visible"
-                            :key="message.id"
-                            :message="message"
-                            :choices="reactionChoices"
-                            :class="message.category === 'company' ? 'md:col-span-2' : ''"
-                            @react="react"
-                            @open="openReader"
-                        />
-                    </div>
-                    <button
-                        v-if="visible.length < filtered.length"
-                        type="button"
-                        class="h-10 cursor-pointer self-center rounded-full border border-list-border bg-list-surface px-4 text-sm font-semibold text-list-text"
-                        @click="visibleCount += pageSize"
+                    <UiStickySurface v-slot="{ scrolled }" class="pb-3">
+                        <div aria-hidden="true" class="pointer-events-none h-3"></div>
+                        <section
+                            class="rounded-xl border border-list-border bg-list-surface px-3 py-2.5 shadow-sm transition-[background-color,backdrop-filter,box-shadow] duration-200 ease-out motion-reduce:transition-none"
+                            :style="scrolled ? frostStyle : undefined"
+                        >
+                            <div class="flex flex-col gap-2 lg:flex-row lg:items-center">
+                                <form class="flex min-w-0 flex-1 items-center" @submit.prevent>
+                                    <label class="sr-only" for="messages-search">{{ t('MESSAGES_SEARCH') }}</label>
+                                    <div class="relative min-w-0 flex-1">
+                                        <Icon class="pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2 text-list-text-muted" icon="material-symbols:search-rounded" />
+                                        <input
+                                            id="messages-search"
+                                            v-model="query"
+                                            type="search"
+                                            autocomplete="off"
+                                            :placeholder="t('MESSAGES_SEARCH')"
+                                            class="h-9 w-full rounded-lg border border-list-border bg-list-surface pr-3 pl-10 text-sm text-list-text outline-none placeholder:text-list-text-muted focus:border-primary focus:ring-2 focus:ring-primary/15"
+                                        />
+                                    </div>
+                                </form>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <label class="inline-flex h-9 items-center gap-2 rounded-lg border border-list-border bg-list-surface px-2.5 text-sm text-list-text">
+                                        <span>{{ t('MESSAGES_UNREAD_ONLY') }}</span>
+                                        <ToggleSwitch v-model="unreadOnly" :label="t('MESSAGES_UNREAD_ONLY')" />
+                                    </label>
+                                    <ChoiceDropdown
+                                        v-model="sort"
+                                        :aria-label="t('MESSAGES_SORT')"
+                                        :full-width="false"
+                                        :options="sortOptions"
+                                    />
+                                    <router-link
+                                        class="inline-flex size-9 items-center justify-center rounded-lg border border-list-border bg-list-surface text-list-text hover:border-primary hover:text-primary"
+                                        :to="{ name: 'admin-account', hash: '#message-preferences' }"
+                                        :aria-label="t('MESSAGE_PREFERENCES_TITLE')"
+                                        :title="t('MESSAGE_PREFERENCES_TITLE')"
+                                    >
+                                        <Icon class="size-4" icon="material-symbols:tune-rounded" />
+                                    </router-link>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex flex-wrap gap-1.5" role="tablist" :aria-label="t('MESSAGES_TITLE')">
+                                <button
+                                    v-for="filter in filters"
+                                    :key="filter.id"
+                                    type="button"
+                                    class="h-8 cursor-pointer rounded-full px-3 text-xs font-semibold"
+                                    :class="category === filter.id ? 'bg-list-text text-list-surface' : 'border border-list-border bg-list-surface text-list-text hover:border-primary'"
+                                    :aria-selected="category === filter.id"
+                                    role="tab"
+                                    @click="selectCategory(filter.id)"
+                                >
+                                    {{ filter.label }}
+                                </button>
+                            </div>
+                        </section>
+                    </UiStickySurface>
+
+                    <p v-if="isLoading && feed.length === 0" role="status" class="text-sm text-list-text-muted">{{ t('MESSAGES_LOADING') }}</p>
+                    <p v-else-if="failed" role="alert" class="flex items-center gap-3 text-sm text-list-text">
+                        {{ t('MESSAGES_ERROR') }}
+                        <button type="button" class="cursor-pointer font-semibold underline" @click="load('feed')">{{ t('MESSAGES_RETRY') }}</button>
+                    </p>
+                    <p
+                        v-else-if="filtered.length === 0"
+                        role="status"
+                        class="rounded-xl border border-dashed border-list-border bg-list-surface px-4 py-10 text-center text-sm text-list-text-muted"
                     >
-                        {{ t('MESSAGES_LOAD_MORE') }}
-                    </button>
+                        {{ emptyLabel }}
+                    </p>
+                    <template v-else>
+                        <div class="grid grid-cols-1 items-stretch gap-3 md:grid-cols-2">
+                            <MessageFeedCard
+                                v-for="message in visible"
+                                :key="message.id"
+                                :message="message"
+                                :unread="isUnread(message.id)"
+                                @react="onReact"
+                                @open="openReader"
+                            />
+                        </div>
+                        <button
+                            v-if="visible.length < filtered.length"
+                            type="button"
+                            class="mt-3 h-9 cursor-pointer rounded-lg border border-list-border bg-list-surface px-4 text-sm font-semibold text-list-text"
+                            @click="visibleCount += pageSize"
+                        >
+                            {{ t('MESSAGES_LOAD_MORE') }}
+                        </button>
+                    </template>
                 </template>
-            </template>
+            </div>
         </div>
     </PageLayout>
 </template>
 
 <script lang="ts" setup>
-    import { PageLayout, ToggleSwitch } from '@freelance/vue-ui';
+    import { PageLayout, ToggleSwitch, UiStickySurface } from '@freelance/vue-ui';
     import { Icon } from '@iconify/vue';
     import HelpTrigger from '@/components/help/HelpTrigger.vue';
-    import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+    import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import MessageComposeModal from '@/components/messages/MessageComposeModal.vue';
     import MessageFeedCard from '@/components/messages/MessageFeedCard.vue';
     import MessageManageView from '@/components/messages/MessageManageView.vue';
@@ -160,7 +193,6 @@
         canCreate,
         canUpdate,
         canDelete,
-        preference,
         failed,
         manageFailed,
         isLoading,
@@ -168,65 +200,61 @@
         react,
         publish,
         removeDraft,
-        savePreference,
     } = useMessages();
 
     const category = ref<'all' | 'company' | 'people' | 'milestones'>('all');
+    const query = ref('');
+    const unreadOnly = ref(false);
+    const sort = ref<'newest' | 'oldest'>('newest');
     const managing = ref(false);
     const visibleCount = ref(8);
     const pageSize = 8;
     const seenVersion = ref(0);
+    const frostStyle = {
+        backgroundColor: 'color-mix(in srgb, var(--color-list-surface) 94%, transparent)',
+        backdropFilter: 'blur(12px)',
+    };
     const canManage = computed(() => canPublish.value || canCreate.value || canUpdate.value || canDelete.value);
-    const reactionChoices = computed(() => [
-        { id: '👍', label: t('MESSAGE_REACTION_THUMBS') },
-        { id: '🎉', label: t('MESSAGE_REACTION_PARTY') },
-        { id: '👏', label: t('MESSAGE_REACTION_CLAP') },
-    ]);
     const filters = computed(() => [
         { id: 'all' as const, label: t('MESSAGES_FILTER_ALL') },
         { id: 'company' as const, label: t('MESSAGES_FILTER_COMPANY') },
         { id: 'people' as const, label: t('MESSAGE_CATEGORY_PEOPLE') },
         { id: 'milestones' as const, label: t('MESSAGE_CATEGORY_MILESTONES') },
     ]);
-    const filtered = computed(() => (category.value === 'all' ? feed.value : feed.value.filter((message) => message.category === category.value)));
-    const visible = computed(() => filtered.value.slice(0, visibleCount.value));
-    const unreadCount = computed(() => {
-        seenVersion.value;
-        const seen = readSeenMessageIds();
-        if (!seen) return 0;
-        const ids = new Set(seen);
-        return feed.value.filter((message) => !ids.has(message.id)).length;
-    });
-    const preferenceItems = computed(() => [
-        {
-            key: 'push_notifications',
-            label: t('MESSAGES_PUSH_NOTIFICATIONS'),
-            value: preference.value.push_notifications,
-            locked: false,
-            save: (value: boolean) => void savePreference({ ...preference.value, push_notifications: value }),
-        },
-        {
-            key: 'people',
-            label: t('MESSAGE_CATEGORY_PEOPLE'),
-            value: preference.value.people,
-            locked: false,
-            save: (value: boolean) => void savePreference({ ...preference.value, people: value }),
-        },
-        {
-            key: 'milestones',
-            label: t('MESSAGE_CATEGORY_MILESTONES'),
-            value: preference.value.milestones,
-            locked: false,
-            save: (value: boolean) => void savePreference({ ...preference.value, milestones: value }),
-        },
-        {
-            key: 'company',
-            label: t('MESSAGE_CATEGORY_COMPANY'),
-            value: true,
-            locked: preference.value.company_locked,
-            save: () => undefined,
-        },
+    const sortOptions = computed(() => [
+        { value: 'newest' as const, label: t('MESSAGES_SORT_NEWEST') },
+        { value: 'oldest' as const, label: t('MESSAGES_SORT_OLDEST') },
     ]);
+    const seenIds = computed(() => {
+        seenVersion.value;
+        return new Set(readSeenMessageIds() ?? []);
+    });
+    const filtered = computed(() => {
+        const needle = query.value.trim().toLowerCase();
+        const rows = feed.value.filter((message) => {
+            if (category.value !== 'all' && message.category !== category.value) return false;
+            if (unreadOnly.value && !isUnread(message.id)) return false;
+            if (!needle) return true;
+            const haystack = [message.title, message.text, message.subjectName, message.authorName].join(' ').toLowerCase();
+            return haystack.includes(needle);
+        });
+        return rows.sort((left, right) => {
+            const leftTime = Date.parse(left.publishedAt ?? left.updatedAt ?? '') || 0;
+            const rightTime = Date.parse(right.publishedAt ?? right.updatedAt ?? '') || 0;
+            return sort.value === 'oldest' ? leftTime - rightTime : rightTime - leftTime;
+        });
+    });
+    const visible = computed(() => filtered.value.slice(0, visibleCount.value));
+    const unreadCount = computed(() => feed.value.filter((message) => isUnread(message.id)).length);
+    const emptyLabel = computed(() => {
+        if (unreadOnly.value && feed.value.length > 0) return t('MESSAGES_ALL_READ');
+        if (query.value.trim()) return t('MESSAGES_NONE_FOUND');
+        return category.value === 'all' ? t('MESSAGES_EMPTY') : t('MESSAGES_EMPTY_FILTER');
+    });
+
+    function isUnread(id: string): boolean {
+        return !seenIds.value.has(id);
+    }
 
     function selectCategory(next: 'all' | 'company' | 'people' | 'milestones'): void {
         category.value = next;
@@ -235,6 +263,14 @@
 
     function bumpSeen(): void {
         seenVersion.value += 1;
+    }
+
+    async function onReact(id: string, emoji: string | null): Promise<void> {
+        try {
+            await react(id, emoji);
+        } catch {
+            toast.error('MESSAGE_REACTION_FAILED');
+        }
     }
 
     function openCompose(message: FeedMessage | null): void {
@@ -271,18 +307,8 @@
             component: ConfirmationModal,
             props: { message: 'MESSAGE_PUBLISH_CONFIRM', variant: ModalVariant.INFO },
             actions: [
-                {
-                    type: ModalResultType.DISMISS,
-                    name: 'GENERAL_CANCEL',
-                    variant: ModalActionType.DISMISS,
-                    target: ModalActionTarget.CANCEL,
-                },
-                {
-                    type: ModalResultType.ACCEPT,
-                    name: 'MESSAGE_COMPOSE_PUBLISH',
-                    variant: ModalActionType.PRIMARY,
-                    target: ModalActionTarget.CONFIRM,
-                },
+                { type: ModalResultType.DISMISS, name: 'GENERAL_CANCEL', variant: ModalActionType.DISMISS, target: ModalActionTarget.CANCEL },
+                { type: ModalResultType.ACCEPT, name: 'MESSAGE_COMPOSE_PUBLISH', variant: ModalActionType.PRIMARY, target: ModalActionTarget.CONFIRM },
             ],
         });
         if (confirmed.type !== ModalResultType.ACCEPT) return;
@@ -301,18 +327,8 @@
             component: ConfirmationModal,
             props: { message: 'MESSAGE_DELETE_CONFIRM', variant: ModalVariant.WARNING },
             actions: [
-                {
-                    type: ModalResultType.DISMISS,
-                    name: 'GENERAL_CANCEL',
-                    variant: ModalActionType.DISMISS,
-                    target: ModalActionTarget.CANCEL,
-                },
-                {
-                    type: ModalResultType.ACCEPT,
-                    name: 'MESSAGE_DELETE',
-                    variant: ModalActionType.PRIMARY,
-                    target: ModalActionTarget.CONFIRM,
-                },
+                { type: ModalResultType.DISMISS, name: 'GENERAL_CANCEL', variant: ModalActionType.DISMISS, target: ModalActionTarget.CANCEL },
+                { type: ModalResultType.ACCEPT, name: 'MESSAGE_DELETE', variant: ModalActionType.PRIMARY, target: ModalActionTarget.CONFIRM },
             ],
         });
         if (confirmed.type !== ModalResultType.ACCEPT) return;
@@ -328,6 +344,10 @@
         managing.value = true;
         void load('manage');
     }
+
+    watch([query, unreadOnly, sort], () => {
+        visibleCount.value = pageSize;
+    });
 
     onMounted(() => {
         window.addEventListener('hanab-messages-seen', bumpSeen);

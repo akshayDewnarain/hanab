@@ -267,8 +267,10 @@ class ExpertiseSearchTest extends TestCase
             'employee_location_id' => $location->id,
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'email' => strtolower($firstName).'.'.strtolower($lastName).'@hanab.test',
-            'phone' => '+31611111111',
+            'email' => 'private.'.strtolower($firstName).'.'.strtolower($lastName).'@example.com',
+            'phone' => '+31600000000',
+            'business_email' => strtolower($firstName).'.'.strtolower($lastName).'@hanab.test',
+            'business_phone' => '+31611111111',
             'is_active' => $active,
         ]);
     }

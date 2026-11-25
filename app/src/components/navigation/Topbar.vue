@@ -255,6 +255,7 @@
     }));
 
     const accountActions = computed<TopbarAction[]>(() => [
+        { id: 'profile', label: t('ACCOUNT_PROFILE'), icon: 'material-symbols:account-circle-outline' },
         { id: 'security', label: t('ACCOUNT_SECURITY'), icon: 'material-symbols:shield-lock-outline' },
         { id: 'logout', label: t('SIDEBAR_ITEM_LOGOUT'), icon: 'material-symbols:logout-rounded', danger: true },
     ]);
@@ -290,6 +291,7 @@
     ]);
 
     function onAccountAction(action: TopbarAction): void {
+        if (action.id === 'profile') void router.push({ name: 'admin-account' });
         if (action.id === 'security') void router.push({ name: 'admin-settings-security' });
         if (action.id === 'logout') confirmLogout();
     }
@@ -349,8 +351,14 @@
         });
     }
 
+    function syncSeenFromStorage(): void {
+        seenMessageIds.value = new Set(readSeenMessageIds() ?? []);
+        dismissedMessageIds.value = new Set(readDismissedMessageIds());
+    }
+
     onMounted(() => {
         syncLocaleFromStorage();
+        window.addEventListener('hanab-messages-seen', syncSeenFromStorage);
         void refreshMessages();
         messagePoll = setInterval(() => {
             void refreshMessages();
@@ -358,6 +366,7 @@
     });
 
     onBeforeUnmount(() => {
+        window.removeEventListener('hanab-messages-seen', syncSeenFromStorage);
         if (messagePoll) clearInterval(messagePoll);
     });
 </script>

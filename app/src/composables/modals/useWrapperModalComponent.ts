@@ -112,6 +112,19 @@ export function useWrapperModalComponent(modal: ModalProps, component: Ref<Parti
         return true;
     }
 
+    async function permitsDismiss(): Promise<boolean> {
+        const ask = _modalComponent.value.allowDismiss;
+        if (typeof ask !== 'function') return true;
+        return await ask();
+    }
+
+    function closeFromOutside(): void {
+        visible.value = false;
+        setTimeout(() => {
+            _modalService.dismiss(modal, { type: ModalResultType.DISMISS });
+        }, delay ?? 300);
+    }
+
     function handleClickOutside(event: MouseEvent) {
         const target = event.target;
         if (!(target instanceof Node) || !target.isConnected) {
@@ -123,14 +136,23 @@ export function useWrapperModalComponent(modal: ModalProps, component: Ref<Parti
         const isTopModal = _modalService.modals[_modalService.modals.length - 1] === _modal;
 
         if (!clickedInsideModal && !clickedInsideDropdown && isTopModal) {
-            visible.value = false;
-            setTimeout(() => {
-                _modalService.dismiss(modal, { type: ModalResultType.DISMISS });
-            }, delay ?? 300);
+            void permitsDismiss().then((allowed) => {
+                if (allowed) closeFromOutside();
+            });
         }
     }
 
+    function handleEscape(event: KeyboardEvent): void {
+        if (event.key !== 'Escape' || _modalService.modals[_modalService.modals.length - 1] !== _modal) return;
+        event.preventDefault();
+        void permitsDismiss().then((allowed) => {
+            if (allowed) closeFromOutside();
+        });
+    }
+
     async function handleDismiss(action: ModalAction): Promise<boolean> {
+        if (!(await permitsDismiss())) return false;
+
         if (action.callback) {
             await action.callback.call(action);
         }
@@ -143,12 +165,14 @@ export function useWrapperModalComponent(modal: ModalProps, component: Ref<Parti
     }
 
     onMounted(() => {
+        document.addEventListener('keydown', handleEscape);
         setTimeout(() => {
             document.addEventListener('click', handleClickOutside);
         }, 200);
     });
 
     onUnmounted(() => {
+        document.removeEventListener('keydown', handleEscape);
         document.removeEventListener('click', handleClickOutside);
     });
 

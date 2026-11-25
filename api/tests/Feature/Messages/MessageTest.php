@@ -87,8 +87,19 @@ class MessageTest extends TestCase
         $this->putJson('/api/v1/message-preferences', [
             'people' => true,
             'milestones' => false,
+            'company' => true,
+        ])->assertOk()->assertJsonPath('data.company', true)->assertJsonPath('data.milestones', false);
+
+        $this->putJson('/api/v1/message-preferences', [
+            'people' => true,
+            'milestones' => true,
             'company' => false,
-        ])->assertOk()->assertJsonPath('data.company', true);
+        ])->assertStatus(422);
+
+        $this->getJson('/api/v1/message-preferences')
+            ->assertOk()
+            ->assertJsonPath('data.company', true)
+            ->assertJsonPath('data.milestones', false);
 
         $this->postJson('/api/v1/messages', [
             'title' => 'Won the north lot',

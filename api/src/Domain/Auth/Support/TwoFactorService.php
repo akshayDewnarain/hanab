@@ -88,7 +88,7 @@ class TwoFactorService
             $locked->forceFill([
                 'two_factor_secret' => $secret,
                 'two_factor_pending_secret' => null,
-                'two_factor_confirmed_at' => $locked->two_factor_confirmed_at ?? now(),
+                'two_factor_confirmed_at' => $pending ? now() : ($locked->two_factor_confirmed_at ?? now()),
                 'two_factor_last_step' => $step,
             ])->save();
 
@@ -97,6 +97,18 @@ class TwoFactorService
             $this->record($locked, $pending ? 'authenticator_replaced' : 'authenticator_confirmed');
 
             return $codes;
+        });
+    }
+
+    public function cancelReplacement(User $user): void
+    {
+        DB::transaction(function () use ($user): void {
+            $locked = User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
+            if (! $locked->hasCompletedSecurity()) {
+                return;
+            }
+
+            $locked->forceFill(['two_factor_pending_secret' => null])->save();
         });
     }
 

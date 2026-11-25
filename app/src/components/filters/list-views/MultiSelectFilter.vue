@@ -1,27 +1,27 @@
 <template>
     <div :class="layout === 'sidebar' ? 'flex flex-col gap-0.5' : 'space-y-2'">
-        <p v-if="loading" class="text-xs text-slate-500">{{ t('FORM_LOADING') }}…</p>
-        <p v-else-if="loadError" class="text-xs text-red-600">{{ loadError }}</p>
-        <p v-else-if="options.length === 0" class="text-xs text-slate-500">{{ t('FORM_NO_OPTIONS') }}</p>
+        <p v-if="loading" class="text-xs text-list-text-muted">{{ t('FORM_LOADING') }}…</p>
+        <p v-else-if="loadError" class="text-xs text-error">{{ loadError }}</p>
+        <p v-else-if="options.length === 0" class="text-xs text-list-text-muted">{{ t('FORM_NO_OPTIONS') }}</p>
         <template v-else>
             <div
                 v-for="option in options"
                 :key="option.value"
             :class="[
-                'flex items-center gap-2.5 rounded-md hover:bg-slate-50',
-                layout === 'sidebar' ? 'px-2 py-1.5 hover:bg-white/80' : 'px-1 py-1',
+                'flex items-center gap-2.5 rounded-md hover:bg-list-row-hover',
+                layout === 'sidebar' ? 'px-2 py-1.5' : 'px-1 py-1',
             ]"
         >
             <input
                 :id="`${inputIdPrefix}-${option.value}`"
                 :checked="isChecked(option.value)"
-                class="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-[var(--color-primary)]"
+                class="size-4 shrink-0 cursor-pointer rounded border-list-border text-emphasis"
                 type="checkbox"
                 @change="onToggle(option.value)"
             />
             <label
                 :for="`${inputIdPrefix}-${option.value}`"
-                class="min-w-0 flex-1 cursor-pointer text-sm leading-snug text-slate-700"
+                class="min-w-0 flex-1 cursor-pointer text-sm leading-snug text-list-text"
             >
                 {{ option.label }}
                 </label>

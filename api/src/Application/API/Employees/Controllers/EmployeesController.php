@@ -55,7 +55,14 @@ class EmployeesController extends BaseAPICrudController
             abort(404);
         }
 
-        return $this->handleShow($employee);
+        return $this->handleShow($employee, [
+            'directReports' => function ($query): void {
+                $query->where('is_active', true)
+                    ->with(['employeeRole', 'media'])
+                    ->orderBy('last_name')
+                    ->orderBy('first_name');
+            },
+        ]);
     }
 
     public function update(UpdateEmployeeRequest $request, Employee $employee): JsonResponse

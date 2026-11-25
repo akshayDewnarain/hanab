@@ -34,8 +34,8 @@ export type EmployeeRecord = {
     first_name: string;
     last_name: string;
     initials: string | null;
-    email: string;
-    phone: string | null;
+    email?: string | null;
+    phone?: string | null;
     business_email: string | null;
     business_phone: string | null;
     introduction: string | null;
@@ -52,5 +52,15 @@ export type EmployeeRecord = {
     manager?: { id: number; first_name: string; last_name: string; initials: string | null; role: string | null } | null;
     organization_level?: { id: number; name: string } | null;
     skills?: SkillRecord[];
-    certificates?: Array<CertificateRecord & { expires_at?: string | null }>;
+    certificates?: Array<CertificateRecord & { expires_at?: string | null; certificate_number?: string | null }>;
+    direct_reports?: EmployeeDirectReport[];
+};
+
+export type EmployeeDirectReport = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    initials: string;
+    role: string | null;
+    photo_url: string | null;
 };

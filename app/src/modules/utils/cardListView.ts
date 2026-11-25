@@ -165,12 +165,30 @@ export function normalizeToColoredBadges(value: unknown, displayKey = 'name'): C
             (typeof record.label_text_color === 'string' && record.label_text_color) ||
             (typeof record.label_border_color === 'string' && record.label_border_color);
 
-        const code = typeof record.code === 'string' ? record.code.trim() : '';
-        const name = typeof record.name === 'string' ? record.name.trim() : '';
-        const detail = [name !== label ? name : '', code !== label ? code : ''].filter(Boolean).join(' · ');
+        const textOf = (value: unknown): string => {
+            if (typeof value === 'string') return value.trim();
+            if (Array.isArray(value)) {
+                return value.map((item) => String(item).trim()).filter(Boolean).join(', ');
+            }
+            return '';
+        };
+        const code = textOf(record.code);
+        const name = textOf(record.name);
+        const description = textOf(record.description);
+        const synonyms = textOf(record.synonyms);
+        const number = textOf(record.certificate_number);
+        const expires = textOf(record.expires_at);
+        const lines = [
+            name && name.toLowerCase() !== label.toLowerCase() ? name : '',
+            code && code.toLowerCase() !== label.toLowerCase() ? code : '',
+            description,
+            synonyms ? synonyms : '',
+            number,
+            expires,
+        ].filter(Boolean);
         return {
             label,
-            ...(detail ? { description: detail } : {}),
+            ...(lines.length ? { description: lines.join('\n') } : {}),
             ...(hasCustomColors ? { chipStyle: labelRecordChipStyle(record) } : {}),
         };
     };

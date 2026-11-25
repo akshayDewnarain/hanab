@@ -62,8 +62,8 @@ class EmployeeProfileTest extends TestCase
 
         $this->assertSame('I help colleagues with planning.', $profile['introduction']);
         $this->assertSame('Casey', $profile['first_name']);
-        $this->assertSame('casey.auer@example.com', $profile['email']);
-        $this->assertSame('+31612345678', $profile['phone']);
+        $this->assertArrayNotHasKey('email', $profile);
+        $this->assertArrayNotHasKey('phone', $profile);
         $this->assertSame('casey.auer@hanab.test', $profile['business_email']);
         $this->assertSame('+31687654321', $profile['business_phone']);
         $this->assertSame('Project Manager', $profile['employee_role']['name']);
@@ -141,5 +141,63 @@ class EmployeeProfileTest extends TestCase
         $this->getJson('/api/v1/employees/'.$employee->id)
             ->assertOk()
             ->assertJsonPath('data.manager.id', $manager->id);
+    }
+
+    public function test_a_profile_lists_people_who_report_to_the_employee(): void
+    {
+        $location = EmployeeLocation::factory()->create(['is_active' => true]);
+        $role = EmployeeRole::factory()->create(['name' => 'Project Manager', 'is_active' => true]);
+        $lead = Employee::factory()->create([
+            'employee_role_id' => $role->id,
+            'employee_location_id' => $location->id,
+            'first_name' => 'Casey',
+            'last_name' => 'Auer',
+            'is_active' => true,
+        ]);
+        $report = Employee::factory()->create([
+            'employee_role_id' => $role->id,
+            'employee_location_id' => $location->id,
+            'manager_id' => $lead->id,
+            'first_name' => 'Sem',
+            'last_name' => 'Bos',
+            'initials' => 'SB',
+            'is_active' => true,
+        ]);
+        Employee::factory()->create([
+            'employee_role_id' => $role->id,
+            'employee_location_id' => $location->id,
+            'manager_id' => $lead->id,
+            'is_active' => false,
+        ]);
+
+        $this->actingAs(User::factory()->create());
+        $profile = $this->getJson('/api/v1/employees/'.$lead->id)->assertOk()->json('data');
+
+        $this->assertCount(1, $profile['direct_reports']);
+        $this->assertSame($report->id, $profile['direct_reports'][0]['id']);
+        $this->assertSame('Sem', $profile['direct_reports'][0]['first_name']);
+        $this->assertSame('SB', $profile['direct_reports'][0]['initials']);
+        $this->assertSame('Project Manager', $profile['direct_reports'][0]['role']);
+    }
+
+    public function test_an_editor_still_receives_personal_contact_details(): void
+    {
+        $location = EmployeeLocation::factory()->create(['is_active' => true]);
+        $role = EmployeeRole::factory()->create(['is_active' => true]);
+        $employee = Employee::factory()->create([
+            'employee_role_id' => $role->id,
+            'employee_location_id' => $location->id,
+            'email' => 'private@example.com',
+            'phone' => '+31600000000',
+            'business_email' => 'work@hanab.test',
+            'is_active' => true,
+        ]);
+
+        $this->actingAsSuperAdmin();
+        $this->getJson('/api/v1/employees/'.$employee->id)
+            ->assertOk()
+            ->assertJsonPath('data.email', 'private@example.com')
+            ->assertJsonPath('data.phone', '+31600000000')
+            ->assertJsonPath('data.business_email', 'work@hanab.test');
     }
 }

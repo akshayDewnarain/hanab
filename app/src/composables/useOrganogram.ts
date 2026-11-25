@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import http from '@/utils/http';
 import { useAuthStore } from '@/stores/auth';
 import type {
@@ -49,7 +49,7 @@ function readPreference(): Preference {
         minimap: true,
         showAvatars: true,
         showLocations: true,
-        showLegend: false,
+        showLegend: true,
         compact: false,
     };
     try {
@@ -57,7 +57,7 @@ function readPreference(): Preference {
         if (!raw) {
             return fallback;
         }
-        const parsed = JSON.parse(raw) as Partial<Preference>;
+        const parsed = JSON.parse(raw) as Partial<Preference> & { legendPinned?: boolean };
         const view = parsed.view === 'location' || parsed.view === 'roles' ? parsed.view : 'management';
         return {
             view,
@@ -66,7 +66,7 @@ function readPreference(): Preference {
             minimap: parsed.minimap !== false,
             showAvatars: parsed.showAvatars !== false,
             showLocations: parsed.showLocations !== false,
-            showLegend: parsed.showLegend === true,
+            showLegend: typeof parsed.legendPinned === 'boolean' ? parsed.legendPinned : true,
             compact: parsed.compact === true,
         };
     } catch {
@@ -87,14 +87,21 @@ function locationKey(locationId: number | null | undefined): string {
 }
 
 export function useOrganogram() {
+    const route = useRoute();
     const router = useRouter();
     const auth = useAuthStore();
     const { t, locale } = useI18n();
     const preference = readPreference();
+    const requestedView = route.query.view;
+    const focusTarget = typeof route.query.focus === 'string' ? route.query.focus : '';
 
-    const view = ref<OrganogramView>(preference.view);
-    const locationId = ref(preference.locationId);
-    const levelId = ref(preference.levelId);
+    const view = ref<OrganogramView>(
+        requestedView === 'location' || requestedView === 'roles' || requestedView === 'management'
+            ? requestedView
+            : preference.view,
+    );
+    const locationId = ref(focusTarget.startsWith('employee-') ? '' : preference.locationId);
+    const levelId = ref(focusTarget.startsWith('employee-') ? '' : preference.levelId);
     const showMinimap = ref(preference.minimap);
     const showAvatars = ref(preference.showAvatars);
     const showLocations = ref(preference.showLocations);
@@ -109,7 +116,7 @@ export function useOrganogram() {
     const laidOut = ref<LaidOutOrganogramNode[]>([]);
     const collapsed = ref<Set<string>>(new Set());
     const highlightedId = ref<string | null>(null);
-    const isLoading = ref(false);
+    const isLoading = ref(true);
     const failed = ref(false);
     const searchNotice = ref<'none' | 'filtered' | null>(null);
     const fitRequest = ref(0);
@@ -182,6 +189,21 @@ export function useOrganogram() {
                 collapsed.value = new Set([...collapsed.value].filter((id) => present.has(id)));
             }
             graph.value = { nodes, edges };
+            const focus = typeof route.query.focus === 'string' ? route.query.focus : '';
+            if (focus !== '') {
+                const node = nodes.find((item) => item.id === focus);
+                if (node) {
+                    const ancestors = ancestorIds(edges, node.id);
+                    const next = new Set(collapsed.value);
+                    for (const ancestor of ancestors) {
+                        next.delete(ancestor);
+                    }
+                    collapsed.value = next;
+                    highlightedId.value = node.id;
+                    focusId.value = node.id;
+                    focusRequest.value += 1;
+                }
+            }
         } catch {
             failed.value = true;
             graph.value = { nodes: [], edges: [] };
@@ -337,6 +359,7 @@ export function useOrganogram() {
                 showAvatars: showAvatars.value,
                 showLocations: showLocations.value,
                 showLegend: showLegend.value,
+                legendPinned: showLegend.value,
                 compact: compact.value,
             }),
         );

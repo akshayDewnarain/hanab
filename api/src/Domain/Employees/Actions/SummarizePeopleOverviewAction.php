@@ -42,8 +42,8 @@ class SummarizePeopleOverviewAction extends BaseAction
         $withoutSkills = (clone $active)->whereDoesntHave('skills')->count();
         $withoutCertificates = (clone $active)->whereDoesntHave('certificates')->count();
         $withoutLocation = (clone $active)->whereNull('employee_location_id')->count();
-        $withoutEmail = (clone $active)->where(fn (Builder $query) => $query->whereNull('email')->orWhere('email', ''))->count();
-        $withoutPhone = (clone $active)->where(fn (Builder $query) => $query->whereNull('phone')->orWhere('phone', ''))->count();
+        $withoutEmail = (clone $active)->where(fn (Builder $query) => $query->whereNull('business_email')->orWhere('business_email', ''))->count();
+        $withoutPhone = (clone $active)->where(fn (Builder $query) => $query->whereNull('business_phone')->orWhere('business_phone', ''))->count();
 
         $locations = EmployeeLocation::query()->where('is_active', true);
         $locationTotal = (clone $locations)->count();

@@ -108,7 +108,7 @@
             :key="column.name"
             :custom-class="[
                 isActive(column)
-                    ? '!border-[color-mix(in_srgb,var(--color-primary)_22%,#e2e8f0)] !bg-[color-mix(in_srgb,var(--color-primary)_6%,white)] !text-slate-800 !font-medium'
+                    ? '!border-[color-mix(in_srgb,var(--color-emphasis)_35%,var(--color-list-border))] !bg-[color-mix(in_srgb,var(--color-emphasis)_14%,var(--color-list-surface))] !text-list-text !font-medium'
                     : '',
             ]"
             :model-value="_filters[getEffectiveKey(column)]"
@@ -117,13 +117,13 @@
             <template #dropdown-content>
                 <div v-if="!column.component" class="p-2">
                     <label :for="getEffectiveKey(column)" class="flex min-w-52 flex-col gap-1">
-                        <span class="text-[11px] font-medium tracking-wide text-slate-500">
+                        <span class="text-[11px] font-medium tracking-wide text-list-text-muted">
                             {{ t('FILTER_CONTAINS') }}
                         </span>
                         <input
                             :id="getEffectiveKey(column)"
                             v-model="_filters[getEffectiveKey(column)]"
-                            class="h-8 w-full rounded-lg border border-slate-200 bg-white px-2 text-[13px] text-slate-800 outline-none placeholder:text-slate-400 focus:border-primary/30 focus:ring-2 focus:ring-primary/10"
+                            class="h-8 w-full rounded-lg border border-list-border bg-list-canvas px-2 text-[13px] text-list-text outline-none placeholder:text-placeholder focus:border-emphasis/40 focus:ring-2 focus:ring-emphasis/15"
                             placeholder="Type to filter..."
                             type="text"
                             @input="onInputChange"
@@ -146,7 +146,7 @@
                     v-else-if="column.component?.type === TableColumnComponentEnum.BOOLEAN"
                     class="flex min-w-40 items-center justify-between gap-3 px-2.5 py-2"
                 >
-                    <label :for="getEffectiveKey(column)" class="text-[13px] font-medium text-slate-700">
+                    <label :for="getEffectiveKey(column)" class="text-[13px] font-medium text-list-text">
                         {{ t(column.label) }}
                     </label>
                     <ToggleSwitch
@@ -165,7 +165,7 @@
                                 @change="onCheckboxChange(convertToString(value), getEffectiveKey(column))"
                             />
 
-                            <label :for="`${getEffectiveKey(column)}-${value}`" class="text-sm text-gray-800">{{
+                            <label :for="`${getEffectiveKey(column)}-${value}`" class="text-sm text-list-text">{{
                                 t(`GENERAL_${label.toUpperCase()}`)
                             }}</label>
                         </div>

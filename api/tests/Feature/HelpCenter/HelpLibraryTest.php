@@ -120,6 +120,8 @@ class HelpLibraryTest extends TestCase
         $this->assertSame($shot->id, $document['content'][1]['attrs']['id']);
         $this->assertSame('lg', $document['content'][1]['attrs']['size']);
         $this->assertSame($png, Storage::disk('local')->get($shot->path));
+        $this->assertSame(0644, fileperms(Storage::disk('local')->path($shot->path)) & 0777);
+        $this->assertSame(0755, fileperms(dirname(Storage::disk('local')->path($shot->path))) & 0777);
         $this->assertSame(1, $restored->version);
         $this->assertSame(1, $restored->revisions()->count());
         $this->assertSame(0, HelpArticleFeedback::query()->count());

@@ -43,17 +43,19 @@
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('HELP_CATEGORY') }}</span>
-                    <select v-model="categoryId" class="mt-1 h-9 w-full rounded-lg border border-list-border px-2">
-                        <option :value="null">{{ t('HELP_NO_CATEGORY') }}</option>
-                        <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="categoryId"
+                        class="mt-1"
+                        :options="[{ value: null, label: t('HELP_NO_CATEGORY') }, ...categories.map((category) => ({ value: category.id, label: category.name }))]"
+                    />
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('HELP_CONTEXT') }}</span>
-                    <select v-model="contextKey" class="mt-1 h-9 w-full rounded-lg border border-list-border px-2">
-                        <option :value="null">{{ t('HELP_NO_CONTEXT') }}</option>
-                        <option v-for="key in contexts" :key="key" :value="key">{{ key }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="contextKey"
+                        class="mt-1"
+                        :options="[{ value: null, label: t('HELP_NO_CONTEXT') }, ...contexts.map((key) => ({ value: key, label: key }))]"
+                    />
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('HELP_AUDIENCE') }}</span>
@@ -73,10 +75,14 @@
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('HELP_VISIBILITY') }}</span>
-                    <select v-model="visibility" class="mt-1 h-9 w-full rounded-lg border border-list-border px-2">
-                        <option value="authenticated">{{ t('HELP_VISIBILITY_AUTHENTICATED') }}</option>
-                        <option value="private">{{ t('HELP_VISIBILITY_PRIVATE') }}</option>
-                    </select>
+                    <ChoiceDropdown
+                        v-model="visibility"
+                        class="mt-1"
+                        :options="[
+                            { value: 'authenticated', label: t('HELP_VISIBILITY_AUTHENTICATED') },
+                            { value: 'private', label: t('HELP_VISIBILITY_PRIVATE') },
+                        ]"
+                    />
                 </label>
                 <label class="text-sm">
                     <span class="text-list-text-muted">{{ t('HELP_REVIEW_DATE') }}</span>
@@ -92,11 +98,15 @@
                     <input v-model="caption" class="mt-2 h-9 w-full rounded-lg border border-list-border px-3" :placeholder="t('HELP_IMAGE_CAPTION')" />
                     <label class="mt-2 block">
                         <span class="text-list-text-muted">{{ t('HELP_IMAGE_SIZE') }}</span>
-                        <select v-model="imageSize" class="mt-1 h-9 w-full rounded-lg border border-list-border px-2">
-                            <option value="sm">{{ t('HELP_IMAGE_SIZE_SM') }}</option>
-                            <option value="md">{{ t('HELP_IMAGE_SIZE_MD') }}</option>
-                            <option value="lg">{{ t('HELP_IMAGE_SIZE_LG') }}</option>
-                        </select>
+                        <ChoiceDropdown
+                            v-model="imageSize"
+                            class="mt-1"
+                            :options="[
+                                { value: 'sm', label: t('HELP_IMAGE_SIZE_SM') },
+                                { value: 'md', label: t('HELP_IMAGE_SIZE_MD') },
+                                { value: 'lg', label: t('HELP_IMAGE_SIZE_LG') },
+                            ]"
+                        />
                     </label>
                     <input ref="fileInput" class="mt-2 block w-full text-sm" type="file" accept="image/png,image/jpeg,image/webp" @change="upload" />
                     <ul v-if="attachments.length" class="mt-3 list-none p-0">
@@ -127,6 +137,7 @@
     import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
     import { useI18n } from 'vue-i18n';
     import { PageLayout } from '@freelance/vue-ui';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import { emptyDocument, UiRichTextContent, UiRichTextEditor, type RichTextDocument, type RichTextEditorLabels } from '@freelance/vue-ui/editor';
     import http from '@/utils/http';
     import { useAuthStore } from '@/stores/auth';

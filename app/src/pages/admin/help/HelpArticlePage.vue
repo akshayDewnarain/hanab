@@ -3,17 +3,22 @@
         <div class="grid w-full items-start gap-4 xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-6">
             <article
                 ref="surface"
-                class="min-w-0 rounded-xl border border-list-border bg-list-surface shadow-[0_1px_2px_color-mix(in_srgb,var(--color-list-shadow-tint)_6%,transparent)]"
+                class="min-w-0 overflow-hidden rounded-xl border border-list-border bg-list-surface shadow-[0_1px_2px_color-mix(in_srgb,var(--color-list-shadow-tint)_6%,transparent)]"
             >
                 <p v-if="missing" class="m-0 px-4 py-4 text-sm sm:px-5">{{ t('HELP_UNAVAILABLE') }}</p>
                 <template v-else-if="article">
                     <header class="border-b border-list-border px-4 py-4 sm:px-5">
-                        <p v-if="article.category" class="m-0 text-xs font-medium text-list-text-muted">
-                            <router-link class="text-primary" :to="{ name: 'admin-help-category', params: { slug: article.category.slug } }">
-                                {{ article.category.name }}
-                            </router-link>
-                        </p>
-                        <div class="mt-1 flex flex-wrap items-start justify-between gap-3">
+                        <span class="-mx-4 -mt-4 mb-4 block h-1 sm:-mx-5" :class="helpBarClass(article.category?.slug)" aria-hidden="true"></span>
+                        <router-link
+                            v-if="article.category"
+                            class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium"
+                            :class="helpTileClass(article.category.slug)"
+                            :to="{ name: 'admin-help-category', params: { slug: article.category.slug } }"
+                        >
+                            <Icon class="size-3.5" icon="material-symbols:menu-book-outline-rounded" />
+                            {{ article.category.name }}
+                        </router-link>
+                        <div class="mt-2 flex flex-wrap items-start justify-between gap-3">
                             <h1 class="m-0 text-2xl font-semibold text-list-text">{{ article.title }}</h1>
                             <router-link
                                 v-if="article.can_edit"
@@ -153,6 +158,7 @@
     import { documentText, richTextHeadings, UiRichTextContent } from '@freelance/vue-ui/editor';
     import http from '@/utils/http';
     import HelpArticleCard from '@/components/help/HelpArticleCard.vue';
+    import { helpBarClass, helpTileClass } from '@/modules/help/appearance';
     import { imageIds } from '@/modules/help/document';
     import { useHelpDestinations } from '@/composables/useHelpDestinations';
     import type { HelpArticle } from '@/modules/types/help/Help.ts';
@@ -254,13 +260,17 @@
             const response = await http.get<{ data: HelpArticle }>(`help/articles/slug/${route.params.slug}`);
             article.value = response.data.data;
             for (const file of article.value.attachments ?? []) {
-                const image = await http.get(`help/screenshots/${file.id}`, { responseType: 'blob' });
-                shots.value.push({
-                    id: file.id,
-                    url: URL.createObjectURL(image.data),
-                    alt: file.alt_text,
-                    caption: file.caption,
-                });
+                try {
+                    const image = await http.get(`help/screenshots/${file.id}`, { responseType: 'blob' });
+                    shots.value.push({
+                        id: file.id,
+                        url: URL.createObjectURL(image.data),
+                        alt: file.alt_text,
+                        caption: file.caption,
+                    });
+                } catch {
+                    // A missing screenshot leaves the guide readable.
+                }
             }
             activeId.value = headings.value[0]?.id ?? null;
             await nextTick();

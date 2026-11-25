@@ -261,6 +261,24 @@ class Employee extends Model implements HasMedia
         );
     }
 
+    public function scopeMissingBusinessEmail(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged(
+            $query,
+            $value,
+            fn (Builder $builder): Builder => $builder->where(fn (Builder $inner) => $inner->whereNull('business_email')->orWhere('business_email', '')),
+        );
+    }
+
+    public function scopeMissingBusinessPhone(Builder $query, mixed $value): Builder
+    {
+        return $this->whenFlagged(
+            $query,
+            $value,
+            fn (Builder $builder): Builder => $builder->where(fn (Builder $inner) => $inner->whereNull('business_phone')->orWhere('business_phone', '')),
+        );
+    }
+
     /**
      * @param  callable(Builder): Builder  $apply
      */

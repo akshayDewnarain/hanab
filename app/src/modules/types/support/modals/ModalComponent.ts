@@ -16,6 +16,8 @@ export interface ModalComponent {
     isValidForAccept?: (action: ModalAction) => boolean | Promise<boolean>;
     notifyAccepted?: (action: ModalAction) => Promise<void>;
     notifyDismissed?: (action: ModalAction) => Promise<void>;
+    /** Return false to keep a sensitive dialog open, for example until recovery codes are saved. */
+    allowDismiss?: () => boolean | Promise<boolean>;
     getData?: () => unknown;
     setData?: (data: unknown) => void;
     setValid?: (valid: boolean) => void;

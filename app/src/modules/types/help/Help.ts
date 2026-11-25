@@ -10,6 +10,7 @@ export type HelpCategory = {
     parent_id: number | null;
     is_active?: boolean;
     article_count: number;
+    previews?: HelpCard[];
 };
 
 export type HelpCard = {

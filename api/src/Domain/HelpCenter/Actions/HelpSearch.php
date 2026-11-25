@@ -24,13 +24,13 @@ final class HelpSearch
         }
         if ($needle !== '') {
             $query->where(function (Builder $match) use ($like) {
-                $match->whereRaw('LOWER(title) like ? escape \'\\\'', [$like])
-                    ->orWhereRaw('LOWER(COALESCE(summary, \'\')) like ? escape \'\\\'', [$like])
-                    ->orWhereRaw('LOWER(COALESCE(search_text, \'\')) like ? escape \'\\\'', [$like])
-                    ->orWhereRaw('LOWER(COALESCE(keywords, \'\')) like ? escape \'\\\'', [$like])
-                    ->orWhereHas('category', fn (Builder $category) => $category->whereRaw('LOWER(name) like ? escape \'\\\'', [$like]));
+                $match->whereRaw('LOWER(title) like ?', [$like])
+                    ->orWhereRaw('LOWER(COALESCE(summary, \'\')) like ?', [$like])
+                    ->orWhereRaw('LOWER(COALESCE(search_text, \'\')) like ?', [$like])
+                    ->orWhereRaw('LOWER(COALESCE(keywords, \'\')) like ?', [$like])
+                    ->orWhereHas('category', fn (Builder $category) => $category->whereRaw('LOWER(name) like ?', [$like]));
             })->orderByRaw(
-                'CASE WHEN LOWER(title) like ? escape \'\\\' THEN 0 WHEN LOWER(COALESCE(summary, \'\')) like ? escape \'\\\' THEN 1 ELSE 2 END',
+                'CASE WHEN LOWER(title) like ? THEN 0 WHEN LOWER(COALESCE(summary, \'\')) like ? THEN 1 ELSE 2 END',
                 [$like, $like],
             );
         }

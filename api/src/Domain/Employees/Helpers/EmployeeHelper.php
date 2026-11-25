@@ -76,6 +76,8 @@ class EmployeeHelper extends BaseHelper
             AllowedFilter::scope('missing_location'),
             AllowedFilter::scope('missing_email'),
             AllowedFilter::scope('missing_phone'),
+            AllowedFilter::scope('missing_business_email'),
+            AllowedFilter::scope('missing_business_phone'),
         ]);
     }
 

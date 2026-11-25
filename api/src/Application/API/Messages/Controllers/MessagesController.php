@@ -18,6 +18,7 @@ use Domain\Messages\Http\Requests\UpdateContractMessageRequest;
 use Domain\Messages\Http\Resources\MessageResource;
 use Domain\Messages\Models\Message;
 use Domain\Messages\Models\MessagePreference;
+use Domain\Support\Helpers\ApiResponse;
 use Domain\Support\Http\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -135,6 +136,10 @@ class MessagesController extends BaseController
     public function updatePreferences(MessagePreferenceRequest $request): JsonResponse
     {
         $user = $this->user($request);
+        if (! $request->boolean('company')) {
+            return ApiResponse::error('Company announcements cannot be disabled.', null, 422);
+        }
+
         $current = MessagePreference::query()->firstOrCreate(
             ['user_id' => $user->id],
             ['people' => true, 'milestones' => true, 'company' => true, 'push_notifications' => true],

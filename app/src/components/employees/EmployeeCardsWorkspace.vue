@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex h-full min-h-0 flex-col bg-list-canvas">
+    <div class="relative flex h-full min-h-0 flex-col">
         <div class="min-h-0 flex-1 overflow-y-auto">
         <div class="px-3 pt-3 sm:px-4 sm:pt-4">
             <EmployeeDirectoryHeader
@@ -20,7 +20,7 @@
         </div>
 
         <UiStickySurface v-slot="{ scrolled }" class="px-3 pb-4 sm:px-4">
-            <div aria-hidden="true" class="pointer-events-none h-3 bg-list-canvas"></div>
+            <div aria-hidden="true" class="pointer-events-none h-3"></div>
             <section
                 class="rounded-xl border border-list-border bg-list-surface px-4 py-3 shadow-sm transition-[background-color,backdrop-filter] duration-200 ease-out motion-reduce:transition-none"
                 :style="scrolled ? frostStyle : undefined"
@@ -40,8 +40,6 @@
                                 autocomplete="off"
                                 :placeholder="t('DIRECTORY_SEARCH_PLACEHOLDER')"
                                 class="input-base h-9 w-full rounded-lg border-list-border bg-list-surface pr-9 pl-10 text-sm shadow-sm transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-list-text-muted focus:border-primary focus:ring-2 focus:ring-primary/15 motion-reduce:transition-none"
-                                @blur="searchFocused = false"
-                                @focus="searchFocused = true"
                                 @input="emit('update:query', ($event.target as HTMLInputElement).value)"
                             />
                             <button
@@ -57,11 +55,10 @@
                         </div>
                         <button
                             type="submit"
-                            class="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-primary text-on-brand shadow-sm transition-colors duration-200 ease-out hover:bg-[var(--color-primary-hover)] motion-reduce:transition-none"
-                            :aria-label="t('DIRECTORY_SEARCH_ACTION')"
-                            :title="t('DIRECTORY_SEARCH_ACTION')"
+                            class="inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-semibold text-on-brand shadow-sm transition-colors duration-200 ease-out hover:bg-[var(--color-primary-hover)] motion-reduce:transition-none"
                         >
-                            <Icon class="size-5" icon="material-symbols:arrow-forward-rounded" />
+                            <Icon class="size-4" icon="material-symbols:search-rounded" />
+                            {{ t('DIRECTORY_SEARCH_ACTION') }}
                         </button>
                     </form>
 
@@ -77,23 +74,24 @@
                             {{ t('DIRECTORY_FILTERS') }}
                             <span v-if="filterCount > 0" class="tabular-nums text-primary">({{ filterCount }})</span>
                         </button>
-                        <label class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-list-border bg-list-surface px-2.5 text-sm text-list-text-muted">
-                            <Icon class="size-4" icon="material-symbols:sort-rounded" />
-                            <span class="sr-only">{{ t('DIRECTORY_SORT') }}</span>
-                            <select
-                                class="cursor-pointer bg-transparent text-sm font-medium text-list-text outline-none"
-                                :value="sortValue"
-                                @change="emit('sort', ($event.target as HTMLSelectElement).value)"
-                            >
-                                <option value="relevance">{{ t('DIRECTORY_SORT_RELEVANCE') }}</option>
-                                <option value="last_name">{{ t('DIRECTORY_SORT_NAME') }}</option>
-                            </select>
-                        </label>
+                        <div class="inline-flex h-9 items-center gap-1.5">
+                            <Icon class="size-4 text-list-text-muted" icon="material-symbols:sort-rounded" />
+                            <ChoiceDropdown
+                                :model-value="sortValue"
+                                :aria-label="t('DIRECTORY_SORT')"
+                                :full-width="false"
+                                :options="[
+                                    { value: 'relevance', label: t('DIRECTORY_SORT_RELEVANCE') },
+                                    { value: 'last_name', label: t('DIRECTORY_SORT_NAME') },
+                                ]"
+                                @update:model-value="emit('sort', String($event))"
+                            />
+                        </div>
                         <HelpTrigger context="employees.directory" />
                     </div>
                 </div>
 
-                <Collapsible :open="searchFocused && suggestions.length > 0">
+                <Collapsible :open="suggestions.length > 0">
                     <div class="mt-3 flex flex-wrap items-center gap-2 border-t border-list-border pt-3">
                         <span class="text-xs font-medium text-list-text-muted">{{ t('DIRECTORY_SUGGESTIONS') }}</span>
                         <button
@@ -152,19 +150,24 @@
             <div
                 v-if="isLoading"
                 class="grid justify-start gap-4"
-                style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 22rem))"
+                style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 23rem), 1fr))"
             >
                 <div
                     v-for="index in 8"
                     :key="`card-skeleton-${index}`"
                     class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
                 >
-                    <Skeleton class="h-12 w-full rounded-none" />
-                    <div class="flex flex-col items-center gap-3 px-4 pt-5 pb-6">
-                        <Skeleton class="size-32 rounded-full" />
-                        <Skeleton class="h-9 w-full rounded-lg" />
+                    <div class="flex items-center gap-3 px-4 pt-4">
+                        <Skeleton class="size-16 rounded-full" />
+                        <div class="flex flex-1 flex-col gap-2">
+                            <Skeleton class="h-4 w-2/3" />
+                            <Skeleton class="h-3 w-1/2" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 px-4 py-4">
                         <Skeleton class="h-3 w-full" />
                         <Skeleton class="h-3 w-5/6" />
+                        <Skeleton class="h-3 w-2/3" />
                     </div>
                 </div>
             </div>
@@ -172,7 +175,7 @@
             <div
                 v-else-if="items.length"
                 class="grid justify-start gap-4"
-                style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 22rem))"
+                style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 23rem), 1fr))"
             >
                 <CardListItem
                     v-for="item in items"
@@ -196,7 +199,7 @@
         </div>
 
         <div ref="pager" class="pointer-events-none absolute inset-x-0 bottom-0 z-20">
-            <div aria-hidden="true" class="h-3 bg-list-canvas"></div>
+            <div aria-hidden="true" class="pointer-events-none h-3"></div>
             <div class="px-3 sm:px-4">
                 <section
                     class="pointer-events-auto rounded-xl border border-list-border px-4 py-3 shadow-sm [&>footer]:border-0 [&>footer]:bg-transparent [&>footer]:p-0"
@@ -213,7 +216,7 @@
                     />
                 </section>
             </div>
-            <div aria-hidden="true" class="h-3 bg-list-canvas"></div>
+            <div aria-hidden="true" class="pointer-events-none h-3"></div>
         </div>
 
         <div
@@ -285,6 +288,7 @@
 <script lang="ts" setup>
     import { onBeforeUnmount, onMounted, ref } from 'vue';
     import { Icon } from '@iconify/vue';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import { Collapsible, Drawer, ListViewPagination, UiStickySurface } from '@freelance/vue-ui';
     import { useI18n } from 'vue-i18n';
     import EmployeeDirectoryHeader from '@/components/employees/EmployeeDirectoryHeader.vue';
@@ -353,7 +357,6 @@
 
     const { t } = useI18n();
     const filtersOpen = ref(false);
-    const searchFocused = ref(false);
     const frostStyle = {
         backgroundColor: 'color-mix(in srgb, var(--color-list-surface) 94%, transparent)',
         backdropFilter: 'blur(12px)',
@@ -379,7 +382,6 @@
     });
 
     function submitSearch(): void {
-        searchFocused.value = false;
         emit('search');
     }
 

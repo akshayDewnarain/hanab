@@ -63,7 +63,7 @@ class HelpMediaController
         $user = $request->user();
         $article = $attachment->article;
         abort_unless($user instanceof User && $article !== null && HelpAccess::canRead($user, $article), 404);
-        abort_unless($this->safePath($attachment->path), 404);
+        abort_unless($this->safePath($attachment->path) && Storage::disk('local')->exists($attachment->path), 404);
 
         return Storage::disk('local')->response($attachment->path, $this->safeName($attachment->filename, pathinfo($attachment->path, PATHINFO_EXTENSION)), [
             'Content-Type' => $attachment->mime,

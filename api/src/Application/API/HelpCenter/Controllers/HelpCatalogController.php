@@ -42,11 +42,26 @@ class HelpCatalogController
             ->orderBy('name')
             ->get();
         $counts = $this->counts($user);
+        $previews = HelpAccess::catalog(HelpArticle::query(), $user)
+            ->with(['category', 'author'])
+            ->whereNotNull('category_id')
+            ->orderBy('sort_order')
+            ->orderBy('title')
+            ->get()
+            ->groupBy(fn (HelpArticle $article) => (int) $article->category_id);
 
         return response()->json([
             'data' => [
                 'categories' => $categories->map(
-                    fn (HelpCategory $category) => HelpResponse::category($category, $counts[$category->id] ?? 0),
+                    fn (HelpCategory $category) => HelpResponse::category(
+                        $category,
+                        $counts[$category->id] ?? 0,
+                        ($previews->get($category->id) ?? collect())
+                            ->take(3)
+                            ->map(fn (HelpArticle $article) => HelpResponse::card($article))
+                            ->values()
+                            ->all(),
+                    ),
                 )->values(),
                 'getting_started' => HelpAccess::catalog(HelpArticle::query(), $user)
                     ->with(['category', 'author'])

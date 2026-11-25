@@ -13,10 +13,10 @@
                     <div
                         v-if="anySelected && showActionBar"
                         ref="barInnerRef"
-                        class="border-b border-gray-300 bg-gray-100"
+                        class="border-b border-list-border bg-list-thead-background"
                     >
                         <div class="max-w-full px-4 py-2 flex items-center justify-between gap-3">
-                            <div class="text-sm text-gray-700 font-bold">
+                            <div class="text-sm text-list-text font-bold">
                                 {{ selectedCount }} {{ selectedCount === 1 ? t('ITEM_SELECTED') : t('ITEMS_SELECTED') }}
                             </div>
                             <div class="flex items-center gap-2">
@@ -29,14 +29,14 @@
 
                                 <template v-if="showDefaultBulkActions">
                                     <button
-                                        class="flex text-white items-center justify-center bg-[var(--color-background)] border border-gray-200 rounded py-1 px-2 cursor-pointer hover:bg-[var(--color-highlight-dark)] transition-colors duration-200 ease-in shadow-md"
+                                        class="flex text-on-brand items-center justify-center bg-primary border border-list-border rounded py-1 px-2 cursor-pointer hover:brightness-110 transition-colors duration-200 ease-in shadow-md"
                                         type="button"
                                         @click="removeSelection"
                                     >
                                         {{ t('REMOVE_SELECTED') }}
                                     </button>
                                     <button
-                                        class="flex text-[var(--color-primary)] items-center justify-center bg-white border border-[var(--color-primary)] rounded py-1 px-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ease-in shadow-md"
+                                        class="flex text-list-text items-center justify-center bg-list-surface border border-list-border rounded py-1 px-2 cursor-pointer hover:bg-list-row-hover transition-colors duration-200 ease-in shadow-md"
                                         type="button"
                                         @click="clearSelection"
                                     >
@@ -50,13 +50,13 @@
             </div>
 
             <!-- Content translates by bar height -->
-            <div class="h-full overflow-auto bg-white will-change-transform">
-                <table class="min-w-full bg-white">
-                    <thead v-if="showTableHeader" class="sticky top-0 bg-gray-100">
-                        <tr class="w-full border-b border-gray-300">
+            <div class="h-full overflow-auto bg-list-surface will-change-transform">
+                <table class="min-w-full bg-list-surface">
+                    <thead v-if="showTableHeader" class="sticky top-0 bg-list-thead-background">
+                        <tr class="w-full border-b border-list-border">
                             <th
                                 v-if="selectable"
-                                class="py-2 px-4 text-center font-bold text-gray-700 border-r border-gray-300 w-10"
+                                class="py-2 px-4 text-center font-bold text-list-text border-r border-list-border w-10"
                             >
                                 <input
                                     :checked="allSelected"
@@ -70,20 +70,20 @@
                                 :key="column.name"
                                 :class="widthClass(column)"
                                 :style="widthStyle(column)"
-                                class="px-4 text-center font-bold border-r border-gray-300 whitespace-nowrap text-gray-700 text-sm"
+                                class="px-4 text-center font-bold border-r border-list-border whitespace-nowrap text-list-text-muted text-sm"
                             >
                                 {{ t(column.label).toUpperCase() }}
                             </th>
                         </tr>
                     </thead>
 
-                    <tbody class="border-t border-gray-300">
+                    <tbody class="border-t border-list-border">
                         <tr
                             v-for="item in items"
                             :key="(item as Record<string, unknown>).id as string | number"
-                            class="border-b border-gray-300 hover:bg-gray-100 transition ease-in duration-100"
+                            class="border-b border-list-border hover:bg-list-row-hover transition ease-in duration-100"
                         >
-                            <td v-if="selectable" class="py-2 px-4 text-center font-bold text-gray-700 w-10">
+                            <td v-if="selectable" class="py-2 px-4 text-center font-bold text-list-text w-10">
                                 <input
                                     :checked="isChecked((item as Record<string, unknown>).id as number)"
                                     :value="(item as Record<string, unknown>).id"
@@ -98,7 +98,7 @@
                                 :key="column.name"
                                 :class="widthClass(column)"
                                 :style="widthStyle(column)"
-                                class="py-2 px-4 text-gray-600 whitespace-nowrap"
+                                class="py-2 px-4 text-list-text whitespace-nowrap"
                             >
                                 <component
                                     :is="getComponentType(column.component?.type)"
@@ -120,7 +120,7 @@
                         <tr v-if="!items.length">
                             <td
                                 :colspan="visibleColumns.length + (selectable ? 1 : 0)"
-                                class="py-6 text-center text-sm text-gray-400"
+                                class="py-6 text-center text-sm text-list-text-muted"
                             >
                                 {{ t('NO_RESULTS') }}
                             </td>

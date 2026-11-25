@@ -1,4 +1,5 @@
 @import url('./animations.css');
+@import '@freelance/vue-ui/bubble-pop.css';
 @import url('./transitions.css');
 @import url('./smooth-expand.css');
 @import 'tailwindcss';

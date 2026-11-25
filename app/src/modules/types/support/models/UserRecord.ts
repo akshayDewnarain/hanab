@@ -20,6 +20,8 @@ export type UserRecord = {
     updated_at: string;
     name: string;
     email: string;
+    status?: string;
+    employee_id?: number | null;
     role_id?: number;
     role_name?: string;
     permissions?: Array<string | { id?: number; name: string }>;

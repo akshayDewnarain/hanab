@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Domain\Auth\Database\Seeders\UserSeeder;
 use Domain\Employees\Database\Seeders\CertificateSeeder;
 use Domain\Employees\Database\Seeders\EmployeeLocationSeeder;
 use Domain\Employees\Database\Seeders\EmployeeRoleSeeder;
@@ -20,11 +21,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            EmployeeRoleSeeder::class,
+            PermissionSeeder::class,
+            SuperAdminRoleSeeder::class,
             EmployeeLocationSeeder::class,
             SkillSeeder::class,
             CertificateSeeder::class,
+            EmployeeRoleSeeder::class,
             EmployeeSeeder::class,
+            DemoAccessSeeder::class,
+            UserSeeder::class,
+            HelpGuideSeeder::class,
         ]);
     }
 }

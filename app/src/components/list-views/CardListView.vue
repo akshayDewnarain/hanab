@@ -133,18 +133,19 @@
                             {{ t('DIRECTORY_FILTERS') }}
                             <span v-if="filterCount > 0" class="tabular-nums text-emphasis">{{ filterCount }}</span>
                         </button>
-                        <label class="inline-flex items-center gap-1.5 text-sm text-list-text-muted">
-                            <Icon class="size-4" icon="material-symbols:sort-rounded" />
-                            <span class="sr-only">{{ t('DIRECTORY_SORT') }}</span>
-                            <select
-                                class="cursor-pointer bg-transparent text-sm font-medium text-list-text outline-none"
-                                :value="sortQuery || (searchQuery ? 'relevance' : 'last_name')"
-                                @change="onDirectorySort"
-                            >
-                                <option value="relevance">{{ t('DIRECTORY_SORT_RELEVANCE') }}</option>
-                                <option value="last_name">{{ t('DIRECTORY_SORT_NAME') }}</option>
-                            </select>
-                        </label>
+                        <div class="inline-flex items-center gap-1.5">
+                            <Icon class="size-4 text-list-text-muted" icon="material-symbols:sort-rounded" />
+                            <ChoiceDropdown
+                                :model-value="sortQuery || (searchQuery ? 'relevance' : 'last_name')"
+                                :aria-label="t('DIRECTORY_SORT')"
+                                :full-width="false"
+                                :options="[
+                                    { value: 'relevance', label: t('DIRECTORY_SORT_RELEVANCE') },
+                                    { value: 'last_name', label: t('DIRECTORY_SORT_NAME') },
+                                ]"
+                                @update:model-value="onDirectorySort(String($event))"
+                            />
+                        </div>
                     </div>
                 </div>
                 <div v-if="props.directorySwitcher && activeFilterChips.length" class="flex shrink-0 flex-wrap gap-1.5 px-3 pt-2">
@@ -507,10 +508,11 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, onMounted, ref } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { useRouter } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import { Icon } from '@iconify/vue';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import { ListViewPagination as DirectoryPagination } from '@freelance/vue-ui';
     import { useListView } from '@/composables/useListView.ts';
     import { useModalService } from '@/composables/useModalService';
@@ -568,6 +570,7 @@ import MobileFiltersOverlay from '@/components/mobile/MobileFiltersOverlay.vue';
     }>();
 
     const { t } = useI18n();
+    const route = useRoute();
     const router = useRouter();
     const modalService = useModalService();
 
@@ -601,6 +604,18 @@ import MobileFiltersOverlay from '@/components/mobile/MobileFiltersOverlay.vue';
 
     const auth = useAuthStore();
     const canCreate = computed(() => props.enableDefaultActions && auth.hasPermission(`create ${props.entity}`));
+
+    watch(
+        () => route.query.create,
+        (value) => {
+            if (value !== '1' || !canCreate.value) return;
+            openModal();
+            const next = { ...route.query };
+            delete next.create;
+            void router.replace({ query: next });
+        },
+        { immediate: true },
+    );
     const cardWorkspace = computed(() => props.directorySwitcher && props.presentation === 'cards');
     const pageSizeOptions = [10, 25, 50, 100];
     const paginationLabels = computed(() => ({
@@ -629,6 +644,8 @@ import MobileFiltersOverlay from '@/components/mobile/MobileFiltersOverlay.vue';
         'missing_location',
         'missing_email',
         'missing_phone',
+        'missing_business_email',
+        'missing_business_phone',
     ]);
 
     const extraFilterLabels: Record<string, string> = {
@@ -637,6 +654,8 @@ import MobileFiltersOverlay from '@/components/mobile/MobileFiltersOverlay.vue';
         missing_location: 'DASHBOARD_ATTENTION_LOCATION',
         missing_email: 'DASHBOARD_ATTENTION_EMAIL',
         missing_phone: 'DASHBOARD_ATTENTION_PHONE',
+        missing_business_email: 'DASHBOARD_ATTENTION_EMAIL',
+        missing_business_phone: 'DASHBOARD_ATTENTION_PHONE',
         employee_location_id: 'DIRECTORY_FILTER_LOCATION',
         employee_role_id: 'DIRECTORY_FILTER_ROLE',
     };
@@ -722,8 +741,7 @@ import MobileFiltersOverlay from '@/components/mobile/MobileFiltersOverlay.vue';
         runDirectorySearch();
     }
 
-    function onDirectorySort(event: Event): void {
-        const value = (event.target as HTMLSelectElement).value;
+    function onDirectorySort(value: string): void {
         setListSort(value === 'relevance' ? '' : value);
     }
 

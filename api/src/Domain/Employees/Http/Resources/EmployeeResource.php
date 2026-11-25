@@ -22,8 +22,6 @@ abstract class EmployeeResource extends BaseResource
             'first_name',
             'last_name',
             'initials',
-            'email',
-            'phone',
             'business_email',
             'business_phone',
             'introduction',
@@ -35,6 +33,8 @@ abstract class EmployeeResource extends BaseResource
 
         $user = $request->user();
         if ($user instanceof User && Maintainer::allows($user, PermissionService::updatePermission(Employee::class))) {
+            $attributes[] = 'email';
+            $attributes[] = 'phone';
             $attributes[] = 'date_of_birth';
         }
 

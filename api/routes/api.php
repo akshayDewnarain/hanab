@@ -11,6 +11,8 @@ use Application\API\Auth\Controllers\SessionAuthController;
 use Application\API\Auth\Controllers\UserInvitationsController;
 use Application\API\Auth\Controllers\UsersController;
 use Application\API\Auth\Resources\UserResource;
+use Application\API\Dashboard\Controllers\DashboardActionsController;
+use Application\API\Dashboard\Controllers\DashboardActivityController;
 use Application\API\Dashboard\Controllers\PeopleOverviewController;
 use Application\API\Employees\Controllers\Actions\DeleteEmployeeImageActionController;
 use Application\API\Employees\Controllers\CertificatesController;
@@ -83,6 +85,8 @@ Route::prefix('v1')
     ->name('v1.')
     ->group(function() {
         Route::get('dashboard/people-overview', [PeopleOverviewController::class, 'show'])->name('dashboard.people-overview');
+        Route::get('dashboard/actions', [DashboardActionsController::class, 'index'])->name('dashboard.actions');
+        Route::get('dashboard/activity', [DashboardActivityController::class, 'index'])->name('dashboard.activity');
 
         Route::get('organogram', [OrganogramController::class, 'show'])->name('organogram');
 
@@ -199,6 +203,7 @@ Route::prefix('v1')
         Route::put('security/password', [AccountSecurityController::class, 'updatePassword'])->name('security.password');
         Route::post('security/recovery-codes', [AccountSecurityController::class, 'regenerate'])->name('security.recovery-codes');
         Route::post('security/two-factor/replace', [AccountSecurityController::class, 'replace'])->name('security.two-factor.replace');
+        Route::post('security/two-factor/replace/cancel', [AccountSecurityController::class, 'cancelReplacement'])->name('security.two-factor.replace-cancel');
         Route::post('security/two-factor/replace/confirm', [AccountSecurityController::class, 'confirmReplacement'])->name('security.two-factor.replace-confirm');
         Route::post('users/{user}/two-factor/reset', [AccountSecurityController::class, 'resetForUser'])->name('users.two-factor.reset');
         Route::apiResource('users', UsersController::class);

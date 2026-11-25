@@ -4,6 +4,7 @@
 </script>
 
 <script setup lang="ts">
+    import '@freelance/vue-ui/bubble-pop.css';
     import { computed, onMounted, onUnmounted, ref } from 'vue';
     import { Icon } from '@iconify/vue';
 
@@ -229,7 +230,7 @@
         </button>
 
         <TransitionGroup
-            name="expandable-card-actions-bubble"
+            name="ui-bubble-pop"
             tag="div"
             class="expandable-card-actions__stack"
             role="menu"
@@ -302,12 +303,12 @@
         justify-content: center;
         width: var(--eca-size);
         height: var(--eca-size);
-        border: 1px solid color-mix(in srgb, #94a3b8 35%, transparent);
+        border: 1px solid var(--color-list-border, #e2e8f0);
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.96);
-        color: #0f172a;
+        background: color-mix(in srgb, var(--color-list-surface, #fff) 96%, transparent);
+        color: var(--color-list-text, #0f172a);
         cursor: pointer;
-        box-shadow: 0 1px 3px color-mix(in srgb, #0f172a 12%, transparent);
+        box-shadow: 0 1px 3px color-mix(in srgb, var(--color-list-shadow-tint, #0f172a) 16%, transparent);
         transition:
             background 140ms ease,
             color 140ms ease,
@@ -326,16 +327,16 @@
     .expandable-card-actions__bubble:hover:not(:disabled),
     .expandable-card-actions__trigger:focus-visible,
     .expandable-card-actions__bubble:focus-visible {
-        color: var(--color-primary);
-        border-color: color-mix(in srgb, var(--color-primary) 35%, #cbd5e1);
-        background: #fff;
+        color: var(--color-emphasis, var(--color-primary));
+        border-color: color-mix(in srgb, var(--color-emphasis, var(--color-primary)) 45%, var(--color-list-border, #cbd5e1));
+        background: var(--color-list-row-hover, #fff);
         outline: none;
     }
 
     .expandable-card-actions--open .expandable-card-actions__trigger {
         transform: rotate(90deg);
-        border-color: color-mix(in srgb, var(--color-primary) 30%, #cbd5e1);
-        color: var(--color-primary);
+        border-color: color-mix(in srgb, var(--color-emphasis, var(--color-primary)) 40%, var(--color-list-border, #cbd5e1));
+        color: var(--color-emphasis, var(--color-primary));
     }
 
     .expandable-card-actions__trigger:disabled,
@@ -363,9 +364,9 @@
     }
 
     .expandable-card-actions__bubble--active {
-        color: var(--color-primary);
-        border-color: color-mix(in srgb, var(--color-primary) 40%, #cbd5e1);
-        background: color-mix(in srgb, var(--color-primary) 8%, #fff);
+        color: var(--color-emphasis, var(--color-primary));
+        border-color: color-mix(in srgb, var(--color-emphasis, var(--color-primary)) 40%, var(--color-list-border, #cbd5e1));
+        background: color-mix(in srgb, var(--color-emphasis, var(--color-primary)) 14%, var(--color-list-surface, #fff));
     }
 
     .expandable-card-actions__bubble[data-tooltip]::after {
@@ -397,26 +398,6 @@
         opacity: 1;
     }
 
-    .expandable-card-actions-bubble-enter-active,
-    .expandable-card-actions-bubble-leave-active {
-        transition:
-            opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
-            transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
-        transition-delay: calc(var(--bubble-index, 0) * 35ms);
-    }
-
-    .expandable-card-actions-bubble-enter-from,
-    .expandable-card-actions-bubble-leave-to {
-        opacity: 0;
-        transform: translateY(-6px) scale(0.75);
-    }
-
-    .expandable-card-actions-bubble-enter-to,
-    .expandable-card-actions-bubble-leave-from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-
     @media (pointer: coarse) {
         .expandable-card-actions {
             --eca-size: 2.35rem;
@@ -427,16 +408,8 @@
     @media (prefers-reduced-motion: reduce) {
         .expandable-card-actions,
         .expandable-card-actions__trigger,
-        .expandable-card-actions__bubble,
-        .expandable-card-actions-bubble-enter-active,
-        .expandable-card-actions-bubble-leave-active {
+        .expandable-card-actions__bubble {
             transition: none !important;
-        }
-
-        .expandable-card-actions-bubble-enter-from,
-        .expandable-card-actions-bubble-leave-to {
-            transform: none;
-            opacity: 0;
         }
     }
 </style>

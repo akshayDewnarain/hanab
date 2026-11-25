@@ -324,11 +324,16 @@ final class HelpLibrary
         foreach ($wanted as $file => $image) {
             if (isset($reusable[$file])) {
                 $ids[$file] = $reusable[$file];
+                $existing = $article->attachments->firstWhere('id', $reusable[$file]);
+                if ($existing instanceof HelpAttachment) {
+                    $this->makeReadable($existing->path);
+                }
                 continue;
             }
             $extension = pathinfo($file, PATHINFO_EXTENSION);
             $path = 'help/'.$article->id.'/'.Str::uuid()->toString().'.'.$extension;
             Storage::disk('local')->put($path, $image['bytes']);
+            $this->makeReadable($path);
             $created[] = $path;
             $attachment = $article->attachments()->create([
                 'uploaded_by' => $ownerId,
@@ -629,6 +634,38 @@ final class HelpLibrary
     private function storedPath(?string $path): bool
     {
         return is_string($path) && str_starts_with($path, 'help/') && ! str_contains($path, '..');
+    }
+
+    /**
+     * Import runs from the shell, often as root. A private directory is then
+     * unreadable by the web process, so the screenshot request fails.
+     */
+    private function makeReadable(string $path): void
+    {
+        if (! $this->storedPath($path)) {
+            return;
+        }
+        $disk = Storage::disk('local');
+        $file = realpath($disk->path($path));
+        $root = realpath($disk->path('help'));
+        if ($file === false || $root === false || ! str_starts_with($file, $root.DIRECTORY_SEPARATOR)) {
+            return;
+        }
+
+        $directories = [$root];
+        $directory = dirname($file);
+        while ($directory !== $root && str_starts_with($directory, $root.DIRECTORY_SEPARATOR)) {
+            $directories[] = $directory;
+            $parent = dirname($directory);
+            if ($parent === $directory) {
+                break;
+            }
+            $directory = $parent;
+        }
+        foreach ($directories as $dir) {
+            chmod($dir, 0755);
+        }
+        chmod($file, 0644);
     }
 
     /**

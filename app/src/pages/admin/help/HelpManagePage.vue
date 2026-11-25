@@ -9,12 +9,17 @@
             </div>
             <label class="text-sm">
                 <span class="text-list-text-muted">{{ t('HELP_FILTER_STATUS') }}</span>
-                <select v-model="status" class="mt-1 h-9 rounded-lg border border-list-border px-2" @change="load">
-                    <option value="">{{ t('HELP_FILTER_STATUS') }}</option>
-                    <option value="draft">{{ t('HELP_STATUS_DRAFT') }}</option>
-                    <option value="published">{{ t('HELP_STATUS_PUBLISHED') }}</option>
-                    <option value="archived">{{ t('HELP_STATUS_ARCHIVED') }}</option>
-                </select>
+                <ChoiceDropdown
+                    v-model="status"
+                    class="mt-1 max-w-xs"
+                    :options="[
+                        { value: '', label: t('HELP_FILTER_STATUS') },
+                        { value: 'draft', label: t('HELP_STATUS_DRAFT') },
+                        { value: 'published', label: t('HELP_STATUS_PUBLISHED') },
+                        { value: 'archived', label: t('HELP_STATUS_ARCHIVED') },
+                    ]"
+                    @update:model-value="load"
+                />
             </label>
             <div class="overflow-hidden rounded-xl border border-list-border bg-list-surface">
                 <table class="w-full text-left text-sm">
@@ -46,6 +51,7 @@
     import { onMounted, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { PageLayout } from '@freelance/vue-ui';
+    import ChoiceDropdown from '@/components/inputs/ChoiceDropdown.vue';
     import http from '@/utils/http';
     import type { HelpCard } from '@/modules/types/help/Help.ts';
 

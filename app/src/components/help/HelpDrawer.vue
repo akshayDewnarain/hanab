@@ -87,10 +87,14 @@
         for (const article of list) {
             const map: Record<string, string> = {};
             for (const file of article.attachments ?? []) {
-                const image = await http.get(`help/screenshots/${file.id}`, { responseType: 'blob' });
-                const url = URL.createObjectURL(image.data);
-                owned.push(url);
-                map[String(file.id)] = url;
+                try {
+                    const image = await http.get(`help/screenshots/${file.id}`, { responseType: 'blob' });
+                    const url = URL.createObjectURL(image.data);
+                    owned.push(url);
+                    map[String(file.id)] = url;
+                } catch {
+                    // A missing screenshot leaves the guide readable.
+                }
             }
             next[article.id] = map;
         }

@@ -8,8 +8,6 @@
             :focus-request="focusRequest"
             :focus-id="focusId"
             :reset-request="resetRequest"
-            :empty="!isLoading && !failed && laidOut.length === 0"
-            :empty-label="t('ORGANOGRAM_EMPTY')"
             :controls-label="t('ORGANOGRAM_CONTROLS')"
             :zoom-in-label="t('ORGANOGRAM_ZOOM_IN')"
             :zoom-out-label="t('ORGANOGRAM_ZOOM_OUT')"
@@ -56,8 +54,31 @@
                 @focus-group="focusGroup"
                 @list="showList = !showList"
             />
-            <p v-if="isLoading" class="organogram-status" role="status">{{ t('ORGANOGRAM_LOADING') }}</p>
-            <p v-else-if="failed" class="organogram-status" role="alert">{{ t('ORGANOGRAM_ERROR') }}</p>
+            <div v-if="showSpinner" class="organogram-overlay">
+                <div class="organogram-loading" role="status">
+                    <span class="organogram-spinner" />
+                    <p>{{ t('ORGANOGRAM_LOADING') }}</p>
+                </div>
+            </div>
+            <div v-else-if="failed" class="organogram-overlay">
+                <div class="organogram-state" role="alert">
+                    <Icon icon="material-symbols:cloud-off-outline-rounded" />
+                    <h2>{{ t('ORGANOGRAM_ERROR') }}</h2>
+                    <p>{{ t('ORGANOGRAM_ERROR_HINT') }}</p>
+                    <button type="button" class="organogram-state-action" @click="load()">{{ t('ORGANOGRAM_RETRY') }}</button>
+                </div>
+            </div>
+            <div v-else-if="laidOut.length === 0" class="organogram-overlay">
+                <div class="organogram-state">
+                    <Icon icon="material-symbols:account-tree-outline-rounded" />
+                    <h2>{{ filtersActive ? t('ORGANOGRAM_EMPTY_FILTERED') : t('ORGANOGRAM_EMPTY') }}</h2>
+                    <p>{{ filtersActive ? t('ORGANOGRAM_EMPTY_FILTERED_BODY') : t('ORGANOGRAM_EMPTY_BODY') }}</p>
+                    <button v-if="filtersActive" type="button" class="organogram-state-action" @click="clearChartFilters">
+                        {{ t('ORGANOGRAM_CLEAR_FILTERS') }}
+                    </button>
+                </div>
+            </div>
+            <p v-else-if="isLoading" class="organogram-status" role="status">{{ t('ORGANOGRAM_LOADING') }}</p>
             <p v-else-if="unassignedCount > 0" class="organogram-unassigned">
                 {{ t('ORGANOGRAM_UNASSIGNED', { count: unassignedCount }) }}
             </p>
@@ -69,6 +90,7 @@
 </template>
 
 <script setup lang="ts">
+    import { Icon } from '@iconify/vue';
     import { computed, onMounted, provide, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { organogramActionsKey } from '@/components/organogram/actions';
@@ -122,6 +144,16 @@
         search,
         revealSearch,
     } = useOrganogram();
+
+    const filtersActive = computed(() => locationId.value !== '' || levelId.value !== '');
+    const showSpinner = computed(
+        () => (isLoading.value && laidOut.value.length === 0) || (!failed.value && graph.value.nodes.length > 0 && laidOut.value.length === 0),
+    );
+
+    function clearChartFilters(): void {
+        locationId.value = '';
+        levelId.value = '';
+    }
 
     const roots = computed(() => {
         const targets = new Set(graph.value.edges.map((edge) => edge.target));
